@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block head %}
+<script src="{{ url_for('static', filename='js/scoreboard.js') }}"></script>
+	<script>
+		socket.on('redirectCricket', function(url) {
+			window.location.href = url;
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+<div class="container" id="content">
+	<div class="row border-bottom border-top rounded">
+		<div class="col-5"><b>Player round: {{ rndcount }}<br>Player Average: </b></div>
+		<div class="col-7" id="cricket"><b>Game: {{ gametype }}<br>Variant: {{ variant }}</b></div>
+	</div>
+</div>
+<br>
+{% endblock %}

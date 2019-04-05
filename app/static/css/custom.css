@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather');
+
+html, body {
+	height: 90%;
+	width: 100%;
+	margin: 0;
+}
+
+body {
+	font-family: 'Merriweather', serif;
+	background-image: linear-gradient(to right, #1d3c4c, #3c5b6c);
+	color: #fff;
+	border-radius: 25px;
+}
+
+a, a:hover, a:visited, a:active {
+	color: #fff;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+div.jumbotron.header {
+	background: url("../img/banner.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 15%;
+}
+
+div.jumbotron.footer {
+	background-image: linear-gradient(to right, #1d3c4c, #3c5b6c);
+}
+
+table.footer {
+	color: #fff;
+}
+
+table.scoreboard {
+	width: 90%;
+	vertical-align: center;
+	text-align: center;
+}
+
+table.throws {
+	text-align: center;
+}
+
+.btn-outline-primary {
+	color: #fff;
+	border-color: #fff;
+}
+
+.btn-outline-primary:hover {
+	background: #012432;
+	border-color: #000;	
+}
+
+.from-control {
+	background-color: #fff;
+}
+
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}

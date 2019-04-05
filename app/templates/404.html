@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block banner %}
+<h1 align="right">404 - That one missed!</h1>
+{% endblock %}
+
+{% block content %}
+<div class=container>
+<p>You missed the dart board! Maybe you wanna start <a href="{{ url_for('game.admin')}}">here</a></p>
+</div>
+{% endblock %}
