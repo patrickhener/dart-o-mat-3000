@@ -7,19 +7,25 @@
 
 {% block content %}
 <div class="container">
-	<h2>Setup a new game like so:</h2>
-	<ul>
-		<li>Connect to the local wifi</li>
-		<li>Scan the QR code with your smartphone or tablet</li>
-		<li>Choose you setup of game and add player</li>
-		<li>Start the game</li>
-	</ul>
-</div>
+	<div class="row">
+	<div class="col-2"></div>
+	<div class="col-8">
+			<h2>Setup a new game like so:</h2>
+			<ul>
+				<li>Connect to the local wifi</li>
+				<li>Scan the QR code with your smartphone or tablet</li>
+				<li>Choose you setup of game and add player</li>
+				<li>Start the game</li>
+			</ul>
 
-<div id="qrcode" class="container qrcode">
-	<script type="text/javascript">
-		new QRCode(document.getElementById("qrcode"), "http://{{ ipaddr }}:{{ port }}/game/admin");
-	</script>
+			<div id="qrcode" class="container qrcode">
+				<script type="text/javascript">
+					new QRCode(document.getElementById("qrcode"), "http://{{ ipaddr }}:{{ port }}/game/admin");
+				</script>
+			</div>
+	</div>
+	<div class="col-2"></div>
+	</div>
 </div>
 <br>
 {% endblock %}

@@ -26,7 +26,6 @@ def index():
 @mod_game.route("/admin/")
 def admin():
     players = Player.query.all()
-    socketio.emit('redirectIndex', '/game/scoreboard')
     return render_template('/game/admin.html', players=players)
 
 @mod_game.route("/manageuser", methods=['GET', 'POST'])
@@ -70,17 +69,28 @@ def gameController():
 @mod_game.route("/scoreboardCricket")
 def scoreboardCricket():
     game = Game.query.first()
-    socketio.emit('refresh')
-    return render_template('/game/scoreboardCricket.html', gametype=game.gametype, variant=game.variant)
+    activePlayer = getActivePlayer()
+    #  socketio.emit('refresh')
+    return render_template(
+        '/game/scoreboardCricket.html',
+        player=activePlayer.name,
+        gametype=game.gametype,
+        variant=game.variant
+    )
 
 @mod_game.route("/scoreboardX01")
-def scoreboardX01():
+def scoreboardX01(message=None):
     # Var for returning options
+    if not message:
+        message = "-"
+    else:
+        message = message
     # Check if there is a Game ongoing
     started = checkIfOngoingGame()
     # Get general data to draw scoreboard
     playing_players = getPlayingPlayersObjects()
     activePlayer = getActivePlayer()
+
     game = Game.query.first()
     try:
         rnd = len(Round.query.filter_by(player_id=activePlayer.id).all())
@@ -92,12 +102,15 @@ def scoreboardX01():
         player_scores.append(getScore(player.id))
 
     playerScoresList = [{'Player': str(name), 'Score': str(score)} for name, score in zip(playing_players,player_scores)]
-    socketio.emit('refresh')
-    socketio.emit('drawScoreboardX01', (playerScoresList, activePlayer.name))
+    socketio.emit('drawScoreboardX01', (playerScoresList))
+    socketio.emit('highlightActive', (activePlayer.name, rnd, message))
 
     return render_template(
         '/game/scoreboardX01.html',
+        playerlist=playerScoresList,
+        message=message,
         started=started,
+        player=activePlayer.name,
         gametype=game.gametype,
         rndcount=rnd,
         startIn=game.inGame,
@@ -109,14 +122,15 @@ def throw(hit, mod):
     game = Game.query.first()
     # Lookup if next player has to be switched
     if game.nextPlayerNeeded:
-        return "Switch to next Player first!\n"
+        scoreboardX01("Remove Darts")
+        return "Switch to next player first\n"
     else:
         # decide which game mechanism to use
         x01_games = ['301','501','701','901']
 
         if any(x in str(game.gametype) for x in x01_games):
             doIt = scoreX01(hit,mod)
-            scoreboardX01()
+            scoreboardX01(doIt)
             return doIt
         elif str(game.gametype) == "Cricket":
             return "Cricket Game"

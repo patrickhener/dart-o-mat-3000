@@ -5,6 +5,5 @@ socket.on('connect', function() {
 });
 
 socket.on('redirectIndex', function(url) {
-	console.log("Got redirected")
 	window.location.href = url;
 });

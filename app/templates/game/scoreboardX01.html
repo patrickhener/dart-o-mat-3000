@@ -1,19 +1,16 @@
 {% extends "base.html" %}
 {% block head %}
 <script src="{{ url_for('static', filename='js/scoreboard.js') }}"></script>
-	<script>
-		socket.on('redirectX01', function(url) {
-			window.location.href = url;
-		});
-	</script>
 {% endblock %}
-
+{% block bodyparam %}onload="drawScoreboardX01({{ playerlist }}); highlightActivePlayer('{{ player }}', '{{ rndcount }}', '{{ message }}')"){% endblock %}
 {% block content %}
-<div class="container" id="content">
-	<div class="row border-bottom border-top rounded">
-		<div class="col-5"><b>Player round: {{ rndcount }}<br>Player Average: </b></div>
-		<div class="col-7" id="x01"><b>Game: {{ gametype }}<br>In: {{ startIn }}<br>Out: {{ exitOut }}</b></div>
+<div class="container-fluid" id="content">
+	<div class="row border-bottom border-top rounded" id="scoreheader">
+		<div class="col" id="header-left"><b>Active Player: {{ player }}<br>Player round: {{ rndcount }}<br>Player Average: </b></div>
+		<div class="col" id="header-right"><b>Game: {{ gametype }}<br>In: {{ startIn }}<br>Out: {{ exitOut }}</b></div>
 	</div>
+	<br>
+	<div class="row border-top rounded" id="score"></div>
 </div>
 <br>
 {% endblock %}

@@ -19,6 +19,45 @@ a, a:hover, a:visited, a:active {
 	text-decoration: underline;
 }
 
+h1#playerName,h1#playerScore {
+	text-align: center;
+}
+
+div#playerName {
+	background-color: #012432;
+	padding: 10px;
+}
+
+div#playerScore {
+	background-color: #3c5f6c;
+	padding: 10px;
+}
+
+div#playerMessage {
+	background-color: #3c5f6c;
+	padding: 10px;
+	text-align: center;
+	font-weight: bold;
+}
+
+div#playerThrow {
+	background-color: #012432;
+	padding: 5px;
+}
+
+div#scoreheader {
+	padding: 10px;
+	margin-bottom: 25px;
+}
+
+div[id^="Border-"] {
+	margin-top: 25px;
+	padding-left: 0px;
+	padding-right: 0px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
 div.jumbotron.header {
 	background: url("../img/banner.jpg");
 	background-size: cover;
@@ -34,16 +73,6 @@ table.footer {
 	color: #fff;
 }
 
-table.scoreboard {
-	width: 90%;
-	vertical-align: center;
-	text-align: center;
-}
-
-table.throws {
-	text-align: center;
-}
-
 .btn-outline-primary {
 	color: #fff;
 	border-color: #fff;
@@ -51,7 +80,7 @@ table.throws {
 
 .btn-outline-primary:hover {
 	background: #012432;
-	border-color: #000;	
+	border-color: #000;
 }
 
 .from-control {

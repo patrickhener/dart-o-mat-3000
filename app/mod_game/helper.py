@@ -51,11 +51,12 @@ def getScore(playerID):
     return score.score
 
 def checkIfOngoingGame():
-    ongoing = False
+    if Game.query.filter_by(won=True).first():
+        return False
     if Player.query.filter_by(active=True).first():
-        ongoing = True
+        return True
 
-    return ongoing
+    return False
 
 def checkIfOngoingRound(activePlayer):
     # Check if there is a ongoing round associated with player
@@ -125,19 +126,18 @@ def scoreX01(hit,mod):
                 #rnd.throwcount = 3
                 playerScore.score = playerScore.parkScore
                 db.session.commit()
-                return "Bust\n"
+                return "Bust! Remove Darts!"
             # check if won
             elif playerScore.score - points == 0:
                 # TODO Here might be the best place to implement statistics function
                 # TODO Also implement exitOut here
                 #
                 game.won = True
-                activePlayer.active = False
                 throwcount += 1
                 rnd.throwcount = throwcount
                 playerScore.score = 0
                 db.session.commit()
-                return "Game has been won\n"
+                return "Winner!"
             # define new score, increase throwcount, commit to db
             else:
                 newScore = playerScore.score - points
@@ -151,9 +151,7 @@ def scoreX01(hit,mod):
                 db.session.add(throw)
                 db.session.commit()
 
-                result = "Hit is {} {}\n".format(modifier,hitword)
-                result += "New score is {}\n".format(newScore)
-                return result
+                return "-"
     else:
         # Output if no game is running
         return "There is no active game running\n"
