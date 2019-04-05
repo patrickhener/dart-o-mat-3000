@@ -12,8 +12,16 @@ socket.on('drawScoreboardX01', function(list) {
 	drawScoreboardX01(list);
 });
 
-socket.on('highlightActive', function(player, round, message) {
-	highlightActivePlayer(player, round, message);
+socket.on('highlightActive', function(player, round, message, average) {
+	highlightActivePlayer(player, round, message, average);
+});
+
+socket.on('refreshAverage', function(average) {
+	refreshAverage(average);
+});
+
+socket.on('updateThrows', function(throws) {
+	updateThrows(throws);
 });
 
 socket.on('redirectX01', function(url) {
@@ -51,7 +59,7 @@ function drawScoreboardX01(list) {
 		messageDiv.innerHTML = "";
 		borderDiv.appendChild(messageDiv);
 		var throwDiv = document.createElement("div");
-		throwDiv.setAttribute("name", "Throw-" + list[item].Player);
+		throwDiv.setAttribute("name", "Throw-" + list[item].Player + "-ID-" + list[item].PlayerID);
 		throwDiv.setAttribute("id", "playerThrow");
 		throwDiv.innerHTML = "";
 		borderDiv.appendChild(throwDiv);
@@ -59,17 +67,31 @@ function drawScoreboardX01(list) {
 	}
 };
 
-function highlightActivePlayer(activePlayer, playerRound, message) {
+function highlightActivePlayer(activePlayer, playerRound, message, average) {
 	var borderDiv = document.getElementById("Border-" + activePlayer);
 	borderDiv.style.border='5px solid white';
 	borderDiv.style.boxShadow='10px 10px 15px black';
 	var headerLeft = document.getElementById("header-left");
-	headerLeft.innerHTML = "<b>Active Player: " + activePlayer + "<br>Player round: " + playerRound + "<br>Player Average: </b>";
+	headerLeft.innerHTML = "<b>Active Player: " + activePlayer + "<br>Player round: " + playerRound + "<br>Player Average: " + average + "</b>";
 	var messageDiv = document.getElementsByName("Message-" + activePlayer);
 	messageDiv[0].innerHTML = message;
 };
 
-function init(list, activePlayer) {
-	drawScoreboardX01(list);
-	highlightActivePlayer(activePlayer);
+function updateThrows(throws) {
+	var div = document.getElementById("playerThrow");
+	while (div.firstChild) {
+		div.removeChild(div.firstChild);
+	}
+
+	// This function has to be worked on. Figure out how to extract the throws and build them into the scoreboard
+	for (var item in throws) {
+		for (i=0; i < throws[item].length; i++ ) {
+			//throwDiv = $('[id*=ID-' + throws[item][i].PlayerID + ']');
+			throwDiv = document.getElementById($('[id*=ID-' + throws[item][i].PlayerID + ']'))
+			console.log(throwDiv);
+			console.log(throws[item][i].RoundID)
+			console.log(throws[item][i].PlayerID)
+			console.log(throws[item][i].Count)
+		}
+	}
 };

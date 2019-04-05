@@ -4,6 +4,8 @@ from app import db
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
 # cycle and islice for nextPlayer
 from itertools import cycle, islice
+# SQLAlchemy functions
+from sqlalchemy.sql.expression import func
 
 # Method definitions
 def clear_db():
@@ -144,7 +146,7 @@ def scoreX01(hit,mod):
                 throwcount += 1
                 playerScore.score = newScore
                 rnd.throwcount = throwcount
-                throw = Throw(hit=hit,mod=mod,round_id=rnd.id)
+                throw = Throw(hit=hit,mod=mod,round_id=rnd.id,player_id=activePlayer.id)
                 if throwcount == 3:
                     playerScore.parkScore = newScore
                     game.nextPlayerNeeded = True
@@ -157,37 +159,61 @@ def scoreX01(hit,mod):
         return "There is no active game running\n"
 
 def switchNextPlayer():
-    # First set active Player round ongoing to 0 and nextPlayerNeeded in Game to 0
-    activePlayerObject = getActivePlayer()
-    activePlayerObject = Player.query.filter_by(active=True).first()
-    activePlayerRound = Round.query.filter_by(player_id=activePlayerObject.id, ongoing=1).first()
-    activePlayerRound.ongoing = False
+    # First check if the game was won
     game = Game.query.first()
-    game.nextPlayerNeeded = False
-    # Initialize variables to work with
-    key = []
-    listOfPlayingPlayers = getPlayingPlayers()
-    # Find key of active player in list
-    for i, x in enumerate(listOfPlayingPlayers):
-        if x == str(activePlayerObject):
-            positionInListOfActivePlayer = i
-    # Fill a list from 0 to x as long as the list of active players
-    for x in range (0, len(listOfPlayingPlayers)):
-        key.append(x)
-    # define cycle over key list
-    cyclePlayerKeyInList = cycle(key)
-    # start at position of active player in the keyList
-    positionKeyAfterActivePlayerKey = islice(cyclePlayerKeyInList, positionInListOfActivePlayer+1, None)
-    # Take one step in list and define next player with the resulting key
-    nextPlayerKeyInList = next(positionKeyAfterActivePlayerKey)
-    nextActivePlayerObject = Player.query.filter_by(name=listOfPlayingPlayers[nextPlayerKeyInList]).first()
-    # Commit current active player false and next active player true to database
-    activePlayerObject.active = False
-    nextActivePlayerObject.active = True
-    db.session.commit()
-    # Result for command line/Browser to catch when called
-    result = ""
-    result += "activePlayer = {}\n".format(activePlayerObject)
-    result += "listOfPlayingPlayers: {}\n".format(listOfPlayingPlayers)
-    result += "nextPlayerKeyInList is {} which is {}\n".format(nextPlayerKeyInList,listOfPlayingPlayers[nextPlayerKeyInList])
-    return result
+    if game.won:
+        return "There is no active game running"
+    else:
+        # Then set active Player round ongoing to 0 and nextPlayerNeeded in Game to 0
+        activePlayerObject = getActivePlayer()
+        activePlayerObject = Player.query.filter_by(active=True).first()
+        activePlayerRound = Round.query.filter_by(player_id=activePlayerObject.id, ongoing=1).first()
+        activePlayerRound.ongoing = False
+        game.nextPlayerNeeded = False
+        # Initialize variables to work with
+        key = []
+        listOfPlayingPlayers = getPlayingPlayers()
+        # Find key of active player in list
+        for i, x in enumerate(listOfPlayingPlayers):
+            if x == str(activePlayerObject):
+                positionInListOfActivePlayer = i
+        # Fill a list from 0 to x as long as the list of active players
+        for x in range (0, len(listOfPlayingPlayers)):
+            key.append(x)
+        # define cycle over key list
+        cyclePlayerKeyInList = cycle(key)
+        # start at position of active player in the keyList
+        positionKeyAfterActivePlayerKey = islice(cyclePlayerKeyInList, positionInListOfActivePlayer+1, None)
+        # Take one step in list and define next player with the resulting key
+        nextPlayerKeyInList = next(positionKeyAfterActivePlayerKey)
+        nextActivePlayerObject = Player.query.filter_by(name=listOfPlayingPlayers[nextPlayerKeyInList]).first()
+        # Commit current active player false and next active player true to database
+        activePlayerObject.active = False
+        nextActivePlayerObject.active = True
+        db.session.commit()
+
+        return "-"
+
+def getAverage(playerID):
+    throws = (Throw.query.filter_by(player_id=playerID)).all()
+    if not throws:
+        return str(0)
+    else:
+        throwlist = []
+        for throw in throws:
+            throwlist.append(str(throw))
+        throwlist = [float(s) for s in throwlist]
+        avgofthrows = round((sum(throwlist) / len(throwlist)), 2)
+        return str(avgofthrows)
+
+def getThrows():
+    throws = Throw.query.all()
+    if not throws:
+        return None
+    else:
+        throwlist = []
+        for throw in throws:
+            throwlist.append([throw.round_id,throw.player_id,throw])
+
+        return throwlist
+    pass

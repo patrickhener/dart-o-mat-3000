@@ -25,6 +25,7 @@ class Player(Base):
     active = db.Column(db.Boolean)
 
     rounds = db.relationship('Round', backref='rounds', lazy=True)
+    throws = db.relationship('Throw', backref='throws', lazy=True)
     scores = db.relationship('Score', backref='scores', lazy=True)
     crickets = db.relationship('Cricket', backref='crickets', lazy=True)
 
@@ -67,11 +68,12 @@ class Round(Base):
         return self.id
 
 class Throw(Base):
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
     hit = db.Column(db.Integer, nullable=False)
     mod = db.Column(db.Integer, nullable=False)
 
     round_id = db.Column(db.Integer, db.ForeignKey('round.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
 
     def __repr__(self):
-        sum = hit * mod
-        return sum
+        sum = self.hit * self.mod
+        return str(sum)

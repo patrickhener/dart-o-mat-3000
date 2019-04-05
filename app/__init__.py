@@ -5,15 +5,13 @@ from flask_socketio import SocketIO
 # Import SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
 
-# Import Minify
-from flask_minify import minify
-
 # Define the WSGI application object
 app = Flask(__name__)
 
 # Grab Configuration from config.py
 app.config.from_object('config')
 IPADDR = app.config["IPADDR"]
+IFACE = app.config["IFACE"]
 PORT = app.config["PORT"]
 
 # Define SocketIO
@@ -22,9 +20,6 @@ socketio = SocketIO(app)
 # Define the database object which is imported
 # by modules and controllers
 db = SQLAlchemy(app)
-
-# Minify Things
-minify(app=app, html=True, js=True, cssless=True, cache=True, fail_safe=True)
 
 # HTTP error handling
 @app.errorhandler(404)

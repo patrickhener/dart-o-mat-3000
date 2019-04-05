@@ -1,5 +1,4 @@
 flask
 flask-socketio
 flask-sqlalchemy
-flask-minify
 eventlet

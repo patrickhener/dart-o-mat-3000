@@ -2,11 +2,11 @@
 {% block head %}
 <script src="{{ url_for('static', filename='js/scoreboard.js') }}"></script>
 {% endblock %}
-{% block bodyparam %}onload="drawScoreboardX01({{ playerlist }}); highlightActivePlayer('{{ player }}', '{{ rndcount }}', '{{ message }}')"){% endblock %}
+{% block bodyparam %}onload="drawScoreboardX01({{ playerlist }}); updateThrows({{ throwlist }}); highlightActivePlayer('{{ player }}', '{{ rndcount }}', '{{ message }}', '{{ average }}')"){% endblock %}
 {% block content %}
 <div class="container-fluid" id="content">
 	<div class="row border-bottom border-top rounded" id="scoreheader">
-		<div class="col" id="header-left"><b>Active Player: {{ player }}<br>Player round: {{ rndcount }}<br>Player Average: </b></div>
+		<div class="col" id="header-left"><b>Active Player: {{ player }}<br>Player round: {{ rndcount }}<br>Player Average: {{ average }}</b></div>
 		<div class="col" id="header-right"><b>Game: {{ gametype }}<br>In: {{ startIn }}<br>Out: {{ exitOut }}</b></div>
 	</div>
 	<br>
