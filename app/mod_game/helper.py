@@ -142,6 +142,7 @@ def scoreX01(hit,mod):
                 return "Winner!"
             # define new score, increase throwcount, commit to db
             else:
+                result = "-"
                 newScore = playerScore.score - points
                 throwcount += 1
                 playerScore.score = newScore
@@ -150,10 +151,11 @@ def scoreX01(hit,mod):
                 if throwcount == 3:
                     playerScore.parkScore = newScore
                     game.nextPlayerNeeded = True
+                    result = "Remove Darts!"
                 db.session.add(throw)
                 db.session.commit()
 
-                return "-"
+                return result
     else:
         # Output if no game is running
         return "There is no active game running\n"

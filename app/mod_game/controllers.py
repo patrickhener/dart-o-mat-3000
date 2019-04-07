@@ -109,8 +109,11 @@ def scoreboardX01(message=None):
     playerScoresList = [{'Player': str(name),'PlayerID': str(playerid), 'Score': str(score)} for name, playerid, score in zip(playing_players,playing_players_id,player_scores)]
 
     playerRoundThrowList = []
-    for i in range (0, len(throws)):
-        playerRoundThrowList.append([{'RoundID': str(throws[i][0]), 'PlayerID': str(throws[i][1]), 'Count': str(throws[i][2])}])
+    if not throws:
+        playerRoundThrowList = ""
+    else:
+        for i in range (0, len(throws)):
+            playerRoundThrowList.append([{'RoundID': str(throws[i][0]), 'PlayerID': str(throws[i][1]), 'Count': str(throws[i][2])}])
 
     # playerRoundThrowList will now be something like [[{'RoundID': '1', 'PlayerID': '2', 'Count': '20'}], [{'RoundID': '1', 'PlayerID': '2', 'Count': '20'}], let's feed it to the socket to continue in javascript
 
