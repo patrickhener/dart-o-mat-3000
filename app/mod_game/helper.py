@@ -52,6 +52,58 @@ def getScore(playerID):
     score = Score.query.filter_by(player_id=playerID).first()
     return score.score
 
+def checkInGame(mod):
+    # set active player
+    activePlayer = Player.query.filter_by(active=True).first()
+    # get Game object
+    game = Game.query.first()
+    inGame = game.inGame
+    playerScore = Score.query.filter_by(player_id=activePlayer.id).first()
+    if inGame == "Double":
+        if str(playerScore.score) == str(game.gametype):
+            if not mod == 2:
+                return False
+            else:
+                return True
+        else:
+            return True
+    elif inGame == "Master":
+        if str(playerScore.score) == str(game.gametype):
+            if mod == 1:
+                return False
+            else:
+                return True
+        else:
+            return True
+    else:
+        return True
+
+def checkOutGame(mod):
+    game = Game.query.first()
+    outGame = game.outGame
+    if outGame == "Double":
+        if not mod == 2:
+            return False
+        else:
+            return True
+    elif outGame == "Master":
+        if mod == 1:
+            return False
+        else:
+            return True
+    else:
+        return True
+
+def checkOutPossible(newScore):
+    game = Game.query.first()
+    if not game.outGame == "Straight":
+        if newScore == 1:
+            return False
+        else:
+            return True
+    else:
+        return True
+
 def checkIfOngoingGame():
     if Game.query.filter_by(won=True).first():
         return False
@@ -83,12 +135,8 @@ def scoreX01(hit,mod):
     if checkIfOngoingGame():
         # set active player
         activePlayer = Player.query.filter_by(active=True).first()
-        # TODO Here startIn and exitOut should be set to a variable
-        #
-        # TODO Here also startIn should be checked like:
-        # If PlayerScore is inital score then check if startIn is Double/Master
-        # Check if modifier fits and then either create first round or game.nextPlayerNeeded = 1
-        #
+        # get Game object
+        game = Game.query.first()
         # Check if there is a ongoing round associated, if not create a new one
         if not checkIfOngoingRound(activePlayer):
             rnd = Round(player_id=activePlayer.id,ongoing=True,throwcount=0)
@@ -98,8 +146,6 @@ def scoreX01(hit,mod):
             # Set round object
             rnd = Round.query.filter_by(player_id=activePlayer.id, ongoing=1).first()
 
-        # get Game object
-        game = Game.query.first()
         # Check if ongoing round is over
         if rnd.throwcount == 3:
             game.nextPlayerNeeded = True
@@ -119,28 +165,46 @@ def scoreX01(hit,mod):
             # check if won
             elif playerScore.score - points == 0:
                 # TODO Here might be the best place to implement statistics function
-                # TODO Also implement exitOut here
                 #
-                game.won = True
-                throwcount += 1
-                rnd.throwcount = throwcount
-                playerScore.score = 0
-                db.session.commit()
-                return "Winner!"
+                if checkOutGame(mod):
+                    game.won = True
+                    throwcount += 1
+                    rnd.throwcount = throwcount
+                    playerScore.score = 0
+                    db.session.commit()
+                    return "Winner!"
+                else:
+                    game.nextPlayerNeeded = True
+                    throwcount +=1
+                    rnd.throwcount = throwcount
+                    playerScore.score = playerScore.parkScore
+                    db.session.commit()
+                    return "Bust! " + game.outGame + " out!"
             # define new score, increase throwcount, commit to db
             else:
                 result = "-"
                 newScore = playerScore.score - points
-                throwcount += 1
-                playerScore.score = newScore
-                rnd.throwcount = throwcount
-                throw = Throw(hit=hit,mod=mod,round_id=rnd.id,player_id=activePlayer.id)
-                if throwcount == 3:
-                    playerScore.parkScore = newScore
+                if not checkOutPossible(newScore):
+                    throwcount += 1
+                    rnd.throwcount = throwcount
+                    playerScore.score = playerScore.parkScore
                     game.nextPlayerNeeded = True
-                    result = "Remove Darts!"
-                db.session.add(throw)
-                db.session.commit()
+                    db.session.commit()
+                    result = "No Out possible! Remove Darts!"
+                else:
+                    throwcount += 1
+                    if checkInGame(mod):
+                        playerScore.score = newScore
+                    else:
+                        result = str(game.inGame) + " in!"
+                    rnd.throwcount = throwcount
+                    throw = Throw(hit=hit,mod=mod,round_id=rnd.id,player_id=activePlayer.id)
+                    if throwcount == 3:
+                        playerScore.parkScore = newScore
+                        game.nextPlayerNeeded = True
+                        result = "Remove Darts!"
+                    db.session.add(throw)
+                    db.session.commit()
 
                 return result
     else:

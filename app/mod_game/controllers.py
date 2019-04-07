@@ -13,7 +13,7 @@ from app import db, socketio, IPADDR, PORT
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
 
 # Import helper functions
-from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage, getThrows
+from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage
 
 # Define the blueprint: 'game', set its url prefix: app.url/game
 mod_game = Blueprint('game', __name__, url_prefix='/game')
@@ -91,8 +91,6 @@ def scoreboardX01(message=None):
     playing_players = getPlayingPlayersObjects()
     playing_players_id = getPlayingPlayersID()
     activePlayer = getActivePlayer()
-    # getThrows get's you throws like [[round_id,player_id,count],[round_id,player_id,count],[...],[...]]
-    throws = getThrows()
     # Get average
     average = getAverage(activePlayer.id)
 
@@ -108,23 +106,13 @@ def scoreboardX01(message=None):
 
     playerScoresList = [{'Player': str(name),'PlayerID': str(playerid), 'Score': str(score)} for name, playerid, score in zip(playing_players,playing_players_id,player_scores)]
 
-    playerRoundThrowList = []
-    if not throws:
-        playerRoundThrowList = ""
-    else:
-        for i in range (0, len(throws)):
-            playerRoundThrowList.append([{'RoundID': str(throws[i][0]), 'PlayerID': str(throws[i][1]), 'Count': str(throws[i][2])}])
-
-    # playerRoundThrowList will now be something like [[{'RoundID': '1', 'PlayerID': '2', 'Count': '20'}], [{'RoundID': '1', 'PlayerID': '2', 'Count': '20'}], let's feed it to the socket to continue in javascript
 
     socketio.emit('drawScoreboardX01', playerScoresList)
-    socketio.emit('updateThrows', playerRoundThrowList)
     socketio.emit('highlightActive', (activePlayer.name, rnd, message, average))
 
     return render_template(
         '/game/scoreboardX01.html',
         playerlist=playerScoresList,
-        throwlist=playerRoundThrowList,
         message=message,
         average=average,
         started=started,

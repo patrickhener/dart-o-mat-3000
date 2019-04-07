@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Merriweather');
 
 html, body {
-	height: 90%;
+	height: 100%;
 	width: 100%;
 	margin: 0;
 }
@@ -11,6 +11,18 @@ body {
 	background-image: linear-gradient(to right, #1d3c4c, #3c5b6c);
 	color: #fff;
 	border-radius: 25px;
+}
+
+#Header {
+	height: 10%;
+}
+
+#content {
+	height: 65%;
+}
+
+#Footer {
+	height: 5%;
 }
 
 a, a:hover, a:visited, a:active {
@@ -28,7 +40,7 @@ div#playerName {
 	padding: 10px;
 }
 
-div#playerScore {
+div#playerScore, div#playerSum {
 	background-color: #3c5f6c;
 	padding: 10px;
 }
@@ -40,9 +52,11 @@ div#playerMessage {
 	font-weight: bold;
 }
 
-div#playerThrow {
+div[id^="playerThrows-ID-"] {
 	background-color: #012432;
 	padding: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
 }
 
 div#scoreheader {

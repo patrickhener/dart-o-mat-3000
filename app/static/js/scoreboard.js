@@ -59,10 +59,15 @@ function drawScoreboardX01(list) {
 		messageDiv.innerHTML = "";
 		borderDiv.appendChild(messageDiv);
 		var throwDiv = document.createElement("div");
-		throwDiv.setAttribute("name", "Throw-" + list[item].Player + "-ID-" + list[item].PlayerID);
-		throwDiv.setAttribute("id", "playerThrow");
-		throwDiv.innerHTML = "";
+		throwDiv.setAttribute("id", "playerThrows-ID-" + list[item].PlayerID);
+		var throwTable = document.createElement("table");
+		throwDiv.appendChild(throwTable);
 		borderDiv.appendChild(throwDiv);
+		var sumDiv = document.createElement("div");
+		sumDiv.setAttribute("name", "Sum-ID-" + list[item].PlayerID);
+		sumDiv.setAttribute("id", "playerSum");
+		sumDiv.innerHTML="";
+		borderDiv.appendChild(sumDiv);
 		div.appendChild(borderDiv);
 	}
 };
@@ -78,20 +83,5 @@ function highlightActivePlayer(activePlayer, playerRound, message, average) {
 };
 
 function updateThrows(throws) {
-	var div = document.getElementById("playerThrow");
-	while (div.firstChild) {
-		div.removeChild(div.firstChild);
-	}
-
-	// This function has to be worked on. Figure out how to extract the throws and build them into the scoreboard
-	for (var item in throws) {
-		for (i=0; i < throws[item].length; i++ ) {
-			//throwDiv = $('[id*=ID-' + throws[item][i].PlayerID + ']');
-			throwDiv = document.getElementById($('[id*=ID-' + throws[item][i].PlayerID + ']'))
-			console.log(throwDiv);
-			console.log(throws[item][i].RoundID)
-			console.log(throws[item][i].PlayerID)
-			console.log(throws[item][i].Count)
-		}
-	}
+	//No function yet, don't know how to do it ...
 };
