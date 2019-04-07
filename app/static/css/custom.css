@@ -40,7 +40,7 @@ div#playerName {
 	padding: 10px;
 }
 
-div#playerScore, div#playerSum {
+div#playerScore, div[id^="Sum-"] {
 	background-color: #3c5f6c;
 	padding: 10px;
 }
@@ -52,7 +52,7 @@ div#playerMessage {
 	font-weight: bold;
 }
 
-div[id^="playerThrows-ID-"] {
+div[id^="Throws-"] {
 	background-color: #012432;
 	padding: 5px;
 	margin-left: 0px;

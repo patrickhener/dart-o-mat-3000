@@ -20,8 +20,8 @@ socket.on('refreshAverage', function(average) {
 	refreshAverage(average);
 });
 
-socket.on('updateThrows', function(throws) {
-	updateThrows(throws);
+socket.on('updateThrow', function(count,playerid) {
+	updateThrows(count,playerid);
 });
 
 socket.on('redirectX01', function(url) {
@@ -33,7 +33,7 @@ socket.on('redirectCricket', function(url) {
 });
 
 // Functions
-function drawScoreboardX01(list) {
+function drawScoreboardX01(list, throwcount, playerid) {
 	var div = document.getElementById("score");
 	while (div.firstChild) {
 		div.removeChild(div.firstChild);
@@ -59,13 +59,10 @@ function drawScoreboardX01(list) {
 		messageDiv.innerHTML = "";
 		borderDiv.appendChild(messageDiv);
 		var throwDiv = document.createElement("div");
-		throwDiv.setAttribute("id", "playerThrows-ID-" + list[item].PlayerID);
-		var throwTable = document.createElement("table");
-		throwDiv.appendChild(throwTable);
+		throwDiv.setAttribute("id", "Throws-" + list[item].PlayerID);
 		borderDiv.appendChild(throwDiv);
 		var sumDiv = document.createElement("div");
-		sumDiv.setAttribute("name", "Sum-ID-" + list[item].PlayerID);
-		sumDiv.setAttribute("id", "playerSum");
+		sumDiv.setAttribute("id", "Sum-" + list[item].PlayerID);
 		sumDiv.innerHTML="";
 		borderDiv.appendChild(sumDiv);
 		div.appendChild(borderDiv);
@@ -82,6 +79,17 @@ function highlightActivePlayer(activePlayer, playerRound, message, average) {
 	messageDiv[0].innerHTML = message;
 };
 
-function updateThrows(throws) {
-	//No function yet, don't know how to do it ...
+function updateThrows(throwcount,playerid) {
+	// Well the point is this is working, when not pretty, but working
+	// But because the scoreboard is redrawn every time it gets requested, so this will not be displayed permanent
+	var throwsDiv = document.getElementById("Throws-" + playerid);
+	if (throwsDiv.childNodes.length == 3) {
+		while (throwsDiv.firstChild) {
+			throwsDiv.removeChild(throwsDiv.firstChild);
+		}
+	}
+	countDiv = document.createElement("div");
+	countDiv.setAttribute("id", "playerThrow");
+	countDiv.innerHTML = throwcount;
+	throwsDiv.appendChild(countDiv);
 };

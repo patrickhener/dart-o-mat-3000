@@ -125,7 +125,9 @@ def scoreboardX01(message=None):
 
 @mod_game.route("/throw/<int:hit>/<int:mod>")
 def throw(hit, mod):
+    count = hit * mod
     game = Game.query.first()
+    activePlayer = getActivePlayer()
     # Lookup if next player has to be switched
     if game.nextPlayerNeeded:
         scoreboardX01("Remove Darts")
