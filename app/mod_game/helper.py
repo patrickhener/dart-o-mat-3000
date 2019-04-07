@@ -77,19 +77,6 @@ def checkIfOngoingRound(activePlayer):
     return ongoing
 
 def scoreX01(hit,mod):
-    # Some modeling for the resulting words on cli/browser
-    if hit == 25:
-        hitword = "Bullseye"
-    elif hit == 0:
-        hitword = "Out of board"
-    else:
-        hitword = hit
-    if mod == 1:
-        modifier = ""
-    elif mod == 2:
-        modifier = "Double"
-    elif mod == 3:
-        modifier = "Triple"
     # calculate points to be substracted from score
     points = hit * mod
     # check if there is a game going on
