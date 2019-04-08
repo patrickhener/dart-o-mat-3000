@@ -14,6 +14,7 @@ def clear_db():
     db.session.query(Cricket).delete()
     db.session.query(Throw).delete()
     db.session.query(Round).delete()
+    db.session.query(LastThrows).delete()
 
     playingPlayersObject = Player.query.filter_by(game_id=1).all()
     for player in playingPlayersObject:
@@ -139,6 +140,9 @@ def scoreX01(hit,mod):
         game = Game.query.first()
         # Check if there is a ongoing round associated, if not create a new one
         if not checkIfOngoingRound(activePlayer):
+            if (LastThrows.query.filter_by(player_id=activePlayer.id).all()):
+                LastThrows.query.filter_by(player_id=activePlayer.id).delete()
+                db.session.commit()
             rnd = Round(player_id=activePlayer.id,ongoing=True,throwcount=0)
             db.session.add(rnd)
             db.session.commit()
@@ -206,6 +210,10 @@ def scoreX01(hit,mod):
                     db.session.add(throw)
                     db.session.commit()
 
+                newLastThrow = LastThrows(player_id=activePlayer.id, counts=points)
+                db.session.add(newLastThrow)
+                db.session.commit()
+
                 return result
     else:
         # Output if no game is running
@@ -265,3 +273,9 @@ def getThrowsCount(playerID):
         return "0"
     else:
         return len(throws)
+
+def getLastThrows(playerID):
+    return LastThrows.query.filter_by(player_id=playerID).all()
+
+def getAllLastThrows():
+    return LastThrows.query.all()

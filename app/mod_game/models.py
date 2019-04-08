@@ -81,7 +81,7 @@ class Throw(Base):
 
 class LastThrows(Base):
     player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
-    count = db.Column(db.Integer, nullable=False)
+    counts = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return str(count)
+        return str(self.counts)

@@ -8,12 +8,13 @@ socket.on('refresh', function() {
 	window.location.reload(1);
 });
 
-socket.on('drawScoreboardX01', function(list) {
-	drawScoreboardX01(list);
+socket.on('drawScoreboardX01', function(list, lastthrowsall, throwsum) {
+	console.log(throwsum);
+	drawScoreboardX01(list, lastthrowsall, throwsum);
 });
 
-socket.on('highlightActive', function(player, round, message, average, throwcount) {
-	highlightActivePlayer(player, round, message, average, throwcount);
+socket.on('highlightActive', function(player, playerID, round, message, average, throwcount) {
+	highlightActivePlayer(player, playerID, round, message, average, throwcount);
 });
 
 socket.on('refreshAverage', function(average) {
@@ -33,7 +34,7 @@ socket.on('redirectCricket', function(url) {
 });
 
 // Functions
-function drawScoreboardX01(list, throwcount, playerid) {
+function drawScoreboardX01(list, lastthrowsall, throwsum) {
 	var div = document.getElementById("score");
 	while (div.firstChild) {
 		div.removeChild(div.firstChild);
@@ -67,9 +68,30 @@ function drawScoreboardX01(list, throwcount, playerid) {
 		borderDiv.appendChild(sumDiv);
 		div.appendChild(borderDiv);
 	}
+	for (var item in lastthrowsall) {
+		var array = lastthrowsall[item].split(",");
+		var throwDiv = document.getElementById("Throws-" + array[0]);
+		var throww = document.createElement("div");
+		throww.setAttribute("id", "throw");
+		throww.innerHTML = "<h2 id='playerThrow'>" + array[1] + "</h2>";
+		throwDiv.appendChild(throww);
+	}
+
+	for (var item in throwsum) {
+		var array = throwsum[item].split(",");
+		var div2 = document.getElementById("Sum-" + array[0]);
+		while(div2.firstChild) {
+			div2.removeChild(div2.firstChild);
+		}
+		var sumDiv = document.getElementById("Sum-" + array[0]);
+		var sum = document.createElement("div");
+		sum.setAttribute("id", "sum");
+		sum.innerHTML = "<h2 id='playerSum'>" + array[1] + "</h2>";
+		sumDiv.appendChild(sum);
+	}
 };
 
-function highlightActivePlayer(activePlayer, playerRound, message, average, throwcount) {
+function highlightActivePlayer(activePlayer, playerID, playerRound, message, average, throwcount) {
 	var borderDiv = document.getElementById("Border-" + activePlayer);
 	borderDiv.style.border='5px solid white';
 	borderDiv.style.boxShadow='10px 10px 15px black';
@@ -77,19 +99,5 @@ function highlightActivePlayer(activePlayer, playerRound, message, average, thro
 	headerLeft.innerHTML = "<b>Active Player: " + activePlayer + "<br>Player round: " + playerRound + "<br>Player Average: " + average + "<br>Player Throws: " + throwcount + "</b>";
 	var messageDiv = document.getElementsByName("Message-" + activePlayer);
 	messageDiv[0].innerHTML = message;
-};
-
-function updateThrows(throwcount,playerid) {
-	// Well the point is this is working, when not pretty, but working
-	// But because the scoreboard is redrawn every time it gets requested, so this will not be displayed permanent
-	var throwsDiv = document.getElementById("Throws-" + playerid);
-	if (throwsDiv.childNodes.length == 3) {
-		while (throwsDiv.firstChild) {
-			throwsDiv.removeChild(throwsDiv.firstChild);
-		}
-	}
-	countDiv = document.createElement("div");
-	countDiv.setAttribute("id", "playerThrow");
-	countDiv.innerHTML = throwcount;
-	throwsDiv.appendChild(countDiv);
+	var throwDiv = document.getElementById("Throws-" + playerID);
 };

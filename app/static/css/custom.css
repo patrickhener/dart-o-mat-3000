@@ -31,9 +31,11 @@ a, a:hover, a:visited, a:active {
 	text-decoration: underline;
 }
 
-h1#playerName,h1#playerScore {
+h1#playerName,h1#playerScore, h2#playerSum, h2#playerThrow {
 	text-align: center;
+	vertical-align: middle;
 }
+
 
 div#playerName {
 	background-color: #012432;
@@ -57,6 +59,19 @@ div[id^="Throws-"] {
 	padding: 5px;
 	margin-left: 0px;
 	margin-right: 0px;
+	text-align: justify;
+	-ms-text-justify: distribute-all-lines;
+	text-justify: distribute-all-lines;
+}
+
+div#throw {
+	vertical-align: middle;
+	width: 33%;
+	vertical-align: top;
+	display: inline-block;
+	*display: inline;
+	zoom: 1;
+	text-align: center;
 }
 
 div#scoreheader {

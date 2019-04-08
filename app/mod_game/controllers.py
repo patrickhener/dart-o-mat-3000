@@ -13,7 +13,7 @@ from app import db, socketio, IPADDR, PORT
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
 
 # Import helper functions
-from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage, getThrowsCount
+from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage, getThrowsCount, getLastThrows, getAllLastThrows
 
 # Define the blueprint: 'game', set its url prefix: app.url/game
 mod_game = Blueprint('game', __name__, url_prefix='/game')
@@ -96,6 +96,24 @@ def scoreboardX01(message=None):
     # Get average
     average = getAverage(activePlayer.id)
 
+    # Get last throws to show in scoreboard beneath Message Container
+    allThrowsList = []
+    lastthrowsall = getAllLastThrows()
+    for throw in lastthrowsall:
+        allThrowsList.append(str(throw.player_id) + "," + str(throw.counts))
+
+    # Get sum of last throws to show beneath Last Throws container
+    lastThrowsSum = []
+    for player in playing_players:
+        if getLastThrows(player.id):
+            throws = getLastThrows(player.id)
+            sum = 0
+            for throw in throws:
+                sum += throw.counts
+                lastThrowsSum.append(str(throw.player_id) + "," + str(sum))
+        else:
+            lastThrowsSum.append(str(player.id) + ",0")
+
     game = Game.query.first()
     try:
         rnd = len(Round.query.filter_by(player_id=activePlayer.id).all())
@@ -108,18 +126,20 @@ def scoreboardX01(message=None):
 
     playerScoresList = [{'Player': str(name),'PlayerID': str(playerid), 'Score': str(score)} for name, playerid, score in zip(playing_players,playing_players_id,player_scores)]
 
-
-    socketio.emit('drawScoreboardX01', playerScoresList)
-    socketio.emit('highlightActive', (activePlayer.name, rnd, message, average, throwcount))
+    socketio.emit('drawScoreboardX01', (playerScoresList,allThrowsList,lastThrowsSum))
+    socketio.emit('highlightActive', (activePlayer.name, activePlayer.id, rnd, message, average, throwcount))
 
     return render_template(
         '/game/scoreboardX01.html',
         playerlist=playerScoresList,
         throwcount=throwcount,
+        lastthrows=allThrowsList,
+        throwsum=lastThrowsSum,
         message=message,
         average=average,
         started=started,
         player=activePlayer.name,
+        player_id=activePlayer.id,
         gametype=game.gametype,
         rndcount=rnd,
         startIn=game.inGame,
