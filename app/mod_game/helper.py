@@ -1,7 +1,7 @@
 # Import db from app
 from app import db
 # Import module models
-from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
+from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, LastThrows
 # cycle and islice for nextPlayer
 from itertools import cycle, islice
 # SQLAlchemy functions
@@ -259,14 +259,9 @@ def getAverage(playerID):
         avgofthrows = round((sum(throwlist) / len(throwlist)), 2)
         return str(avgofthrows)
 
-def getThrows():
-    throws = Throw.query.all()
-    if not throws:
-        return None
+def getThrowsCount(playerID):
+    throws = (Throw.query.filter_by(player_id=playerID)).all()
+    if throws == []:
+        return "0"
     else:
-        throwlist = []
-        for throw in throws:
-            throwlist.append([throw.round_id,throw.player_id,throw])
-
-        return throwlist
-    pass
+        return len(throws)

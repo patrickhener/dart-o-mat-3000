@@ -13,7 +13,7 @@ from app import db, socketio, IPADDR, PORT
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
 
 # Import helper functions
-from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage
+from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage, getThrowsCount
 
 # Define the blueprint: 'game', set its url prefix: app.url/game
 mod_game = Blueprint('game', __name__, url_prefix='/game')
@@ -91,6 +91,8 @@ def scoreboardX01(message=None):
     playing_players = getPlayingPlayersObjects()
     playing_players_id = getPlayingPlayersID()
     activePlayer = getActivePlayer()
+    # ActivePlayerThrowcount
+    throwcount = getThrowsCount(activePlayer.id)
     # Get average
     average = getAverage(activePlayer.id)
 
@@ -108,11 +110,12 @@ def scoreboardX01(message=None):
 
 
     socketio.emit('drawScoreboardX01', playerScoresList)
-    socketio.emit('highlightActive', (activePlayer.name, rnd, message, average))
+    socketio.emit('highlightActive', (activePlayer.name, rnd, message, average, throwcount))
 
     return render_template(
         '/game/scoreboardX01.html',
         playerlist=playerScoresList,
+        throwcount=throwcount,
         message=message,
         average=average,
         started=started,

@@ -12,8 +12,8 @@ socket.on('drawScoreboardX01', function(list) {
 	drawScoreboardX01(list);
 });
 
-socket.on('highlightActive', function(player, round, message, average) {
-	highlightActivePlayer(player, round, message, average);
+socket.on('highlightActive', function(player, round, message, average, throwcount) {
+	highlightActivePlayer(player, round, message, average, throwcount);
 });
 
 socket.on('refreshAverage', function(average) {
@@ -69,12 +69,12 @@ function drawScoreboardX01(list, throwcount, playerid) {
 	}
 };
 
-function highlightActivePlayer(activePlayer, playerRound, message, average) {
+function highlightActivePlayer(activePlayer, playerRound, message, average, throwcount) {
 	var borderDiv = document.getElementById("Border-" + activePlayer);
 	borderDiv.style.border='5px solid white';
 	borderDiv.style.boxShadow='10px 10px 15px black';
 	var headerLeft = document.getElementById("header-left");
-	headerLeft.innerHTML = "<b>Active Player: " + activePlayer + "<br>Player round: " + playerRound + "<br>Player Average: " + average + "</b>";
+	headerLeft.innerHTML = "<b>Active Player: " + activePlayer + "<br>Player round: " + playerRound + "<br>Player Average: " + average + "<br>Player Throws: " + throwcount + "</b>";
 	var messageDiv = document.getElementsByName("Message-" + activePlayer);
 	messageDiv[0].innerHTML = message;
 };

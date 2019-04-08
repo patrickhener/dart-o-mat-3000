@@ -26,6 +26,7 @@ class Player(Base):
 
     rounds = db.relationship('Round', backref='rounds', lazy=True)
     throws = db.relationship('Throw', backref='throws', lazy=True)
+    lastthrows = db.relationship('LastThrows', backref='lastthrows', lazy=True)
     scores = db.relationship('Score', backref='scores', lazy=True)
     crickets = db.relationship('Cricket', backref='crickets', lazy=True)
 
@@ -77,3 +78,10 @@ class Throw(Base):
     def __repr__(self):
         sum = self.hit * self.mod
         return str(sum)
+
+class LastThrows(Base):
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+    count = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return str(count)
