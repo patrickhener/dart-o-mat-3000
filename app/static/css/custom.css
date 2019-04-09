@@ -112,10 +112,31 @@ table.footer {
 	border-color: #000;
 }
 
+.btn-outline-primary:focus {
+	background-color: unset;
+	box-shadow: unset;
+	border-color: unset;
+}
+
+.btn-outline-primary:not(:disabled):not(.disabled).active {
+	background-color: #3c5f6c;
+	box-shadow: unset;
+	border-color: #fff;
+}
+
 .from-control {
 	background-color: #fff;
 }
 
 input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active  {
     -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+.btn-group {
+    display: flex;
+    flex-direction: row;
+}
+
+.btn-group > button {
+    width: 100%;
 }

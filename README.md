@@ -35,3 +35,6 @@ Now you'll find the scoreboard at [http://127.0.0.1:5000/game/](http://127.0.0.1
 
 # Deploy it
 TODO
+
+# General TODO
+Fix the view in ScoreboardX01 to show the Throws as DX and TX exactly the same as you can see it in gameController view. Also look if the list can be formatted as learned later on str","str"," and so on.

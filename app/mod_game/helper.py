@@ -279,3 +279,7 @@ def getLastThrows(playerID):
 
 def getAllLastThrows():
     return LastThrows.query.all()
+
+def getAllThrows(playerID):
+    throws = (Throw.query.filter_by(player_id=playerID)).all()
+    return throws

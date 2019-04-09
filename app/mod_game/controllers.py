@@ -7,13 +7,13 @@ from flask import Blueprint, request, render_template, url_for, app
 from flask_socketio import SocketIO, emit
 
 # Import the database and socketio object from the main app module
-from app import db, socketio, IPADDR, PORT
+from app import db, socketio, IPADDR, PORT, RECOGNITION
 
 # Import module models
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
 
 # Import helper functions
-from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage, getThrowsCount, getLastThrows, getAllLastThrows
+from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage, getThrowsCount, getLastThrows, getAllLastThrows, getAllThrows
 
 # Define the blueprint: 'game', set its url prefix: app.url/game
 mod_game = Blueprint('game', __name__, url_prefix='/game')
@@ -64,7 +64,48 @@ def manageuser():
 
 @mod_game.route("/gameController")
 def gameController():
-    return render_template('/game/gameController.html')
+    # Recognition [config.py]
+    recognition = RECOGNITION
+    # Gather Stuff to five to gameController View
+    # Game
+    game = Game.query.first()
+    # Playing Players
+    playing_players = getPlayingPlayersObjects()
+
+    playerlist = []
+    for player in playing_players:
+        playerlist.append(str(player.id) + "," + str(player))
+
+    playing_players_id = getPlayingPlayersID()
+    activePlayer = getActivePlayer()
+    # Throws
+    throwlist = []
+    for player in playing_players_id:
+        throws = getAllThrows(player)
+        for throw in throws:
+            throwlist.append(str(player)+","+str(throw.id)+","+str(throw.hit)+","+str(throw.mod))
+
+    # gametype
+    x01_games = ['301','501','701','901']
+    if any(x in str(game.gametype) for x in x01_games):
+        gametype = "x01"
+        socketio.emit("drawX01Controller")
+        socketio.emit("drawThrowContainer", playerlist)
+        socketio.emit("drawThrows", throwlist)
+    elif str(game.gametype) == "Cricket":
+        gametype = "cricket"
+    else:
+        gametype = "unknown"
+
+    # Render Template
+    return render_template(
+        '/game/gameController.html',
+        recognition = recognition,
+        gametype = gametype,
+        playingPlayers = playerlist,
+        activePlayer = activePlayer,
+        throwlist = throwlist
+    )
 
 @mod_game.route("/scoreboardCricket")
 def scoreboardCricket():
@@ -162,11 +203,16 @@ def throw(hit, mod):
         if any(x in str(game.gametype) for x in x01_games):
             doIt = scoreX01(hit,mod)
             scoreboardX01(doIt)
+            gameController()
             return doIt
         elif str(game.gametype) == "Cricket":
             return "Cricket Game"
         else:
             return "Other Game Type"
+
+@mod_game.route("/throw/update/<int:id>/<int:newHit>/<int:newMod>")
+def updateThrow(id, newHit, newMod):
+    pass
 
 @mod_game.route("/nextPlayer")
 def nextPlayer():
@@ -176,6 +222,7 @@ def nextPlayer():
         scoreboardCricket()
     else:
         scoreboardX01(doIt)
+    gameController()
     return doIt
 
 @mod_game.route("/endGame")
@@ -183,6 +230,7 @@ def endGame():
     clear_db()
     socketio.emit('redirectX01', "/game/")
     socketio.emit('redirectCricket', "/game/")
+    socketio.emit('redirectGameController', "/game/admin")
     return "Done\n"
 
 @socketio.on('startX01')
@@ -209,7 +257,9 @@ def on_startX01(data):
     db.session.commit()
 
     scoreboardX01()
+    gameController()
     socketio.emit('redirectIndex', '/game/scoreboardX01')
+    socketio.emit('redirectAdmin', '/game/gameController')
 
 @socketio.on('startCricket')
 def on_startCricket(data):
@@ -238,4 +288,5 @@ def on_startCricket(data):
     db.session.commit()
 
     socketio.emit('redirectIndex', '/game/scoreboardCricket')
+    socketio.emit('redirectAdmin', '/game/gameController')
     scoreboardCricket()

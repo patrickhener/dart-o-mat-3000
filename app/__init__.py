@@ -13,6 +13,7 @@ app.config.from_object('config')
 IPADDR = app.config["IPADDR"]
 IFACE = app.config["IFACE"]
 PORT = app.config["PORT"]
+RECOGNITION = app.config["RECOGNITION"]
 
 # Define SocketIO
 socketio = SocketIO(app)
