@@ -1,11 +1,13 @@
 # Import db from app
-from app import db
+from app import db, babel
 # Import module models
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
 # cycle and islice for nextPlayer
 from itertools import cycle, islice
 # SQLAlchemy functions
 from sqlalchemy.sql.expression import func
+# Babel Translation
+from flask_babel import gettext, ngettext
 
 # Method definitions
 def clear_db():
@@ -183,7 +185,7 @@ def scoreX01(hit,mod):
                 #rnd.throwcount = 3
                 playerScore.score = playerScore.parkScore
                 db.session.commit()
-                return "Bust! Remove Darts!"
+                return gettext(u"Bust! Remove Darts!")
             # check if won
             elif playerScore.score - points == 0:
                 # TODO Here might be the best place to implement statistics function

@@ -1,0 +1,125 @@
+# German translations for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-04-10 20:23+0200\n"
+"PO-Revision-Date: 2019-04-10 19:56+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: mod_game/helper.py:188
+msgid "Bust! Remove Darts!"
+msgstr "Überworfen! Darts entfernen!"
+
+#: templates/404.html:3
+msgid "404 - That one missed!"
+msgstr "404 - Der ging vorbei!"
+
+#: templates/404.html:8
+msgid "You missed the dart board! Maybe you wanna start"
+msgstr "Du hast das Dartboard  verfehlt! Vielleicht solltest du hier"
+
+#: templates/404.html:8
+msgid "here"
+msgstr "starten"
+
+#: templates/base.html:32
+msgid "Author"
+msgstr "Autor"
+
+#: templates/game/admin.html:13
+msgid "Players"
+msgstr "Spieler"
+
+#: templates/game/admin.html:21
+msgid "Choose your game type"
+msgstr "Spiel wählen"
+
+#: templates/game/admin.html:28
+msgid "Which X01 do you want to play"
+msgstr "Welches X01 möchtest du spielen"
+
+#: templates/game/admin.html:37
+msgid "Condition to get into the game"
+msgstr "Startbedingung"
+
+#: templates/game/admin.html:39 templates/game/admin.html:47
+msgid "Straight"
+msgstr "Direkt"
+
+#: templates/game/admin.html:45
+msgid "Condition to end the game"
+msgstr "Endbedingung"
+
+#: templates/game/admin.html:53
+msgid "Variant"
+msgstr "Variante"
+
+#: templates/game/admin.html:60
+msgid "Start Game"
+msgstr "Spiel Starten"
+
+#: templates/game/admin.html:63
+msgid "You are missing a user? Create "
+msgstr "Dir fehlt ein Spieler? Erstelle"
+
+#: templates/game/admin.html:63
+msgid "one"
+msgstr "einen"
+
+#: templates/game/manageuser.html:9
+#, python-format
+msgid "User %(name)s was created successfully"
+msgstr "Spieler %(name)s wurde erfolgreich erstellt"
+
+#: templates/game/manageuser.html:11
+#, python-format
+msgid "User %(name)s was deleted successfully"
+msgstr "Spieler %(name)s wurder erfolgreich gelöscht"
+
+#: templates/game/manageuser.html:13
+msgid "Create a new user"
+msgstr "Erstelle einen neuen Spieler"
+
+#: templates/game/manageuser.html:14
+msgid "You are missing a user to play? Go ahead and create one!"
+msgstr "Dir fehlt eine Spieler zum Spielen? Na los, erstell dir einen!"
+
+#: templates/game/manageuser.html:23
+msgid "Create User"
+msgstr "Spieler erstellen"
+
+#: templates/game/manageuser.html:26
+msgid "User list"
+msgstr "Spielerliste"
+
+#: templates/game/manageuser.html:37
+msgid "Delete Selected User"
+msgstr "Lösche den ausgewählten Spieler"
+
+#: templates/game/manageuser.html:40
+msgid "Go"
+msgstr "Gehe"
+
+#: templates/game/manageuser.html:40
+msgid "back"
+msgstr "zurück"
+
+#: templates/game/manageuser.html:40
+msgid "to the game setup when done"
+msgstr "zum den Spieleinstellungen, wenn du fertig bist"
+
+#~ msgid "You are missing a user? Create one"
+#~ msgstr "Dir fehlt ein Spieler? Erstelle Spieler"
+

@@ -10,7 +10,7 @@
 <div class="container">
 	<form name="setup" id="setup" action="javascript:submitGame();">
 		<div id="playerlist" class="form-group">
-			<label for="player">Players: </label>
+			<label for="player">{% trans %}Players{% endtrans %}: </label>
 			<select size="4" class="form-control" id="player" name="player" multiple required>
 				{% for player in players %}
 				<option value="{{ player }}">{{ player }}</option>
@@ -18,14 +18,14 @@
 			</select>
 		</div>
 		<div class="form-group">
-			<label for="gametype">Choose your game type: </label>
+			<label for="gametype">{% trans %}Choose your game type{% endtrans %}: </label>
 			<select class="form-control" id="gametype" onchange="hideshow()">
 				<option value="x01">X01</option>
 				<option value="cricket">Cricket</option>
 			</select>
 		</div>
 		<div class="form-group" id="div-x01variant">
-			<label for="x01variant">Which X01 do you want to play: </label>
+			<label for="x01variant">{% trans %}Which X01 do you want to play{% endtrans %}: </label>
 			<select class="form-control" id="x01variant" name="x01variant">
 				<option value="301">301</option>
 				<option value="501">501</option>
@@ -34,33 +34,33 @@
 			</select>
 		</div>
 		<div class="form-group" id="div-startIn">
-			<label for="startIn">Condition to get into the game:</label>
+			<label for="startIn">{% trans %}Condition to get into the game{% endtrans %}:</label>
 			<select class="form-control" id="startIn" name="startIn">
-				<option value="Straight">Straight</option>
+				<option value="Straight">{% trans %}Straight{% endtrans %}</option>
 				<option value="Double">Double</option>
 				<option value="Master">Master</option>
 			</select>
 		</div>
 		<div class="form-group" id="div-exitOut">
-			<label for="exitOut">Condition to end the game:</label>
+			<label for="exitOut">{% trans %}Condition to end the game{% endtrans %}:</label>
 			<select class="form-control" id="exitOut" name="exitOut">
-				<option value="Straight">Straight</option>
+				<option value="Straight">{% trans %}Straight{% endtrans %}</option>
 				<option value="Double">Double</option>
 				<option value="Master">Master</option>
 			</select>
 		</div>
 		<div class="form-group" id="div-variant">
-			<label for="variant">Variant:</label>
+			<label for="variant">{% trans %}Variant{% endtrans%}:</label>
 			<select class="form-control"id="variant" name="variant">
 				<option value="Normal">Normal</option>
 				<option value="Cut Throat">Cut Throat</option>
 				<option value="No Score">No Score</option>
 			</select>
 		</div>
-		<button class="btn btn-outline-primary btn-lg" type="submit">Start Game</button>
+		<button class="btn btn-outline-primary btn-lg" type="submit">{% trans %}Start Game{% endtrans %}</button>
 	</form>
 	<hr>
-	<p>You are missing a user? Create one <a href="{{ url_for('game.manageuser') }}">here</a></p>
+	<p>{% trans %}You are missing a user? Create {% endtrans %} <a href="{{ url_for('game.manageuser') }}">{% trans %}one{% endtrans %}</a></p>
 </div>
 <br>
 {% endblock %}

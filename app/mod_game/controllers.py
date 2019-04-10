@@ -7,7 +7,7 @@ from flask import Blueprint, request, render_template, url_for, app
 from flask_socketio import SocketIO, emit
 
 # Import the database and socketio object from the main app module
-from app import db, socketio, IPADDR, PORT, RECOGNITION, SOUND
+from app import db, socketio, babel, IPADDR, PORT, RECOGNITION, SOUND
 
 # Import module models
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw

@@ -5,6 +5,9 @@ from flask_socketio import SocketIO
 # Import SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
 
+# Babel for translations
+from flask_babel import Babel
+
 # Define the WSGI application object
 app = Flask(__name__)
 
@@ -22,6 +25,9 @@ socketio = SocketIO(app)
 # Define the database object which is imported
 # by modules and controllers
 db = SQLAlchemy(app)
+
+# Babel for translation
+babel = Babel(app)
 
 # HTTP error handling
 @app.errorhandler(404)

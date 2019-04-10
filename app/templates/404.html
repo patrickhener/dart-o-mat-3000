@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block banner %}
-<h1 align="right">404 - That one missed!</h1>
+<h1 align="right">{% trans %}404 - That one missed!{% endtrans %}</h1>
 {% endblock %}
 
 {% block content %}
 <div class=container>
-<p>You missed the dart board! Maybe you wanna start <a href="{{ url_for('game.admin')}}">here</a></p>
+	<p>{% trans %}You missed the dart board! Maybe you wanna start{% endtrans %} <a href="{{ url_for('game.admin')}}">{% trans %}here{% endtrans %}</a></p>
 </div>
 {% endblock %}

@@ -6,24 +6,24 @@
 {% block content %}
 <div class="container">
 	{% if created %}
-	<p>User {{ name }} was created successfully!</p>
+	<p>{% trans %}User {{ name }} was created successfully{% endtrans %}!</p>
 	{% elif deleted %}
-	<p>User {{ name }} was deleted successfully!</p>
+	<p>{% trans %}User {{ name }} was deleted successfully{% endtrans %}!</p>
 	{% endif %}
-	<h2>Create a new user</h2>
-	<p>You are missing a user to play? Go ahead and create one!</p>
+	<h2>{% trans %}Create a new user{% endtrans %}</h2>
+	<p>{% trans %}You are missing a user to play? Go ahead and create one!{% endtrans %}</p>
 	<form id="createuser" action="{{ url_for('game.manageuser') }}" method="post">
 		<div id="username" class="form-group">
-			<label for="username">Username:</label>
+			<label for="username">Name:</label>
 			<input type="text" class="form-control" id="username" name="username" required>
 			</input>
 		</div>
 		<input type="hidden" name="_action" value="add">
 
-		<button class="btn btn-outline-primary btn-lg" type="submit">Create User</button>
+		<button class="btn btn-outline-primary btn-lg" type="submit">{% trans %}Create User{% endtrans %}</button>
 	</form>
 	<hr>
-	<h2>User list</h2>
+	<h2>{% trans %}User list{% endtrans %}</h2>
 	<form id="deleteuser" action="{{ url_for('game.manageuser') }}" method="post">
 		<div id="delusername" class="form-group">
 			{% for player in players %}
@@ -34,10 +34,10 @@
 	   {% endfor %}
 		</div>
 		<input type="hidden" name="_action" value="del">
-		<button class="btn btn-outline-primary btn-lg" type="submit">Delete Selected User</button>
+		<button class="btn btn-outline-primary btn-lg" type="submit">{% trans %}Delete Selected User{% endtrans %}</button>
 	</form>
 	<hr>
-	<p>Go <a href="{{ url_for('game.admin') }}">back</a> to the game setup when done!</p>
+	<p>{% trans %}Go{% endtrans %} <a href="{{ url_for('game.admin') }}">{% trans %}back{% endtrans %}</a> {% trans %}to the game setup when done{% endtrans %}!</p>
 </div>
 <br>
 {% endblock %}
