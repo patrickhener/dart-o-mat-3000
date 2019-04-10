@@ -14,6 +14,7 @@ IPADDR = app.config["IPADDR"]
 IFACE = app.config["IFACE"]
 PORT = app.config["PORT"]
 RECOGNITION = app.config["RECOGNITION"]
+SOUND = app.config["SOUND"]
 
 # Define SocketIO
 socketio = SocketIO(app)

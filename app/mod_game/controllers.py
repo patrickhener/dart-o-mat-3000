@@ -7,7 +7,7 @@ from flask import Blueprint, request, render_template, url_for, app
 from flask_socketio import SocketIO, emit
 
 # Import the database and socketio object from the main app module
-from app import db, socketio, IPADDR, PORT, RECOGNITION
+from app import db, socketio, IPADDR, PORT, RECOGNITION, SOUND
 
 # Import module models
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
@@ -17,6 +17,33 @@ from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlaying
 
 # Define the blueprint: 'game', set its url prefix: app.url/game
 mod_game = Blueprint('game', __name__, url_prefix='/game')
+
+# Dict for soundfiles
+sounddict = {
+    "0": "beep",
+    "1": "beep",
+    "2": "beep",
+    "3": "beep",
+    "4": "beep",
+    "5": "beep",
+    "6": "beep",
+    "7": "beep",
+    "8": "beep",
+    "9": "beep",
+    "10": "beep",
+    "11": "beep",
+    "12": "beep",
+    "13": "beep",
+    "14": "beep",
+    "15": "beep",
+    "16": "beep",
+    "17": "beep",
+    "18": "beep",
+    "19": "beep",
+    "20": "beep",
+    "25": "bull",
+    "50": "doublebull",
+}
 
 # Routes
 @mod_game.route("/")
@@ -120,12 +147,19 @@ def scoreboardCricket():
     )
 
 @mod_game.route("/scoreboardX01")
-def scoreboardX01(message=None):
+def scoreboardX01(message=None, soundeffect=None):
     # Var for returning options
     if not message:
         message = "-"
     else:
         message = message
+    if not soundeffect:
+        audiofile = None
+    else:
+        audiofile = soundeffect
+    print("DEBUG in scoreboard, audiofile is {}".format(audiofile))
+    # Check if sound is enabled [config.py]
+    sound = SOUND
     # Check if there is a Game ongoing
     started = checkIfOngoingGame()
     # Get general data to draw scoreboard
@@ -179,6 +213,8 @@ def scoreboardX01(message=None):
 
     socketio.emit('drawScoreboardX01', (playerScoresList,lastThrows,sumThrows))
     socketio.emit('highlightActive', (activePlayer.name, activePlayer.id, rnd, message, average, throwcount))
+    if sound:
+        socketio.emit('playSound', audiofile)
 
     return render_template(
         '/game/scoreboardX01.html',
@@ -202,6 +238,17 @@ def throw(hit, mod):
     count = hit * mod
     game = Game.query.first()
     activePlayer = getActivePlayer()
+    # Determine which sound to play
+    audiofile = None
+    if mod == 2:
+        if hit == 25:
+            audiofile = sounddict["50"]
+        else:
+            audiofile = sounddict[str(hit)]
+    else:
+        if hit in range (0,26):
+            audiofile = sounddict[str(hit)]
+
     # Lookup if next player has to be switched
     if game.nextPlayerNeeded:
         scoreboardX01("Remove Darts")
@@ -212,7 +259,15 @@ def throw(hit, mod):
 
         if any(x in str(game.gametype) for x in x01_games):
             doIt = scoreX01(hit,mod)
-            scoreboardX01(doIt)
+            if doIt == "Winner!":
+                audiofile = "winner"
+            if doIt == "Bust! Remove Darts!":
+                audiofile = "bust"
+            if doIt == "No Out possible! Remove Darts!":
+                audiofile = "bust"
+            if doIt == "Bust!":
+                audiofile = "bust"
+            scoreboardX01(doIt, audiofile)
             gameController()
             return doIt
         elif str(game.gametype) == "Cricket":
@@ -269,7 +324,7 @@ def on_startX01(data):
     db.session.add(a)
     db.session.commit()
 
-    scoreboardX01()
+    scoreboardX01(None, "startgame")
     gameController()
     socketio.emit('redirectIndex', '/game/scoreboardX01')
     socketio.emit('redirectAdmin', '/game/gameController')

@@ -4,6 +4,7 @@ IPADDR = '192.168.1.160' #QRCode IP
 IFACE = '0.0.0.0' #Server Interface IP
 PORT = 5000
 RECOGNITION = False #User Recognition or not. If not you will have buttons to insert Score in gameController
+SOUND = True #Sound output if you want
 
 # Statement for enabling the development environment
 DEBUG = True

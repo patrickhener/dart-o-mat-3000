@@ -8,6 +8,10 @@ socket.on('refresh', function() {
 	window.location.reload(1);
 });
 
+socket.on('playSound', function(soundfile) {
+	playSound(soundfile);
+});
+
 socket.on('drawScoreboardX01', function(list, lastthrowsall, throwsum) {
 	drawScoreboardX01(list, lastthrowsall, throwsum);
 });
@@ -34,8 +38,6 @@ socket.on('redirectCricket', function(url) {
 
 // Functions
 function drawScoreboardX01(list, lastthrowsall, throwsum) {
-	// console.log("throwsum:");
-	console.log(throwsum);
 	var div = document.getElementById("score");
 	while (div.firstChild) {
 		div.removeChild(div.firstChild);
@@ -114,13 +116,9 @@ function highlightActivePlayer(activePlayer, playerID, playerRound, message, ave
 	var throwDiv = document.getElementById("Throws-" + playerID);
 };
 
-function isEmpty(myObj) {
-	for (var key in myObj) {
-		if(myObj.hasOwnProperty(key)) {
-			return false;
-		}
+function playSound(soundfile) {
+	if (soundfile != null) {
+		var audio = new Audio('http://' + document.domain + ':' + location.port + '/static/sounds/' + soundfile + '.mp3');
+		audio.play();
 	}
-
-	return true;
 };
-
