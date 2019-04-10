@@ -1,7 +1,7 @@
 # Import db from app
 from app import db
 # Import module models
-from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, LastThrows
+from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
 # cycle and islice for nextPlayer
 from itertools import cycle, islice
 # SQLAlchemy functions
@@ -14,7 +14,6 @@ def clear_db():
     db.session.query(Cricket).delete()
     db.session.query(Throw).delete()
     db.session.query(Round).delete()
-    db.session.query(LastThrows).delete()
 
     playingPlayersObject = Player.query.filter_by(game_id=1).all()
     for player in playingPlayersObject:
@@ -129,6 +128,28 @@ def checkIfOngoingRound(activePlayer):
 
     return ongoing
 
+def updateThrowTable(id, hit, mod):
+    # get Throw and score
+    throw = (Throw.query.filter_by(id=id)).first()
+    score = (Score.query.filter_by(player_id=throw.player_id)).first()
+    # Calculate old points resulting of old throw
+    oldpoints = throw.hit * throw.mod
+    # Calculate new points resulting of altered throw
+    newpoints = hit * mod
+    # Calculate difference
+    alterScore = newpoints - oldpoints
+    # Calculate new score
+    newScore = score.score - alterScore
+    # Set Throw to new values
+    throw.hit = hit
+    throw.mod = mod
+    # Set Score and Park Score to new Score
+    score.score = newScore
+    score.parkScore = newScore
+    # Commit to db
+    db.session.commit()
+    return "-"
+
 def scoreX01(hit,mod):
     # calculate points to be substracted from score
     points = hit * mod
@@ -140,9 +161,6 @@ def scoreX01(hit,mod):
         game = Game.query.first()
         # Check if there is a ongoing round associated, if not create a new one
         if not checkIfOngoingRound(activePlayer):
-            if (LastThrows.query.filter_by(player_id=activePlayer.id).all()):
-                LastThrows.query.filter_by(player_id=activePlayer.id).delete()
-                db.session.commit()
             rnd = Round(player_id=activePlayer.id,ongoing=True,throwcount=0)
             db.session.add(rnd)
             db.session.commit()
@@ -210,10 +228,6 @@ def scoreX01(hit,mod):
                     db.session.add(throw)
                     db.session.commit()
 
-                newLastThrow = LastThrows(player_id=activePlayer.id, counts=points)
-                db.session.add(newLastThrow)
-                db.session.commit()
-
                 return result
     else:
         # Output if no game is running
@@ -229,7 +243,10 @@ def switchNextPlayer():
         activePlayerObject = getActivePlayer()
         activePlayerObject = Player.query.filter_by(active=True).first()
         activePlayerRound = Round.query.filter_by(player_id=activePlayerObject.id, ongoing=1).first()
-        activePlayerRound.ongoing = False
+        try:
+            activePlayerRound.ongoing = False
+        except AttributeError:
+            print("Error handled, lolz.")
         game.nextPlayerNeeded = False
         # Initialize variables to work with
         key = []
@@ -275,10 +292,20 @@ def getThrowsCount(playerID):
         return len(throws)
 
 def getLastThrows(playerID):
-    return LastThrows.query.filter_by(player_id=playerID).all()
+    allThrows = Throw.query.filter_by(player_id=playerID).order_by(Throw.round_id.desc()).all()
+    throwlist = []
+    if not allThrows == []:
+        try:
+            for i in range(0, 3):
+                throwlist.append(str(playerID) + "," + str(allThrows[i].hit) + "," + str(allThrows[i].mod))
+        except:
+            print("Exception handled, lolz")
+    else:
+        throwlist.append(str(playerID) + ",0,0")
+        throwlist.append(str(playerID) + ",0,0")
+        throwlist.append(str(playerID) + ",0,0")
 
-def getAllLastThrows():
-    return LastThrows.query.all()
+    return throwlist
 
 def getAllThrows(playerID):
     throws = (Throw.query.filter_by(player_id=playerID)).all()

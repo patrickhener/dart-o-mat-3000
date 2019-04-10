@@ -13,7 +13,7 @@ from app import db, socketio, IPADDR, PORT, RECOGNITION
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
 
 # Import helper functions
-from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage, getThrowsCount, getLastThrows, getAllLastThrows, getAllThrows
+from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage, getThrowsCount, getLastThrows, getAllThrows, updateThrowTable
 
 # Define the blueprint: 'game', set its url prefix: app.url/game
 mod_game = Blueprint('game', __name__, url_prefix='/game')
@@ -133,27 +133,37 @@ def scoreboardX01(message=None):
     playing_players_id = getPlayingPlayersID()
     activePlayer = getActivePlayer()
     # ActivePlayerThrowcount
-    throwcount = getThrowsCount(activePlayer.id)
+    try:
+        throwcount = getThrowsCount(activePlayer.id)
+    except AttributeError:
+        throwcount = "0"
     # Get average
-    average = getAverage(activePlayer.id)
+    try:
+        average = getAverage(activePlayer.id)
+    except AttributeError:
+        average = "0"
 
     # Get last throws to show in scoreboard beneath Message Container
-    allThrowsList = []
-    lastthrowsall = getAllLastThrows()
-    for throw in lastthrowsall:
-        allThrowsList.append(str(throw.player_id) + "," + str(throw.counts))
-
-    # Get sum of last throws to show beneath Last Throws container
-    lastThrowsSum = []
+    lastThrows = []
     for player in playing_players:
-        if getLastThrows(player.id):
-            throws = getLastThrows(player.id)
-            sum = 0
-            for throw in throws:
-                sum += throw.counts
-                lastThrowsSum.append(str(throw.player_id) + "," + str(sum))
-        else:
-            lastThrowsSum.append(str(player.id) + ",0")
+        lastThrows.append(getLastThrows(player.id))
+
+    # Calculate Sum of Throws for Scoreboard
+    sumThrows = []
+    for item in lastThrows:
+        sumOfThrows = 0
+        sumID = ""
+        try:
+            for i in range (0,3):
+                split = item[i].split(",")
+                hit = int(split[1])
+                mod = int(split[2])
+                count = hit * mod
+                sumOfThrows += count
+                sumID = split[0]
+            sumThrows.append(str(sumID) + "," + str(sumOfThrows))
+        except IndexError:
+            sumThrows.append(str(sumID) + ",0")
 
     game = Game.query.first()
     try:
@@ -167,15 +177,15 @@ def scoreboardX01(message=None):
 
     playerScoresList = [{'Player': str(name),'PlayerID': str(playerid), 'Score': str(score)} for name, playerid, score in zip(playing_players,playing_players_id,player_scores)]
 
-    socketio.emit('drawScoreboardX01', (playerScoresList,allThrowsList,lastThrowsSum))
+    socketio.emit('drawScoreboardX01', (playerScoresList,lastThrows,sumThrows))
     socketio.emit('highlightActive', (activePlayer.name, activePlayer.id, rnd, message, average, throwcount))
 
     return render_template(
         '/game/scoreboardX01.html',
         playerlist=playerScoresList,
         throwcount=throwcount,
-        lastthrows=allThrowsList,
-        throwsum=lastThrowsSum,
+        lastthrows=lastThrows,
+        throwsum=sumThrows,
         message=message,
         average=average,
         started=started,
@@ -212,7 +222,10 @@ def throw(hit, mod):
 
 @mod_game.route("/throw/update/<int:id>/<int:newHit>/<int:newMod>")
 def updateThrow(id, newHit, newMod):
-    pass
+    updateThrowTable(id, newHit, newMod)
+    scoreboardX01("Throw updated")
+    gameController()
+    return "-"
 
 @mod_game.route("/nextPlayer")
 def nextPlayer():

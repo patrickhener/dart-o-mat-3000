@@ -21,6 +21,10 @@ socket.on('drawThrows', function(throwlist) {
 });
 
 function drawX01Controller() {
+	var div = document.getElementById("x01-controls");
+	while (div.firstChild) {
+		div.removeChild(div.firstChild);
+	}
 	var borderDiv = document.getElementById("x01-controls");
 	var groupDiv = document.createElement("div");
 	groupDiv.setAttribute("class", "btn-group");
@@ -105,11 +109,6 @@ function sendThrow(hit) {
 	xhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
 			var response = xhttp.responseText;
-
-			if (response !== "-") {
-				xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/nextPlayer'), true);
-				xhttp.send();
-			}
 			location.reload();
 		}
 	};
@@ -124,35 +123,54 @@ function endGame() {
 	xhttp.send();
 };
 
+function nextPlayer() {
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/nextPlayer'), true);
+	xhttp.send();
+	location.reload();
+}
+
 function drawThrowContainer(playerlist) {
+	var div = document.getElementById("frame");
+	while (div.firstChild) {
+		div.removeChild(div.firstChild);
+	}
+	var frameDiv = document.getElementById("frame");
 	for (var item in playerlist) {
 		var array = playerlist[item].split(",");
 		var borderDiv = document.createElement("div");
 		borderDiv.setAttribute("id", "border-" + array[0]);
-		borderDiv.setAttribute("class", "col");
-		var divThrows = document.getElementById("throws");
+		// borderDiv.setAttribute("class", "row");
+		frameDiv.appendChild(borderDiv);
+		var headerDiv = document.createElement("div");
+		headerDiv.setAttribute("id", "header");
+		// headerDiv.setAttribute("class", "col");
+		headerDiv.innerHTML = "<b>" + array[1] + "</b>";
+		borderDiv.appendChild(headerDiv);
 		var grpDiv = document.createElement("div");
 		grpDiv.setAttribute("class", "btn-group");
 		grpDiv.setAttribute("id", "btn-group-" + array[0]);
-		grpDiv.innerHTML = "<h1 id='h1-throws'>" + array[1] + "</h1>";
-		divThrows.appendChild(borderDiv);
 		borderDiv.appendChild(grpDiv);
-		// var divPlayerThrows = document.createElement("div");
-		// divPlayerThrows.setAttribute("id", "Throws-" + array[0]);
-		// grpDiv.appendChild(divPlayerThrows);
 	}
 };
 
 function drawThrows(throwlist) {
-	console.log(throwlist);
 	for (var item in throwlist) {
 		var array = throwlist[item].split(",");
 		var divPlayerThrows = document.getElementById("btn-group-" + array[0]);
+		var dropdownDiv = document.createElement("div");
+		dropdownDiv.setAttribute("class", "dropdown");
+		divPlayerThrows.appendChild(dropdownDiv);
+
+
 		var throww = document.createElement("button");
-		throww.setAttribute("class", "btn btn-outline-primary btn-lg");
-		throww.setAttribute("data-toggle", "button");
-		throww.setAttribute("role", "button");
-		throww.setAttribute("id","throw-id-" + array[1]);
+		throww.setAttribute("class", "btn btn-outline-primary btn-lg dropdown-toggle");
+		throww.setAttribute("type", "button");
+
+		throww.setAttribute("data-toggle", "dropdown");
+		throww.setAttribute("aria-haspopup", "true");
+		throww.setAttribute("aria-expanded", "false");
+		throww.setAttribute("id","dropdownMenuButton-" + array[1]);
 		var output = "";
 		if (array[3] == "2") {
 			output += "D";
@@ -162,10 +180,63 @@ function drawThrows(throwlist) {
 		}
 		output += array[2];
 		throww.innerHTML = output;
-		divPlayerThrows.appendChild(throww);
+		dropdownDiv.appendChild(throww);
+		var dropdownMenuDiv = document.createElement("div");
+		dropdownMenuDiv.setAttribute("class", "dropdown-menu");
+		dropdownMenuDiv.setAttribute("aria-labelledby", "dropdownMenuButton-" + array[1]);
+		dropdownDiv.appendChild(dropdownMenuDiv);
+		var link = document.createElement("button");
+		link.setAttribute("class", "dropdown-item");
+		link.setAttribute("onclick", "editThrow(" + array[1] + ",'0','1')");
+		link.innerHTML = "0";
+		dropdownMenuDiv.appendChild(link);
+		var divider = document.createElement("div");
+		divider.setAttribute("class", "dropdown-divider");
+		dropdownMenuDiv.appendChild(divider);
+		for (i=1; i<21; i++) {
+			var link = document.createElement("button");
+			link.setAttribute("class", "dropdown-item");
+			link.setAttribute("onclick", "editThrow(" + array[1] + "," + i + ",1)");
+			link.innerHTML = i;
+			dropdownMenuDiv.appendChild(link);
+		}
+		var link = document.createElement("button");
+		link.setAttribute("class", "dropdown-item");
+		link.setAttribute("onclick", "editThrow(" + array[1] + ",'25','1')");
+		link.innerHTML = "25";
+		dropdownMenuDiv.appendChild(link);
+		var divider = document.createElement("div");
+		divider.setAttribute("class", "dropdown-divider");
+		dropdownMenuDiv.appendChild(divider);
+		for (i=1; i<21; i++) {
+			var link = document.createElement("button");
+			link.setAttribute("class", "dropdown-item");
+			link.setAttribute("onclick", "editThrow(" + array[1] + "," + i + ",2)");
+			link.innerHTML = "D" + i;
+			dropdownMenuDiv.appendChild(link);
+		}
+		var link = document.createElement("button");
+		link.setAttribute("class", "dropdown-item");
+		link.setAttribute("onclick", "editThrow(" + array[1] + ",'25','2')");
+		link.innerHTML = "D25";
+		dropdownMenuDiv.appendChild(link);
+		var divider = document.createElement("div");
+		divider.setAttribute("class", "dropdown-divider");
+		dropdownMenuDiv.appendChild(divider);
+		for (i=1; i<21; i++) {
+			var link = document.createElement("button");
+			link.setAttribute("class", "dropdown-item");
+			link.setAttribute("onclick", "editThrow(" + array[1] + "," + i + ",'3')");
+			link.innerHTML = "T" + i;
+			dropdownMenuDiv.appendChild(link);
+		}
+
 	}
 };
 
-function editThrow(throwID, hitString) {
-
-}
+function editThrow(throwID, hit, mod) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/throw/update/' + throwID + '/' + hit + '/' + mod), true);
+	xhttp.send();
+	location.reload();
+};

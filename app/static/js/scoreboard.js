@@ -9,7 +9,6 @@ socket.on('refresh', function() {
 });
 
 socket.on('drawScoreboardX01', function(list, lastthrowsall, throwsum) {
-	console.log(throwsum);
 	drawScoreboardX01(list, lastthrowsall, throwsum);
 });
 
@@ -35,6 +34,8 @@ socket.on('redirectCricket', function(url) {
 
 // Functions
 function drawScoreboardX01(list, lastthrowsall, throwsum) {
+	// console.log("throwsum:");
+	console.log(throwsum);
 	var div = document.getElementById("score");
 	while (div.firstChild) {
 		div.removeChild(div.firstChild);
@@ -69,12 +70,23 @@ function drawScoreboardX01(list, lastthrowsall, throwsum) {
 		div.appendChild(borderDiv);
 	}
 	for (var item in lastthrowsall) {
-		var array = lastthrowsall[item].split(",");
-		var throwDiv = document.getElementById("Throws-" + array[0]);
-		var throww = document.createElement("div");
-		throww.setAttribute("id", "throw");
-		throww.innerHTML = "<h2 id='playerThrow'>" + array[1] + "</h2>";
-		throwDiv.appendChild(throww);
+		for (item2 in lastthrowsall[item]) {
+			var mod = ""
+			var array = lastthrowsall[item][item2].split(",");
+			var throwDiv = document.getElementById("Throws-" + array[0]);
+			var throww = document.createElement("div");
+			throww.setAttribute("id", "throw");
+			var output = "";
+			if (array[2] == "2") {
+				output += "D";
+			}
+			else if (array[2] == "3") {
+				output += "T";
+			}
+			output += array[1];
+			throww.innerHTML = "<h2 id='playerThrow'>" + output + "</h2>";
+			throwDiv.appendChild(throww);
+		}
 	}
 
 	for (var item in throwsum) {
@@ -101,3 +113,14 @@ function highlightActivePlayer(activePlayer, playerID, playerRound, message, ave
 	messageDiv[0].innerHTML = message;
 	var throwDiv = document.getElementById("Throws-" + playerID);
 };
+
+function isEmpty(myObj) {
+	for (var key in myObj) {
+		if(myObj.hasOwnProperty(key)) {
+			return false;
+		}
+	}
+
+	return true;
+};
+
