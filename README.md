@@ -7,6 +7,9 @@ As this project is developed depending on the following recognition software, it
 You can use any other recoginition as well, as long as it is propagating it's throws and next player via a GET Request to the scoreboard engine in this format:
 
 - URL to insert a throw /game/throw/_number-of-throw_/_modifier-of-throw_
+  - Example: Single 20 will be /game/throw/20/1
+  - Example: Miss will be /game/throw/0/1
+  - Example: Double 18 will be /game/throw/18/2
 - URL to switch to next player /game/nextPlayer
 
 # Scoreboard
@@ -34,7 +37,7 @@ Open up _config.py_ and edit:
 IPADDR = '192.168.1.160' #QRCode IP
 IFACE = '0.0.0.0' #Server Interface IP
 PORT = 5000
-RECOGNITION = False #User Recognition or not. If not you will have buttons to insert Score in gameController
+RECOGNITION = False #Use Recognition or not. If not you will have buttons to insert Score in gameController
 SOUND = True #Sound output if you want
 ```
  to fit your needs. You are welcome to edit any other setting as well. But you do not really have to.
