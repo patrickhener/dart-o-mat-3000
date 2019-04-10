@@ -1,5 +1,4 @@
 # Custom IP and Port Config, needed for example in QR Code generation
-#  IPADDR = '0.0.0.0'
 IPADDR = '192.168.1.160' #QRCode IP
 IFACE = '0.0.0.0' #Server Interface IP
 PORT = 5000
