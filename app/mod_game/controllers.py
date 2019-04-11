@@ -18,6 +18,9 @@ from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlaying
 # Define the blueprint: 'game', set its url prefix: app.url/game
 mod_game = Blueprint('game', __name__, url_prefix='/game')
 
+# Import Babel Stuff
+from flask_babel import gettext
+
 # Dict for soundfiles
 sounddict = {
     "0": "beep",
@@ -117,8 +120,7 @@ def gameController():
     if any(x in str(game.gametype) for x in x01_games):
         gametype = "x01"
         socketio.emit("drawX01Controller")
-        socketio.emit("drawThrowContainer", playerlist)
-        socketio.emit("drawThrows", throwlist)
+        socketio.emit("drawThrows", (playerlist,throwlist))
     elif str(game.gametype) == "Cricket":
         gametype = "cricket"
     else:

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-11 10:17+0200\n"
+"POT-Creation-Date: 2019-04-11 15:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 
-#: mod_game/controllers.py:253
+#: mod_game/controllers.py:255
 msgid "Remove Darts"
 msgstr ""
 
-#: mod_game/controllers.py:254
+#: mod_game/controllers.py:256
 msgid "Switch to next player first"
 msgstr ""
 
-#: mod_game/controllers.py:281
+#: mod_game/controllers.py:283
 msgid "Throw updated"
 msgstr ""
 
-#: mod_game/controllers.py:302
+#: mod_game/controllers.py:304
 msgid "Done"
 msgstr ""
 
@@ -114,26 +114,30 @@ msgstr ""
 msgid "one"
 msgstr ""
 
-#: templates/game/gameController.html:14
+#: templates/game/gameController.html:15
 msgid "Change Throws"
 msgstr ""
 
-#: templates/game/gameController.html:20 templates/game/gameController.html:33
-#: templates/game/gameController.html:41
+#: templates/game/gameController.html:24 templates/game/gameController.html:41
+#: templates/game/gameController.html:50
 msgid "Next Player"
 msgstr ""
 
-#: templates/game/gameController.html:21 templates/game/gameController.html:34
-#: templates/game/gameController.html:42
+#: templates/game/gameController.html:25 templates/game/gameController.html:42
+#: templates/game/gameController.html:51
 msgid "End Game"
 msgstr ""
 
-#: templates/game/gameController.html:27
+#: templates/game/gameController.html:30
 msgid "Insert Throws"
 msgstr ""
 
-#: templates/game/gameController.html:32
+#: templates/game/gameController.html:39
 msgid "Game Controls"
+msgstr ""
+
+#: templates/game/gameController.html:64
+msgid "Update Throw"
 msgstr ""
 
 #: templates/game/index.html:13
