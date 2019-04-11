@@ -4,6 +4,9 @@ IFACE = '0.0.0.0' #Server Interface IP
 PORT = 5000
 RECOGNITION = False #Use Recognition or not. If not you will have buttons to insert Score in gameController
 SOUND = True #Sound output if you want
+# Babel default settings
+BABEL_DEFAULT_LOCALE = "de"
+BABEL_DEFAULT_TIMEZONE = "UTC"
 
 # Statement for enabling the development environment
 DEBUG = True
@@ -23,9 +26,6 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 # operations using the other.
 THREADS_PER_PAGE = 2
 
-# Babel default settings
-BABEL_DEFAULT_LOCALE = "de"
-BABEL_DEFAULT_TIMEZONE = "UTC"
 
 # Secret Keys
 SECRET_KEY = b'J\xd1\xd0:Y\xb3\xce\x04\xc7\xc0\x1f\xa2p\x88\xd9\x04'

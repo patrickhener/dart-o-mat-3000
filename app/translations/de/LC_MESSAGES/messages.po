@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-10 20:23+0200\n"
+"POT-Creation-Date: 2019-04-11 10:17+0200\n"
 "PO-Revision-Date: 2019-04-10 19:56+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -18,9 +18,46 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 
+#: mod_game/controllers.py:253
+msgid "Remove Darts"
+msgstr "Darts entfernen"
+
+#: mod_game/controllers.py:254
+msgid "Switch to next player first"
+msgstr "Wechsle zuerst zum nächsten Spieler"
+
+#: mod_game/controllers.py:281
+msgid "Throw updated"
+msgstr "Wurf geändert"
+
+#: mod_game/controllers.py:302
+msgid "Done"
+msgstr "Erledigt"
+
 #: mod_game/helper.py:188
 msgid "Bust! Remove Darts!"
 msgstr "Überworfen! Darts entfernen!"
+
+#: mod_game/helper.py:199
+msgid "Winner!"
+msgstr "Sieger!"
+
+#: mod_game/helper.py:206
+#, python-format
+msgid "Bust! %(mode)s out!"
+msgstr "Überworfen! %(mode)s aus!"
+
+#: mod_game/helper.py:217
+msgid "No Out possible! Remove Darts!"
+msgstr "Sieg nicht mehr möglich! Darts entfernen!"
+
+#: mod_game/helper.py:229
+msgid "Remove Darts!"
+msgstr "Darts entfernen"
+
+#: mod_game/helper.py:236 mod_game/helper.py:242
+msgid "There is no active game running"
+msgstr "Aktuell ist kein Spiel gestartet"
 
 #: templates/404.html:3
 msgid "404 - That one missed!"
@@ -78,6 +115,48 @@ msgstr "Dir fehlt ein Spieler? Erstelle"
 msgid "one"
 msgstr "einen"
 
+#: templates/game/gameController.html:14
+msgid "Change Throws"
+msgstr "Würfe bearbeiten"
+
+#: templates/game/gameController.html:20 templates/game/gameController.html:33
+#: templates/game/gameController.html:41
+msgid "Next Player"
+msgstr "Nächster Spieler"
+
+#: templates/game/gameController.html:21 templates/game/gameController.html:34
+#: templates/game/gameController.html:42
+msgid "End Game"
+msgstr "Spiel beenden"
+
+#: templates/game/gameController.html:27
+msgid "Insert Throws"
+msgstr "Würfe einfügen"
+
+#: templates/game/gameController.html:32
+msgid "Game Controls"
+msgstr "Spielsteuerung"
+
+#: templates/game/index.html:13
+msgid "Setup a new game like so:"
+msgstr "Starte ein neues Spiel, wie folgt:"
+
+#: templates/game/index.html:15
+msgid "Connect to the local wifi"
+msgstr "Verbinde dich mit dem lokalen W-LAN"
+
+#: templates/game/index.html:16
+msgid "Scan the QR code with your smartphone or tablet"
+msgstr "Scanne den QR Code mit deinem Smartphone"
+
+#: templates/game/index.html:17
+msgid "Choose you setup of game and add player"
+msgstr "Wähle dein Spiel und deine Spieler"
+
+#: templates/game/index.html:18
+msgid "Start the game"
+msgstr "Starte das Spiel"
+
 #: templates/game/manageuser.html:9
 #, python-format
 msgid "User %(name)s was created successfully"
@@ -118,8 +197,36 @@ msgstr "zurück"
 
 #: templates/game/manageuser.html:40
 msgid "to the game setup when done"
-msgstr "zum den Spieleinstellungen, wenn du fertig bist"
+msgstr "zu den Spieleinstellungen, wenn du fertig bist"
 
-#~ msgid "You are missing a user? Create one"
-#~ msgstr "Dir fehlt ein Spieler? Erstelle Spieler"
+#: templates/game/scoreboardX01.html:12
+msgid "Active Player"
+msgstr "Aktiver Spieler"
+
+#: templates/game/scoreboardX01.html:15
+msgid "Player round"
+msgstr "Spieler Runde"
+
+#: templates/game/scoreboardX01.html:18
+msgid "Player Average"
+msgstr "Wurfdurchschnitt"
+
+#: templates/game/scoreboardX01.html:21
+msgid "Player Throws"
+msgstr "Wurfanzahl"
+
+#: templates/game/scoreboardX01.html:29
+msgid "Game"
+msgstr "Spiel"
+
+#: templates/game/scoreboardX01.html:32
+msgid "In"
+msgstr "Start"
+
+#: templates/game/scoreboardX01.html:35
+msgid "Out"
+msgstr "Ende"
+
+#~ msgid "Bust!"
+#~ msgstr "Überworfen!"
 

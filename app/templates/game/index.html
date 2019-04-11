@@ -8,14 +8,14 @@
 {% block content %}
 <div class="container">
 	<div class="row">
-	<div class="col-2"></div>
-	<div class="col-8">
-			<h2>Setup a new game like so:</h2>
+		<div class="col-1"></div>
+		<div class="col-10">
+			<h2>{% trans %}Setup a new game like so:{% endtrans %}</h2>
 			<ul>
-				<li>Connect to the local wifi</li>
-				<li>Scan the QR code with your smartphone or tablet</li>
-				<li>Choose you setup of game and add player</li>
-				<li>Start the game</li>
+				<li>{% trans %}Connect to the local wifi{% endtrans %}</li>
+				<li>{% trans %}Scan the QR code with your smartphone or tablet{% endtrans %}</li>
+				<li>{% trans %}Choose you setup of game and add player{% endtrans %}</li>
+				<li>{% trans %}Start the game{% endtrans %}</li>
 			</ul>
 
 			<div id="qrcode" class="container qrcode">
@@ -23,8 +23,8 @@
 					new QRCode(document.getElementById("qrcode"), "http://{{ ipaddr }}:{{ port }}/game/admin");
 				</script>
 			</div>
-	</div>
-	<div class="col-2"></div>
+		</div>
+		<div class="col-1"></div>
 	</div>
 </div>
 <br>

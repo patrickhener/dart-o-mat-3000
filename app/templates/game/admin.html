@@ -36,7 +36,7 @@
 		<div class="form-group" id="div-startIn">
 			<label for="startIn">{% trans %}Condition to get into the game{% endtrans %}:</label>
 			<select class="form-control" id="startIn" name="startIn">
-				<option value="Straight">{% trans %}Straight{% endtrans %}</option>
+				<option value="{% trans %}Straight{% endtrans %}">{% trans %}Straight{% endtrans %}</option>
 				<option value="Double">Double</option>
 				<option value="Master">Master</option>
 			</select>
@@ -44,7 +44,7 @@
 		<div class="form-group" id="div-exitOut">
 			<label for="exitOut">{% trans %}Condition to end the game{% endtrans %}:</label>
 			<select class="form-control" id="exitOut" name="exitOut">
-				<option value="Straight">{% trans %}Straight{% endtrans %}</option>
+				<option value="{% trans %}Straight{% endtrans %}">{% trans %}Straight{% endtrans %}</option>
 				<option value="Double">Double</option>
 				<option value="Master">Master</option>
 			</select>
@@ -60,7 +60,7 @@
 		<button class="btn btn-outline-primary btn-lg" type="submit">{% trans %}Start Game{% endtrans %}</button>
 	</form>
 	<hr>
-	<p>{% trans %}You are missing a user? Create {% endtrans %} <a href="{{ url_for('game.manageuser') }}">{% trans %}one{% endtrans %}</a></p>
+	<p>{% trans %}You are missing a user? Create {% endtrans %} <a href="{{ url_for('game.manageuser') }}">{% trans %}one{% endtrans %}!</a></p>
 </div>
 <br>
 {% endblock %}

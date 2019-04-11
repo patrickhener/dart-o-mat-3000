@@ -110,15 +110,27 @@ function highlightActivePlayer(activePlayer, playerID, playerRound, message, ave
 	borderDiv.style.border='5px solid white';
 	borderDiv.style.boxShadow='10px 10px 15px black';
 	var headerLeft = document.getElementById("header-left");
-	headerLeft.innerHTML = "<b>Active Player: " + activePlayer + "<br>Player round: " + playerRound + "<br>Player Average: " + average + "<br>Player Throws: " + throwcount + "</b>";
+	var divActivePlayer = document.getElementById("header-activePlayer");
+	divActivePlayer.innerHTML = activePlayer;
+	var divRndcount = document.getElementById("header-rndcount");
+	divRndcount.innerHTML = playerRound;
+	var divAverage = document.getElementById("header-average");
+	divAverage.innerHTML = average;
+	var divThrowcount = document.getElementById("header-throwcount");
+	divThrowcount.innerHTML = throwcount;
 	var messageDiv = document.getElementsByName("Message-" + activePlayer);
-	messageDiv[0].innerHTML = message;
+	messageDiv[0].innerHTML = "<h1>" + message + "</h1>";
 	var throwDiv = document.getElementById("Throws-" + playerID);
 };
 
 function playSound(soundfile) {
 	if (soundfile != null) {
 		var audio = new Audio('http://' + document.domain + ':' + location.port + '/static/sounds/' + soundfile + '.mp3');
-		audio.play();
+		var playPromise = audio.play();
+
+		if (playPromise !== undefined) {
+			playPromise.then(_ => {})
+				.catch(error => { audio.play(); });
+		}
 	}
 };

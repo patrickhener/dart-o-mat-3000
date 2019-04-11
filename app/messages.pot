@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-10 20:23+0200\n"
+"POT-Creation-Date: 2019-04-11 10:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,45 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 
+#: mod_game/controllers.py:253
+msgid "Remove Darts"
+msgstr ""
+
+#: mod_game/controllers.py:254
+msgid "Switch to next player first"
+msgstr ""
+
+#: mod_game/controllers.py:281
+msgid "Throw updated"
+msgstr ""
+
+#: mod_game/controllers.py:302
+msgid "Done"
+msgstr ""
+
 #: mod_game/helper.py:188
 msgid "Bust! Remove Darts!"
+msgstr ""
+
+#: mod_game/helper.py:199
+msgid "Winner!"
+msgstr ""
+
+#: mod_game/helper.py:206
+#, python-format
+msgid "Bust! %(mode)s out!"
+msgstr ""
+
+#: mod_game/helper.py:217
+msgid "No Out possible! Remove Darts!"
+msgstr ""
+
+#: mod_game/helper.py:229
+msgid "Remove Darts!"
+msgstr ""
+
+#: mod_game/helper.py:236 mod_game/helper.py:242
+msgid "There is no active game running"
 msgstr ""
 
 #: templates/404.html:3
@@ -77,6 +114,48 @@ msgstr ""
 msgid "one"
 msgstr ""
 
+#: templates/game/gameController.html:14
+msgid "Change Throws"
+msgstr ""
+
+#: templates/game/gameController.html:20 templates/game/gameController.html:33
+#: templates/game/gameController.html:41
+msgid "Next Player"
+msgstr ""
+
+#: templates/game/gameController.html:21 templates/game/gameController.html:34
+#: templates/game/gameController.html:42
+msgid "End Game"
+msgstr ""
+
+#: templates/game/gameController.html:27
+msgid "Insert Throws"
+msgstr ""
+
+#: templates/game/gameController.html:32
+msgid "Game Controls"
+msgstr ""
+
+#: templates/game/index.html:13
+msgid "Setup a new game like so:"
+msgstr ""
+
+#: templates/game/index.html:15
+msgid "Connect to the local wifi"
+msgstr ""
+
+#: templates/game/index.html:16
+msgid "Scan the QR code with your smartphone or tablet"
+msgstr ""
+
+#: templates/game/index.html:17
+msgid "Choose you setup of game and add player"
+msgstr ""
+
+#: templates/game/index.html:18
+msgid "Start the game"
+msgstr ""
+
 #: templates/game/manageuser.html:9
 #, python-format
 msgid "User %(name)s was created successfully"
@@ -117,5 +196,33 @@ msgstr ""
 
 #: templates/game/manageuser.html:40
 msgid "to the game setup when done"
+msgstr ""
+
+#: templates/game/scoreboardX01.html:12
+msgid "Active Player"
+msgstr ""
+
+#: templates/game/scoreboardX01.html:15
+msgid "Player round"
+msgstr ""
+
+#: templates/game/scoreboardX01.html:18
+msgid "Player Average"
+msgstr ""
+
+#: templates/game/scoreboardX01.html:21
+msgid "Player Throws"
+msgstr ""
+
+#: templates/game/scoreboardX01.html:29
+msgid "Game"
+msgstr ""
+
+#: templates/game/scoreboardX01.html:32
+msgid "In"
+msgstr ""
+
+#: templates/game/scoreboardX01.html:35
+msgid "Out"
 msgstr ""
 

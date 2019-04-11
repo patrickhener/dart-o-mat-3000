@@ -11,35 +11,35 @@
 <div class="container">
 	<div id="throws" class="row">
 	<div id="frame" class="col">
-		<h3>Change Throws</h3>
+		<h3>{% trans %}Change Throws{% endtrans %}</h3>
 	</div></div><br><hr>
 
 	{% if recognition %}
 	<p>Maybe show status here?</p>
 	<div id="gameControls" class="col">
-		<button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">Next Player</button>
-		<button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">End Game</button>
+		<button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">{% trans %}Next Player{% endtrans %}</button>
+		<button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">{% trans %}End Game{% endtrans %}</button>
 	</div>
 	{% else %}
 	<div id="controls" class="row">
 		{% if gametype == "x01" %}
 		<div id="x01-controls" class="col">
-			<h3>Insert Throws</h3>
+			<h3>{% trans %}Insert Throws{% endtrans %}</h3>
 		</div>
 	</div><br><hr>
 	<div id="gameControls" class="row">
 	<div id="buttons" class="col">
-		<h3>Game Controls</h3>
-		<button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">Next Player</button>
-		<button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">End Game</button>
+		<h3>{% trans %}Game Controls{% endtrans %}</h3>
+		<button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">{% trans %}Next Player{% endtrans %}</button>
+		<button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">{% trans %}End Game{% endtrans %}</button>
 	</div>
 	</div>
 		{% elif gametype == "cricket" %}
 		<p>cricket</p>
 		<div id="cricket-controls"></div>
 		<div id="gameControls">
-			<button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">Next Player</button>
-			<button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">End Game</button>
+			<button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">{% trans %}Next Player{% endtrans %}</button>
+			<button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">{% trans %}End Game{% endtrans %}</button>
 		</div>
 		{% else %}
 		<p>unknown</p>

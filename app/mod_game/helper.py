@@ -98,7 +98,7 @@ def checkOutGame(mod):
 
 def checkOutPossible(newScore):
     game = Game.query.first()
-    if not game.outGame == "Straight":
+    if not (game.outGame == "Straight") or (game.outGame == "Direkt"):
         if newScore == 1:
             return False
         else:
@@ -196,14 +196,14 @@ def scoreX01(hit,mod):
                     rnd.throwcount = throwcount
                     playerScore.score = 0
                     db.session.commit()
-                    return "Winner!"
+                    return gettext(u"Winner!")
                 else:
                     game.nextPlayerNeeded = True
                     throwcount +=1
                     rnd.throwcount = throwcount
                     playerScore.score = playerScore.parkScore
                     db.session.commit()
-                    return "Bust! " + game.outGame + " out!"
+                    return gettext(u"Bust! %(mode)s out!", mode=game.outGame)
             # define new score, increase throwcount, commit to db
             else:
                 result = "-"
@@ -214,7 +214,7 @@ def scoreX01(hit,mod):
                     playerScore.score = playerScore.parkScore
                     game.nextPlayerNeeded = True
                     db.session.commit()
-                    result = "No Out possible! Remove Darts!"
+                    result = gettext(u"No Out possible! Remove Darts!")
                 else:
                     throwcount += 1
                     if checkInGame(mod):
@@ -226,20 +226,20 @@ def scoreX01(hit,mod):
                     if throwcount == 3:
                         playerScore.parkScore = newScore
                         game.nextPlayerNeeded = True
-                        result = "Remove Darts!"
+                        result = gettext(u"Remove Darts!")
                     db.session.add(throw)
                     db.session.commit()
 
                 return result
     else:
         # Output if no game is running
-        return "There is no active game running\n"
+        return gettext("There is no active game running")
 
 def switchNextPlayer():
     # First check if the game was won
     game = Game.query.first()
     if game.won:
-        return "There is no active game running"
+        return gettext(u"There is no active game running")
     else:
         # Then set active Player round ongoing to 0 and nextPlayerNeeded in Game to 0
         activePlayerObject = getActivePlayer()

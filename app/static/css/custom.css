@@ -25,6 +25,11 @@ body {
 	height: 5%;
 }
 
+#header-left.table, #header-right.table {
+	background-color: #012432;
+	font-size: xx-large;
+}
+
 a, a:hover, a:visited, a:active {
 	color: #fff;
 	font-weight: bold;

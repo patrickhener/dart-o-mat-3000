@@ -39,8 +39,11 @@ IFACE = '0.0.0.0' #Server Interface IP
 PORT = 5000
 RECOGNITION = False #Use Recognition or not. If not you will have buttons to insert Score in gameController
 SOUND = True #Sound output if you want
+# Babel default settings
+BABEL_DEFAULT_LOCALE = "de"
+BABEL_DEFAULT_TIMEZONE = "UTC"
 ```
- to fit your needs. You are welcome to edit any other setting as well. But you do not really have to.
+ to fit your needs. You are welcome to edit any other setting as well. But you do not really have to. Valid values for language are either `en` or `de`. As no time is used anywhere just ignore the timezone for now.
 
 # Development run it
 First activate the virtual environment like described above. Then run `python3 run.py`.
@@ -54,6 +57,7 @@ TODO Write systemd service to start it on boot
 TODO Write autostart script to startup a browser window in fullscreen displaying the intro page
 
 # General TODOs
+- Finish Translation to German (Javascript? Vars?)
 - Design review
 - Cricket game mechanism
 - Cricket scoreboard
@@ -61,7 +65,7 @@ TODO Write autostart script to startup a browser window in fullscreen displaying
 # Changelog
 ## 2019-04-10 - v0.9: Alpha version
 - Working condition: It might not work that stable. There will still be bugs. Therefore it is only Alpha.
-- Ready features: 
+- Ready features:
   - Game mechanism X01 is working with double/master in/out and sound
   - Game Controller X01 is working to either correct throws or to insert throws like any mobile app does
 

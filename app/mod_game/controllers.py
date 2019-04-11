@@ -157,7 +157,6 @@ def scoreboardX01(message=None, soundeffect=None):
         audiofile = None
     else:
         audiofile = soundeffect
-    print("DEBUG in scoreboard, audiofile is {}".format(audiofile))
     # Check if sound is enabled [config.py]
     sound = SOUND
     # Check if there is a Game ongoing
@@ -251,19 +250,20 @@ def throw(hit, mod):
 
     # Lookup if next player has to be switched
     if game.nextPlayerNeeded:
-        scoreboardX01("Remove Darts")
-        return "Switch to next player first\n"
+        scoreboardX01(gettext(u"Remove Darts"))
+        return gettext(u"Switch to next player first")
     else:
         # decide which game mechanism to use
         x01_games = ['301','501','701','901']
 
         if any(x in str(game.gametype) for x in x01_games):
             doIt = scoreX01(hit,mod)
-            if doIt == "Winner!":
+            # TODO Find a better way of doing with babel
+            if (doIt == "Winner!") or (doIt == "Sieger!"):
                 audiofile = "winner"
-            if doIt == "Bust! Remove Darts!":
+            if (doIt == "Bust! Remove Darts!") or (doIt == "Überworfen! Darts entfernen!"):
                 audiofile = "bust"
-            if doIt == "No Out possible! Remove Darts!":
+            if (doIt == "No Out possible! Remove Darts!") or (doIt == "Sieg nicht mehr möglich! Darts entfernen!"):
                 audiofile = "bust"
             if doIt == "Bust!":
                 audiofile = "bust"
@@ -278,7 +278,7 @@ def throw(hit, mod):
 @mod_game.route("/throw/update/<int:id>/<int:newHit>/<int:newMod>")
 def updateThrow(id, newHit, newMod):
     updateThrowTable(id, newHit, newMod)
-    scoreboardX01("Throw updated")
+    scoreboardX01(gettext(u"Throw updated"))
     gameController()
     return "-"
 
@@ -299,7 +299,7 @@ def endGame():
     socketio.emit('redirectX01', "/game/")
     socketio.emit('redirectCricket', "/game/")
     socketio.emit('redirectGameController', "/game/admin")
-    return "Done\n"
+    return gettext(u"Done")
 
 @socketio.on('startX01')
 def on_startX01(data):
@@ -324,7 +324,7 @@ def on_startX01(data):
     db.session.add(a)
     db.session.commit()
 
-    scoreboardX01(None, "startgame")
+    scoreboardX01()
     gameController()
     socketio.emit('redirectIndex', '/game/scoreboardX01')
     socketio.emit('redirectAdmin', '/game/gameController')
