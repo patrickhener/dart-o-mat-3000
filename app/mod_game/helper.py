@@ -54,6 +54,10 @@ def getScore(playerID):
     score = Score.query.filter_by(player_id=playerID).first()
     return score.score
 
+def getCricket(playerID):
+    cricket = Cricket.query.filter_by(player_id=playerID).first()
+    return cricket
+
 def checkInGame(mod):
     # set active player
     activePlayer = Player.query.filter_by(active=True).first()

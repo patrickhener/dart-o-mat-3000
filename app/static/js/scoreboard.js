@@ -16,6 +16,14 @@ socket.on('drawScoreboardX01', function(list, lastthrowsall, throwsum) {
 	drawScoreboardX01(list, lastthrowsall, throwsum);
 });
 
+socket.on('drawScoreboardCricket', function(cricketlist, lastthrows) {
+	drawScoreboardCricket(cricketlist, lastthrows);
+});
+
+socket.on('highlightActiveCricket', function(player, playerID, round, message, average, throwcount) {
+	highlightActiveCricket(player, playerID, round, message, average, throwcount);
+});
+
 socket.on('highlightActive', function(player, playerID, round, message, average, throwcount) {
 	highlightActivePlayer(player, playerID, round, message, average, throwcount);
 });
@@ -134,3 +142,73 @@ function playSound(soundfile) {
 		}
 	}
 };
+
+function drawScoreboardCricket(list, lastthrows) {
+	var div = document.getElementById("score");
+	while (div.firstChild) {
+		div.removeChild(div.firstChild);
+	}
+	console.log(list);
+	for (var item in list) {
+		// break array
+		// array[0] = playerID
+		// array[1] = 20s
+		// array[2] = 19s
+		// array[3] = 18s
+		// array[4] = 17s
+		// array[5] = 16s
+		// array[6] = 15s
+		// array[7] = 25s
+		var array = list[item].split(",");
+		// for (i=0; i<8; i++) {
+			// console.log(array[i]);
+		// }
+		// var div = document.getElementById("score");
+		// var borderDiv = document.createElement("div");
+		// borderDiv.setAttribute("class", "col");
+		// borderDiv.setAttribute("id", "Border-" + list[item].Player);
+		// var nameDiv = document.createElement("div");
+		// nameDiv.setAttribute("name", "Player-" + list[item].Player);
+		// nameDiv.setAttribute("id", "playerName");
+		// nameDiv.innerHTML = "<h1 id='playerName'>" + list[item].Player + "</h1>";
+		// borderDiv.appendChild(nameDiv);
+		// var scoreDiv = document.createElement("div");
+		// scoreDiv.setAttribute("name", "Score-" + list[item].Player);
+		// scoreDiv.setAttribute("id", "playerScore");
+		// scoreDiv.innerHTML = "<h1 id='playerScore'>" + list[item].Score + "</h1>";
+		// borderDiv.appendChild(scoreDiv);
+		// var messageDiv = document.createElement("div");
+		// messageDiv.setAttribute("name", "Message-" + list[item].Player);
+		// messageDiv.setAttribute("id", "playerMessage");
+		// messageDiv.innerHTML = "";
+		// borderDiv.appendChild(messageDiv);
+		// var throwDiv = document.createElement("div");
+		// throwDiv.setAttribute("id", "Throws-" + list[item].PlayerID);
+		// borderDiv.appendChild(throwDiv);
+		// var sumDiv = document.createElement("div");
+		// sumDiv.setAttribute("id", "Sum-" + list[item].PlayerID);
+		// sumDiv.innerHTML="";
+		// borderDiv.appendChild(sumDiv);
+		// div.appendChild(borderDiv);
+	}
+
+}
+
+function highlightActiveCricket(activePlayer, playerID, playerRound, message, average, throwcount) {
+	// var borderDiv = document.getElementById("Border-" + activePlayer);
+	// borderDiv.style.border='5px solid white';
+	// borderDiv.style.boxShadow='10px 10px 15px black';
+	var headerLeft = document.getElementById("header-left");
+	var divActivePlayer = document.getElementById("header-activePlayer");
+	divActivePlayer.innerHTML = activePlayer;
+	var divRndcount = document.getElementById("header-rndcount");
+	divRndcount.innerHTML = playerRound;
+	var divAverage = document.getElementById("header-average");
+	divAverage.innerHTML = average;
+	var divThrowcount = document.getElementById("header-throwcount");
+	divThrowcount.innerHTML = throwcount;
+	// var messageDiv = document.getElementsByName("Message-" + activePlayer);
+	// messageDiv[0].innerHTML = "<h1>" + message + "</h1>";
+	var throwDiv = document.getElementById("Throws-" + playerID);
+}
+

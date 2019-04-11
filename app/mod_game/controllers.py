@@ -13,7 +13,7 @@ from app import db, socketio, babel, IPADDR, PORT, RECOGNITION, SOUND
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
 
 # Import helper functions
-from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage, getThrowsCount, getLastThrows, getAllThrows, updateThrowTable
+from app.mod_game.helper import clear_db, scoreX01, switchNextPlayer, getPlayingPlayersObjects, getPlayingPlayersID, getScore, checkIfOngoingGame, getActivePlayer, getAverage, getThrowsCount, getLastThrows, getAllThrows, updateThrowTable, getCricket
 
 # Define the blueprint: 'game', set its url prefix: app.url/game
 mod_game = Blueprint('game', __name__, url_prefix='/game')
@@ -137,14 +137,69 @@ def gameController():
     )
 
 @mod_game.route("/scoreboardCricket")
-def scoreboardCricket():
-    game = Game.query.first()
+def scoreboardCricket(message=None, soundeffect=None):
+    # Var for returning options
+    if not message:
+        message = "-"
+    else:
+        message = message
+    if not soundeffect:
+        audiofile = None
+    else:
+        audiofile = soundeffect
+    # Check if sound is enabled [config.py]
+    sound = SOUND
+    # Get general data to draw scoreboard
+    playing_players = getPlayingPlayersObjects()
+    playing_players_id = getPlayingPlayersID()
     activePlayer = getActivePlayer()
-    #  socketio.emit('refresh')
+
+    # ActivePlayerThrowcount
+    try:
+        throwcount = getThrowsCount(activePlayer.id)
+    except AttributeError:
+        throwcount = "0"
+    # Get average
+    try:
+        average = getAverage(activePlayer.id)
+    except AttributeError:
+        average = "0"
+
+    # Get last throws to show in scoreboard beneath Message Container
+    lastThrows = []
+    for player in playing_players:
+        lastThrows.append(getLastThrows(player.id))
+
+    game = Game.query.first()
+
+    try:
+        rnd = len(Round.query.filter_by(player_id=activePlayer.id).all())
+    except:
+        rnd = 1
+
+    CricketArray = []
+    for player in playing_players:
+        CricketArray.append(str(getCricket(player.id)))
+
+    print(CricketArray)
+
+    socketio.emit('drawScoreboardCricket', (CricketArray, str(lastThrows)))
+    socketio.emit('highlightActiveCricket', (activePlayer.name, activePlayer.id, rnd, message, average, throwcount))
+
+    if sound:
+        socketio.emit('playSound', audiofile)
+
     return render_template(
         '/game/scoreboardCricket.html',
+        playerlist=CricketArray,
+        throwcount=throwcount,
+        lastthrows=lastThrows,
+        message=message,
+        average=average,
         player=activePlayer.name,
+        player_id=activePlayer.id,
         gametype=game.gametype,
+        rndcount=rnd,
         variant=game.variant
     )
 
@@ -161,8 +216,6 @@ def scoreboardX01(message=None, soundeffect=None):
         audiofile = soundeffect
     # Check if sound is enabled [config.py]
     sound = SOUND
-    # Check if there is a Game ongoing
-    started = checkIfOngoingGame()
     # Get general data to draw scoreboard
     playing_players = getPlayingPlayersObjects()
     playing_players_id = getPlayingPlayersID()
@@ -225,7 +278,6 @@ def scoreboardX01(message=None, soundeffect=None):
         throwsum=sumThrows,
         message=message,
         average=average,
-        started=started,
         player=activePlayer.name,
         player_id=activePlayer.id,
         gametype=game.gametype,
@@ -289,7 +341,7 @@ def nextPlayer():
     doIt = switchNextPlayer()
     game = Game.query.first()
     if game.gametype == "Cricket":
-        scoreboardCricket()
+        scoreboardCricket(doIt)
     else:
         scoreboardX01(doIt)
     gameController()
@@ -339,7 +391,7 @@ def on_startCricket(data):
     variant = data['variant']
     g = Game(gametype='Cricket',variant=variant)
     for player in data['players']:
-        c = Cricket()
+        c = Cricket(c20=0,c19=0,c18=0,c17=0,c16=0,c15=0,c25=0)
         s = Score(score=0, parkScore=0)
         p = Player.query.filter_by(name=player).first()
         g.players.append(p)

@@ -3,12 +3,45 @@
 <script src="{{ url_for('static', filename='js/scoreboard.js') }}"></script>
 {% endblock %}
 
+{% block bodyparam %}style="overflow: hidden;" onload='drawScoreboardCricket("{{ playerlist }}", "{{ lastthrows }}"), highlightActiveCricket("{{ player }}","{{ player_id }}","{{ rndcount }}","{{ message }}"," {{ average }}","{{ throwcount }}")'{% endblock %}
+
+
 {% block content %}
-<div class="container" id="content">
-	<div class="row border-bottom border-top rounded">
-		<div class="col-5"><b>Active Player: {{ player }}<br>Player round: {{ rndcount }}<br>Player Average: </b></div>
-		<div class="col-7" id="cricket"><b>Game: {{ gametype }}<br>Variant: {{ variant }}</b></div>
+<div class="container-fluid" id="content">
+	<div id="scoreheader" class="row border-bottom border-top rounded">
+		<div class="col" id="header-left">
+			<table id="header-left" class="table table-sm table-dark table-striped">
+				<tr>
+					<td>{% trans %}Active Player{% endtrans %}:</td>
+					<td id="header-activePlayer">{{ player }}</td>
+				</tr><tr>
+					<td>{% trans %}Player round{% endtrans %}:</td>
+					<td id="header-rndcount">{{ rndcount }}</td>
+				</tr><tr>
+					<td>{% trans %}Player Average{% endtrans %}:</td>
+					<td id="header-average">{{ average }}</td>
+				</tr><tr>
+					<td>{% trans %}Player Throws{% endtrans %}:</td>
+					<td id="header-throwcount">{{ throwcount }}</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="col" id="header-right">
+			<table id="header-right" class="table table-sm table-dark table-striped">
+				<tr>
+					<td>{% trans %}Game{% endtrans %}:</td>
+					<td>{{ gametype }}</td>
+				</tr><tr>
+					<td>{% trans %}Variant{% endtrans %}:</td>
+					<td>{{ variant }}</td>
+				</tr>
+			</table>
+		</div>
 	</div>
+	<br>
+	<div class="row border-top rounded" id="score"></div>
 </div>
 <br>
+
 {% endblock %}

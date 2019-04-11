@@ -55,8 +55,8 @@ class Cricket(Base):
     player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
 
     def __repr__(self):
-        # returning id for now. Method to return all counts?
-        return self.id
+        output = str(self.player_id)+","+str(self.c20)+","+str(self.c19)+","+str(self.c18)+","+str(self.c17)+","+str(self.c16)+","+str(self.c15)+","+str(self.c25)
+        return output
 
 class Round(Base):
     player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
