@@ -2,7 +2,7 @@
 {% block head %}
 <script src="{{ url_for('static', filename='js/scoreboard.js') }}"></script>
 {% endblock %}
-{% block bodyparam %}style='overflow: hidden;' onload="drawScoreboardX01({{ playerlist }}, '{{ lastthrows }}', {{ throwsum }}); highlightActivePlayer('{{ player }}', '{{ player_id }}', '{{ rndcount }}', '{{ message }}', '{{ average }}', '{{ throwcount }}')"{% endblock %}
+{% block bodyparam %}style="overflow: hidden;" onload="drawScoreboardX01({{ playerlist }}, {{ lastthrows }}, {{ throwsum }}), highlightActivePlayer('{{ player }}', '{{ player_id }}', '{{ rndcount }}', '{{ message }}', '{{ average }}', '{{ throwcount }}')"{% endblock %}
 {% block content %}
 <div class="container-fluid" id="content">
 	<div class="row border-bottom border-top rounded" id="scoreheader">

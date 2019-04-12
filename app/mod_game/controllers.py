@@ -11,8 +11,9 @@ from app import db, socketio, babel, IPADDR, PORT, RECOGNITION, SOUND
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
 
 # Import helper functions
-from app.mod_game.helper import clear_db, score_x01, switch_next_player, get_playing_players_objects, get_playing_players_id, \
-    get_score, get_active_player, get_average, get_throws_count, get_last_throws, get_all_throws, update_throw_table, get_cricket
+from app.mod_game.helper import clear_db, score_x01, switch_next_player, get_playing_players_objects, \
+    get_playing_players_id, get_score, get_active_player, get_average, get_throws_count, get_last_throws, \
+    get_all_throws, update_throw_table, get_cricket
 
 # Import Babel Stuff
 from flask_babel import gettext
@@ -276,9 +277,9 @@ def scoreboard_x01(message=None, soundeffect=None):
     for player in playing_players:
         player_scores.append(get_score(player.id))
 
-    player_scores_list = [{'Player': str(name),'PlayerID': str(playerid), 'Score': str(score)} for name, playerid, score in zip(playing_players,playing_players_id,player_scores)]
+    player_scores_list = [{'Player': str(name), 'PlayerID': str(playerid), 'Score': str(score)} for name, playerid, score in zip(playing_players, playing_players_id, player_scores)]
 
-    socketio.emit('drawScoreboardX01', (player_scores_list,last_throws,sum_throws))
+    socketio.emit('drawScoreboardX01', (player_scores_list, last_throws, sum_throws))
     socketio.emit('highlightActive', (active_player.name, active_player.id, rnd, message, average, throwcount))
     if sound:
         socketio.emit('playSound', audiofile)

@@ -134,12 +134,7 @@ function highlightActivePlayer(activePlayer, playerID, playerRound, message, ave
 function playSound(soundfile) {
     if (soundfile != null) {
         var audio = new Audio('http://' + document.domain + ':' + location.port + '/static/sounds/' + soundfile + '.mp3');
-        var playPromise = audio.play();
-
-        if (playPromise !== undefined) {
-            playPromise.then(_ => {});
-        .catch(error => { audio.play(); });
-        }
+        audio.play();
     }
 };
 

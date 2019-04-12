@@ -8,8 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 # Babel for translations
 from flask_babel import Babel
 
-# Import a module / component using its blueprint handler variable (mod_game)
-from app.mod_game.controllers import mod_game as game_module
 
 # Define the WSGI application object
 app = Flask(__name__)
@@ -37,6 +35,8 @@ babel = Babel(app)
 def not_found(error):
     return render_template('404.html'), 404
 
+# Import a module / component using its blueprint handler variable (mod_game)
+from app.mod_game.controllers import mod_game as game_module
 
 # Register blueprint(s)
 app.register_blueprint(game_module)
