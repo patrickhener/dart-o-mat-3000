@@ -3,13 +3,13 @@
 <script src="{{ url_for('static', filename='js/scoreboard.js') }}"></script>
 {% endblock %}
 
-{% block bodyparam %}style="overflow: hidden;" onload='drawScoreboardCricket("{{ playerlist }}", "{{ lastthrows }}"), highlightActiveCricket("{{ player }}","{{ player_id }}","{{ rndcount }}","{{ message }}"," {{ average }}","{{ throwcount }}")'{% endblock %}
+{% block bodyparam %}style="overflow: hidden;" onload='drawScoreboardCricket({{ playerlist }}, "{{ lastthrows }}"), highlightActiveCricket("{{ player }}","{{ player_id }}","{{ rndcount }}","{{ message }}"," {{ average }}","{{ throwcount }}")'{% endblock %}
 
 
 {% block content %}
 <div class="container-fluid" id="content">
 	<div id="scoreheader" class="row border-bottom border-top rounded">
-		<div class="col" id="header-left">
+		<div class="col">
 			<table id="header-left" class="table table-sm table-dark table-striped">
 				<tr>
 					<td>{% trans %}Active Player{% endtrans %}:</td>
@@ -27,7 +27,7 @@
 			</table>
 		</div>
 
-		<div class="col" id="header-right">
+		<div class="col">
 			<table id="header-right" class="table table-sm table-dark table-striped">
 				<tr>
 					<td>{% trans %}Game{% endtrans %}:</td>

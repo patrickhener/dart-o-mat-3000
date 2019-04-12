@@ -1,43 +1,43 @@
 <!doctype html>
 <head>
-	<!-- Title -->
-	<title>Dart-O-Mat 3000</title>
-	<!-- Meta -->
-	<meta name="author" content="Patrick Hener">
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<!-- links -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/static/css/custom.css">
-	<link rel="icon" href="/static/img/favicon.ico" type="image/x-icon">
-	<!-- scripts -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-	{% block head %}
-	{% endblock %}
+    <!-- Title -->
+    <title>Dart-O-Mat 3000</title>
+    <!-- Meta -->
+    <meta name="author" content="Patrick Hener">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- links -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/custom.css">
+    <link rel="icon" href="/static/img/favicon.ico" type="image/x-icon">
+    <!-- scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    {% block head %}
+    {% endblock %}
 </head>
 
 <body {% block bodyparam %}{% endblock %}>
-	<div class="jumbotron header">
-		{% block banner %}{% endblock %}
-	</div>
-	{% block content %}
-	{% endblock %}
+<div class="jumbotron header">
+    {% block banner %}{% endblock %}
+</div>
+{% block content %}
+{% endblock %}
 
-	<div class="jumbotron footer" style="margin-bottom:0">
-	<table class="table footer">
-		<tr>
-			<td align="left">{% trans %}Author{% endtrans %}: Patrick Hener</td>
-			<td align="left">Dart-O-Mat 3000</td>
-			<td align="right"><a href="https://github.com/patrickhener/dart-o-mat-3000" target="_blank"><img src="/static/img/GitHub-Mark-32px.png" /></a></td>
-		</tr>
-	</table>
+<div class="jumbotron footer" style="margin-bottom:0">
+    <table class="table footer">
+        <tr>
+            <td align="left">{% trans %}Author{% endtrans %}: Patrick Hener</td>
+            <td align="left">Dart-O-Mat 3000</td>
+            <td align="right"><a href="https://github.com/patrickhener/dart-o-mat-3000" target="_blank"><img
+                    src="/static/img/GitHub-Mark-32px.png"/></a></td>
+        </tr>
+    </table>
 </div>
 
-	{% block script %}
-	{% endblock %}
+{% block script %}
+{% endblock %}
 </body>
 </html>
-

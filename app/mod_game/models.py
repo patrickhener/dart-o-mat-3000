@@ -1,10 +1,12 @@
 # Import the database object (db) from the main application module
 from app import db
 
+
 # Define a base model for other database tables to inherit
 class Base(db.Model):
     __abstract__ = True
     id = db.Column(db.Integer, primary_key=True)
+
 
 # Define game related models
 class Game(Base):
@@ -20,6 +22,7 @@ class Game(Base):
     def __repr__(self):
         return self.gametype
 
+
 class Player(Base):
     name = db.Column(db.String, unique=True, nullable=False)
     active = db.Column(db.Boolean)
@@ -34,14 +37,17 @@ class Player(Base):
     def __repr__(self):
         return self.name
 
+
 class Score(Base):
     score = db.Column(db.Integer, nullable=False)
     parkScore = db.Column(db.Integer, nullable=False)
 
-    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"),
+                          nullable=False)
 
     def __int__(self):
         return self.count
+
 
 class Cricket(Base):
     c20 = db.Column(db.Integer, nullable=True)
@@ -52,14 +58,16 @@ class Cricket(Base):
     c15 = db.Column(db.Integer, nullable=True)
     c25 = db.Column(db.Integer, nullable=True)
 
-    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"),
+                          nullable=False)
 
     def __repr__(self):
-        output = str(self.player_id)+","+str(self.c20)+","+str(self.c19)+","+str(self.c18)+","+str(self.c17)+","+str(self.c16)+","+str(self.c15)+","+str(self.c25)
-        return output
+        return str(self.id)
+
 
 class Round(Base):
-    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"),
+                          nullable=False)
     ongoing = db.Column(db.Boolean, nullable=False)
     throwcount = db.Column(db.Integer, nullable=True)
 
@@ -67,14 +75,15 @@ class Round(Base):
         # returning id for now. Need to return other?
         return self.id
 
+
 class Throw(Base):
-    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"),
+                          nullable=False)
     hit = db.Column(db.Integer, nullable=False)
     mod = db.Column(db.Integer, nullable=False)
 
     round_id = db.Column(db.Integer, db.ForeignKey('round.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
 
     def __repr__(self):
-        sum = self.hit * self.mod
-        return str(sum)
-
+        hitcount = self.hit * self.mod
+        return str(hitcount)
