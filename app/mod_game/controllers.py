@@ -224,6 +224,11 @@ def scoreboard_x01(message=None, soundeffect=None):
         message = "-"
     else:
         message = message
+    if message == "Winner!":
+        socketio.emit('rematchButton')
+    elif message == "Sieger!":
+        socketio.emit('rematchButton')
+
     if not soundeffect:
         audiofile = None
     else:
@@ -326,11 +331,17 @@ def throw(hit, mod):
         if any(x in str(game.gametype) for x in x01_games):
             do_it = score_x01(hit, mod)
             # TODO Find a better way of doing with babel
-            if (do_it == "Winner!") or (do_it == "Sieger!"):
+            if do_it == "Winner!":
                 audiofile = "winner"
-            if (do_it == "Bust! Remove Darts!") or (do_it == "Überworfen! Darts entfernen!"):
+            if do_it == "Sieger!":
+                audiofile = "winner"
+            if do_it == "Bust! Remove Darts!":
                 audiofile = "bust"
-            if (do_it == "No Out possible! Remove Darts!") or (do_it == "Sieg nicht mehr möglich! Darts entfernen!"):
+            if do_it == "Überworfen! Darts entfernen!":
+                audiofile = "bust"
+            if do_it == "No Out possible! Remove Darts!":
+                audiofile = "bust"
+            if do_it == "Sieg nicht mehr möglich! Darts entfernen!":
                 audiofile = "bust"
             if do_it == "Bust!":
                 audiofile = "bust"
@@ -370,6 +381,12 @@ def end_game():
     socketio.emit('redirectCricket', "/game/")
     socketio.emit('redirectGameController', "/game/admin")
     return gettext(u"Done")
+
+
+@mod_game.route("/rematch")
+def rematch():
+    print("Implement Rematch here")
+    return "-"
 
 
 @socketio.on('startX01')

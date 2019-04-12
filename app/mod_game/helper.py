@@ -109,9 +109,12 @@ def check_out_game(mod):
 
 def check_out_possible(new_score):
     game = Game.query.first()
-    if not (game.outGame == "Straight") or (game.outGame == "Direkt"):
-        if new_score == 1:
-            return False
+    if not (game.outGame == "Straight"):
+        if not (game.outGame == "Direkt"):
+            if new_score == 1:
+                return False
+            else:
+                return True
         else:
             return True
     else:
@@ -149,14 +152,15 @@ def update_throw_table(id, hit, mod):
     # Calculate old points resulting of old throw
     oldpoints = throw.hit * throw.mod
     # Calculate new points resulting of altered throw
-    newpoints = hit * mod
+    newpoints = int(hit) * int(mod)
     # Calculate difference
     alter_score = newpoints - oldpoints
     # Calculate new score
     new_score = score.score - alter_score
     # Set Throw to new values
-    throw.hit = hit
-    throw.mod = mod
+    throw.hit = int(hit)
+    throw.mod = int(mod
+                    )
     # Set Score and Park Score to new Score
     score.score = new_score
     score.parkScore = new_score

@@ -16,6 +16,10 @@ socket.on('drawThrows', function(playerlist, throwlist) {
 	drawThrows(playerlist, throwlist);
 });
 
+socket.on('rematchButton', function() {
+	rematchButton();
+});
+
 function drawX01Controller() {
 	var div = document.getElementById("x01-controls");
 	while (div.firstChild) {
@@ -87,19 +91,19 @@ function drawX01Controller() {
 	button.setAttribute("id", "triple");
 	button.innerHTML = "Triple";
 	groupDiv4.appendChild(button);
-};
+}
 
 function endGame() {
 	var xhttp = new XMLHttpRequest();
 	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/endGame'), true);
 	xhttp.send();
-};
+}
 
 function nextPlayer() {
 	var xhttp = new XMLHttpRequest();
 	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/nextPlayer'), true);
 	xhttp.send();
-	location.reload();
+	//location.reload();
 }
 
 function drawThrows(playerlist, throwlist) {
@@ -167,7 +171,7 @@ function drawThrows(playerlist, throwlist) {
 		}
 		table.appendChild(tr);
 	}
-};
+}
 
 function editThrow(throwID, hit) {
 	var mod2 = document.querySelector("#doubleModal").getAttribute('aria-pressed');
@@ -185,7 +189,7 @@ function editThrow(throwID, hit) {
 	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/throw/update/' + throwID + '/' + hit + '/' + mod), true);
 	xhttp.send();
 	location.reload();
-};
+}
 
 function sendThrow(hit) {
 	var mod2 = document.querySelector("#double").getAttribute('aria-pressed');
@@ -203,13 +207,13 @@ function sendThrow(hit) {
 	xhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
 			var response = xhttp.responseText;
-			location.reload();
+			//location.reload();
 		}
 	};
 	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/throw/' + hit + '/' + mod), true);
 	xhttp.send();
 
-};
+}
 
 function updateMenu(throwid) {
 	// get modal and span
@@ -293,7 +297,7 @@ function updateMenu(throwid) {
 	// Close handler x
 	span.onclick = function() {
 		modal.style.display = "none";
-	}
+	};
 	// Handler to click anywhere else
 	window.onclick = function(event) {
 		if (event.target == modal) {
@@ -302,3 +306,18 @@ function updateMenu(throwid) {
 	}
 }
 
+function rematchButton() {
+	var nextButton = document.getElementById("nextPlayer");
+	console.log(nextButton);
+	nextButton.style.display = "none";
+	var button = document.getElementById("rematch");
+	console.log(button);
+	button.style.display = "block";
+}
+
+function rematch() {
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/rematch'), true);
+	xhttp.send();
+	location.reload();
+}

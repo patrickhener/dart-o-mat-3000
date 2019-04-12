@@ -38,6 +38,7 @@
 		<div id="gameControls" class="row">
 			<div><h3>{% trans %}Game Controls{% endtrans %}</h3></div>
 			<div id="buttons" class="col">
+				<button onclick="rematch()" style="display: none;" id="rematch" class="btn btn-outline-primary btn-lg">{% trans %}Rematch{% endtrans %}</button>
 				<button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">{% trans %}Next Player{% endtrans %}</button>
 				<button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">{% trans %}End Game{% endtrans %}</button>
 			</div>

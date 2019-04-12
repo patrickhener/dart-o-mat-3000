@@ -57,8 +57,17 @@ TODO Write systemd service to start it on boot
 TODO Write autostart script to startup a browser window in fullscreen displaying the intro page
 
 # General TODOs
-- Finish Translation to German (Javascript? Vars?)
-- Design review
+- Rematch Button(Button handling is okay, implement /rematch route to do something)
+- Sound when next Player button is pressed
+- Ask yes/no if you hit End Game Button
+- Different Sounds to choose from
+- Delete last Throws when first throw of new round
+- Average of round sum not of all Throws
+- Game Controller to only show last two throw round per user 
+- Show Player score in game controller
+- Show active player in game controller
+- When Bust change throws to zero and don't delete them from database
+- If more than 2 player do not end game after one player get's 0/wins cricket
 - Cricket game mechanism
 - Cricket scoreboard
 
