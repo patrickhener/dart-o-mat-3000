@@ -24,12 +24,6 @@
 
 {% block content %}
 	<div class="container">
-		<div id="throws" class="row">
-			<div><h3>{% trans %}Change Throws{% endtrans %}</h3></div>
-			<div id="frame" class="col"></div>
-		</div>
-
-	<br><hr>
 
 	{% if recognition %}
 		<p>Maybe show status here?</p>
@@ -39,6 +33,17 @@
 		</div>
 
 	{% else %}
+        <div id="gameControls" class="row">
+            <div><h3>{% trans %}Game Controls{% endtrans %}</h3></div>
+            <div id="buttons" class="col">
+                <button onclick="rematch()" style="display: none;" id="rematch" class="btn btn-outline-primary btn-lg">{% trans %}Rematch{% endtrans %}</button>
+                <button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">{% trans %}Next Player{% endtrans %}</button>
+                <button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">{% trans %}End Game{% endtrans %}</button>
+            </div>
+        </div>
+
+        <br><hr>
+
 		<div id="controls" class="row">
 			<div><h3>{% trans %}Insert Throws{% endtrans %}</h3></div>
 			{% if gametype == "x01" %}
@@ -46,16 +51,7 @@
 			</div>
 		</div>
 
-		<br><hr>
-
-		<div id="gameControls" class="row">
-			<div><h3>{% trans %}Game Controls{% endtrans %}</h3></div>
-			<div id="buttons" class="col">
-				<button onclick="rematch()" style="display: none;" id="rematch" class="btn btn-outline-primary btn-lg">{% trans %}Rematch{% endtrans %}</button>
-				<button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">{% trans %}Next Player{% endtrans %}</button>
-				<button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">{% trans %}End Game{% endtrans %}</button>
-			</div>
-		</div>
+                <br><hr>
 
 			{% elif gametype == "cricket" %}
 				<p>cricket</p>
@@ -69,6 +65,12 @@
 			<p>unknown</p>
 			{% endif %}
 	{% endif %}
+
+        <div id="throws" class="row">
+            <div><h3>{% trans %}Change Throws{% endtrans %}</h3></div>
+            <div id="frame" class="col"></div>
+        </div>
+
 		<!-- modal for updateThrow -->
 		<div id="updateModal" class="modal">
 			<div id="modal-content" class="modal-content">

@@ -56,20 +56,32 @@ TODO explain how to use gunicorn to deploy it.
 TODO Write systemd service to start it on boot  
 TODO Write autostart script to startup a browser window in fullscreen displaying the intro page
 
-# General TODOs
-- Sound when next Player button is pressed
+# Feature TODOs
 - Different Sounds to choose from
-- Delete last Throws when first throw of new round
-- Average of round sum not of all Throws
 - Game Controller to only show last two throw round per user
 - Show Player score in game controller
 - Show active player in game controller
-- When Bust change throws to zero and don't delete them from database
 - If more than 2 player do not end game after one player get's 0/wins cricket
+
+# Bugs TODOs
+- Delete last Throws when first throw of new round
+- Average of round sum not of all Throws
+- When Bust change throws to zero and don't delete them from database
+
+# New Games TODOs
 - Cricket game mechanism
 - Cricket scoreboard
 
 # Changelog
+## 2019-xx-xx - v1.0: Beta version
+- Working condition: Near release state. There will be minor bugs (hopefully just minor ones). Therefore it is Beta.
+- Features added:
+  - Redesigned a few things to look better
+  - Game Controller was redesigned as well (changed order of containers)
+  - Rematch Button implemented
+  - Confirmation implemented after hitting "End Game" Button
+  - If Sound is on there will now also be a sound when changing player
+  - 
 ## 2019-04-10 - v0.9: Alpha version
 - Working condition: It might not work that stable. There will still be bugs. Therefore it is only Alpha.
 - Ready features:

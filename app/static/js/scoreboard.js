@@ -144,23 +144,10 @@ function drawScoreboardCricket(list, lastthrows) {
         div.removeChild(div.firstChild);
     }
     console.log(list);
-    // for (var item in list) {
-    // break array
-    // array[0] = playerID
-    // array[1] = 20s
-    // array[2] = 19s
-    // array[3] = 18s
-    // array[4] = 17s
-    // array[5] = 16s
-    // array[6] = 15s
-    // array[7] = 25s
-    // console.log(list[item]);
-    // var array = list[item].split("],[");
-    // for (i=0; i<8; i++) {
-    // console.log(array[i]);
-    // }
-    // var div = document.getElementById("score");
-    // var borderDiv = document.createElement("div");
+    for (var item in list) {
+        console.log(list[item]);
+    //  var div = document.getElementById("score");
+    //  var borderDiv = document.createElement("div");
     // borderDiv.setAttribute("class", "col");
     // borderDiv.setAttribute("id", "Border-" + list[item].Player);
     // var nameDiv = document.createElement("div");
@@ -186,7 +173,7 @@ function drawScoreboardCricket(list, lastthrows) {
     // sumDiv.innerHTML="";
     // borderDiv.appendChild(sumDiv);
     // div.appendChild(borderDiv);
-    // }
+     }
 
 }
 

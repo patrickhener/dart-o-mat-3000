@@ -195,9 +195,14 @@ def scoreboard_cricket(message=None, soundeffect=None):
         cricket_array.append(str(get_cricket(player.id).c25))
         player_cricket.append(cricket_array)
 
-    player_scores_list = [{'Player': str(name),'PlayerID': str(playerid), 'Cricket': str(cricket)} for name, playerid, cricket in zip(playing_players,playing_players_id,player_cricket)]
+    scores = []
+    for player in playing_players:
+        score = Score.query.filter_by(player_id=player.id).first()
+        scores.append(str(score.score))
 
-    print(player_scores_list)
+    player_scores_list = [{'Player': str(name),'PlayerID': str(playerid), 'Cricket': str(cricket), 'Score' : str(score)}
+                          for name, playerid, cricket, score in zip(playing_players,playing_players_id,player_cricket,scores)]
+
     socketio.emit('drawScoreboardCricket', (player_scores_list, str(last_throws)))
     socketio.emit('highlightActiveCricket', (active_player.name, active_player.id, rnd, message, average, throwcount))
 
@@ -370,8 +375,10 @@ def next_player():
     game = Game.query.first()
     if game.gametype == "Cricket":
         scoreboard_cricket(do_it)
+        socketio.emit("playSound", "startgame")
     else:
         scoreboard_x01(do_it)
+        socketio.emit("playSound", "startgame")
     game_controller()
     return do_it
 
