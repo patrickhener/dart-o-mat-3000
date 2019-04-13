@@ -93,11 +93,14 @@ function drawX01Controller() {
 	groupDiv4.appendChild(button);
 }
 
-function endGame() {
-	var xhttp = new XMLHttpRequest();
-	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/endGame'), true);
-	xhttp.send();
-}
+//function endGame() {
+//	var message = _("Really end game?");
+//    if (confirm(message) == true) {
+//		var xhttp = new XMLHttpRequest();
+//		xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/endGame'), true);
+//		xhttp.send();
+//	}
+//}
 
 function nextPlayer() {
 	var xhttp = new XMLHttpRequest();
@@ -308,10 +311,8 @@ function updateMenu(throwid) {
 
 function rematchButton() {
 	var nextButton = document.getElementById("nextPlayer");
-	console.log(nextButton);
 	nextButton.style.display = "none";
 	var button = document.getElementById("rematch");
-	console.log(button);
 	button.style.display = "block";
 }
 

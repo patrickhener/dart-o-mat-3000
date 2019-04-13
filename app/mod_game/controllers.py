@@ -97,6 +97,7 @@ def manageuser():
 
 @mod_game.route("/gameController")
 def game_controller():
+    end_message = gettext(u"Really end game?")
     # Recognition [config.py]
     recognition = RECOGNITION
     # Gather Stuff to five to gameController View
@@ -136,7 +137,8 @@ def game_controller():
         gametype = gametype,
         playingPlayers = playerlist,
         activePlayer = active_player,
-        throwlist = throwlist
+        throwlist = throwlist,
+        end_message = end_message
     )
 
 
@@ -385,19 +387,36 @@ def end_game():
 
 @mod_game.route("/rematch")
 def rematch():
-    print("Implement Rematch here")
+    game = Game.query.first()
+    game.won = 0
+    scores = Score.query.all()
+    for score in scores:
+        score.score = score.initialScore
+        score.parkScore = score.initialScore
+    db.session.query(Throw).delete()
+    db.session.query(Round).delete()
+    db.session.query(Cricket).delete()
+    db.session.commit()
+    if game.gametype == "Cricket":
+        scoreboard_cricket()
+        game_controller()
+    else:
+        scoreboard_x01(gettext(u"Rematch"), "startgame")
+        game_controller()
     return "-"
 
 
 @socketio.on('startX01')
 def on_start_x01(data):
+    # {'players': ['Caddi', 'Jürgen'], 'x01variant': '301', 'startIn': 'Direkt', 'exitOut': 'Direkt'}
+    print(data)
     # Flush tables cause for now we handle only one active game
     clear_db()
     # Fill tables
     scorecount = int(data['x01variant'])
     g = Game(gametype=data['x01variant'], inGame=data['startIn'], outGame=data['exitOut'])
     for player in data['players']:
-        s = Score(score=scorecount, parkScore=scorecount)
+        s = Score(score=scorecount, parkScore=scorecount, initialScore=scorecount)
         p = Player.query.filter_by(name=player).first()
         g.players.append(p)
         p.scores.append(s)
@@ -427,7 +446,7 @@ def on_start_cricket(data):
     g = Game(gametype='Cricket',variant=variant)
     for player in data['players']:
         c = Cricket(c20=0,c19=0,c18=0,c17=0,c16=0,c15=0,c25=0)
-        s = Score(score=0, parkScore=0)
+        s = Score(score=0, parkScore=0, initialScore=0)
         p = Player.query.filter_by(name=player).first()
         g.players.append(p)
         p.crickets.append(c)

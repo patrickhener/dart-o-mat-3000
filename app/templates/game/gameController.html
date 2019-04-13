@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 {% block head %}
 <script src="{{ url_for('static', filename='js/gameController.js') }}"></script>
+    {% block script %}
+        <script>
+            function endGame() {
+                var message = "{{ end_message }}";
+                if (confirm(message) == true) {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/endGame'), true);
+                    xhttp.send();
+                }
+            }
+        </script>
+    {% endblock %}
 {% endblock %}
 
 {% if gametype == "x01" %}
@@ -8,6 +20,7 @@
 
 {% elif gametype == "cricket" %}
 {% endif %}
+
 
 {% block content %}
 	<div class="container">

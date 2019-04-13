@@ -1,13 +1,13 @@
-# German translations for PROJECT.
+# German translations for .
 # Copyright (C) 2019 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
+# This file is distributed under the same license as the  project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.9\n"
+"Project-Id-Version:  0.9\n"
 "Report-Msgid-Bugs-To: patrickhener@gmx.de\n"
-"POT-Creation-Date: 2019-04-11 15:05+0200\n"
+"POT-Creation-Date: 2019-04-13 11:24+0200\n"
 "PO-Revision-Date: 2019-04-10 19:56+0200\n"
 "Last-Translator: Patrick Hener <patrickhener@gmx.de>\n"
 "Language: de\n"
@@ -18,44 +18,52 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 
-#: mod_game/controllers.py:255
+#: mod_game/controllers.py:100
+msgid "Really end game?"
+msgstr "Spiel wirklich beenden?"
+
+#: mod_game/controllers.py:327
 msgid "Remove Darts"
 msgstr "Darts entfernen"
 
-#: mod_game/controllers.py:256
+#: mod_game/controllers.py:328
 msgid "Switch to next player first"
 msgstr "Wechsle zuerst zum nächsten Spieler"
 
-#: mod_game/controllers.py:283
+#: mod_game/controllers.py:362
 msgid "Throw updated"
 msgstr "Wurf geändert"
 
-#: mod_game/controllers.py:304
+#: mod_game/controllers.py:385
 msgid "Done"
 msgstr "Erledigt"
 
-#: mod_game/helper.py:188
+#: mod_game/controllers.py:404 templates/game/gameController.html:54
+msgid "Rematch"
+msgstr "Erneut spielen"
+
+#: mod_game/helper.py:204
 msgid "Bust! Remove Darts!"
 msgstr "Überworfen! Darts entfernen!"
 
-#: mod_game/helper.py:199
+#: mod_game/helper.py:215
 msgid "Winner!"
 msgstr "Sieger!"
 
-#: mod_game/helper.py:206
+#: mod_game/helper.py:222
 #, python-format
 msgid "Bust! %(mode)s out!"
 msgstr "Überworfen! %(mode)s aus!"
 
-#: mod_game/helper.py:217
+#: mod_game/helper.py:233
 msgid "No Out possible! Remove Darts!"
 msgstr "Sieg nicht mehr möglich! Darts entfernen!"
 
-#: mod_game/helper.py:229
+#: mod_game/helper.py:245
 msgid "Remove Darts!"
 msgstr "Darts entfernen"
 
-#: mod_game/helper.py:236 mod_game/helper.py:242
+#: mod_game/helper.py:252 mod_game/helper.py:259
 msgid "There is no active game running"
 msgstr "Aktuell ist kein Spiel gestartet"
 
@@ -99,7 +107,7 @@ msgstr "Direkt"
 msgid "Condition to end the game"
 msgstr "Endbedingung"
 
-#: templates/game/admin.html:53
+#: templates/game/admin.html:53 templates/game/scoreboardCricket.html:36
 msgid "Variant"
 msgstr "Variante"
 
@@ -115,29 +123,29 @@ msgstr "Dir fehlt ein Spieler? Erstelle"
 msgid "one"
 msgstr "einen"
 
-#: templates/game/gameController.html:15
+#: templates/game/gameController.html:28
 msgid "Change Throws"
 msgstr "Würfe bearbeiten"
 
-#: templates/game/gameController.html:24 templates/game/gameController.html:41
-#: templates/game/gameController.html:50
+#: templates/game/gameController.html:37 templates/game/gameController.html:55
+#: templates/game/gameController.html:64
 msgid "Next Player"
 msgstr "Nächster Spieler"
 
-#: templates/game/gameController.html:25 templates/game/gameController.html:42
-#: templates/game/gameController.html:51
+#: templates/game/gameController.html:38 templates/game/gameController.html:56
+#: templates/game/gameController.html:65
 msgid "End Game"
 msgstr "Spiel beenden"
 
-#: templates/game/gameController.html:30
+#: templates/game/gameController.html:43
 msgid "Insert Throws"
 msgstr "Würfe einfügen"
 
-#: templates/game/gameController.html:39
+#: templates/game/gameController.html:52
 msgid "Game Controls"
 msgstr "Spielsteuerung"
 
-#: templates/game/gameController.html:64
+#: templates/game/gameController.html:76
 msgid "Update Throw"
 msgstr "Wurf bearbeiten"
 
@@ -179,46 +187,51 @@ msgstr "Erstelle einen neuen Spieler"
 msgid "You are missing a user to play? Go ahead and create one!"
 msgstr "Dir fehlt eine Spieler zum Spielen? Na los, erstell dir einen!"
 
-#: templates/game/manageuser.html:23
+#: templates/game/manageuser.html:22
 msgid "Create User"
 msgstr "Spieler erstellen"
 
-#: templates/game/manageuser.html:26
+#: templates/game/manageuser.html:25
 msgid "User list"
 msgstr "Spielerliste"
 
-#: templates/game/manageuser.html:37
+#: templates/game/manageuser.html:36
 msgid "Delete Selected User"
 msgstr "Lösche den ausgewählten Spieler"
 
-#: templates/game/manageuser.html:40
+#: templates/game/manageuser.html:39
 msgid "Go"
 msgstr "Gehe"
 
-#: templates/game/manageuser.html:40
+#: templates/game/manageuser.html:39
 msgid "back"
 msgstr "zurück"
 
-#: templates/game/manageuser.html:40
+#: templates/game/manageuser.html:39
 msgid "to the game setup when done"
 msgstr "zu den Spieleinstellungen, wenn du fertig bist"
 
+#: templates/game/scoreboardCricket.html:15
 #: templates/game/scoreboardX01.html:12
 msgid "Active Player"
 msgstr "Aktiver Spieler"
 
+#: templates/game/scoreboardCricket.html:18
 #: templates/game/scoreboardX01.html:15
 msgid "Player round"
 msgstr "Spieler Runde"
 
+#: templates/game/scoreboardCricket.html:21
 #: templates/game/scoreboardX01.html:18
 msgid "Player Average"
 msgstr "Wurfdurchschnitt"
 
+#: templates/game/scoreboardCricket.html:24
 #: templates/game/scoreboardX01.html:21
 msgid "Player Throws"
 msgstr "Wurfanzahl"
 
+#: templates/game/scoreboardCricket.html:33
 #: templates/game/scoreboardX01.html:29
 msgid "Game"
 msgstr "Spiel"

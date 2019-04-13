@@ -41,6 +41,7 @@ class Player(Base):
 class Score(Base):
     score = db.Column(db.Integer, nullable=False)
     parkScore = db.Column(db.Integer, nullable=False)
+    initialScore = db.Column(db.Integer, nullable=False)
 
     player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"),
                           nullable=False)
