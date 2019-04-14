@@ -293,14 +293,18 @@ def switch_next_player():
 
 def get_average(player_id):
     throws = (Throw.query.filter_by(player_id=player_id)).all()
+    rnds = (Round.query.filter_by(player_id=player_id)).all()
     if not throws:
         return str(0)
     else:
         throwlist = []
+        roundlist = []
         for throw in throws:
             throwlist.append(str(throw))
+        for rnd in rnds:
+            roundlist.append(rnd.id)
         throwlist = [float(s) for s in throwlist]
-        avgofthrows = round((sum(throwlist) / len(throwlist)), 2)
+        avgofthrows = round((sum(throwlist) / len(roundlist)), 2)
         return str(avgofthrows)
 
 
@@ -313,18 +317,25 @@ def get_throws_count(player_id):
 
 
 def get_last_throws(player_id):
-    all_throws = Throw.query.filter_by(player_id=player_id).order_by(Throw.round_id.desc()).all()
     throwlist = []
-    if not all_throws == []:
-        try:
-            for i in range(0, 3):
-                throwlist.append(str(player_id) + "," + str(all_throws[i].hit) + "," + str(all_throws[i].mod))
-        except:
-            print("Exception handled, lolz")
+    last_round = Round.query.filter_by(player_id=player_id).order_by(Round.id.desc()).first()
+    if last_round == None:
+        print("Last Round is none so hitting the if clause.")
+        throwlist.append(str(player_id) + ",0,0")
+        throwlist.append(str(player_id) + ",0,0")
+        throwlist.append(str(player_id) + ",0,0")
     else:
-        throwlist.append(str(player_id) + ",0,0")
-        throwlist.append(str(player_id) + ",0,0")
-        throwlist.append(str(player_id) + ",0,0")
+        last_throws = Throw.query.filter_by(round_id=last_round.id).all()
+        if not last_throws == []:
+            try:
+                for i in range(0, 3):
+                    throwlist.append(str(player_id) + "," + str(last_throws[i].hit) + "," + str(last_throws[i].mod))
+            except:
+                print("Exception handled, lolz")
+        else:
+            throwlist.append(str(player_id) + ",0,0")
+            throwlist.append(str(player_id) + ",0,0")
+            throwlist.append(str(player_id) + ",0,0")
 
     return throwlist
 

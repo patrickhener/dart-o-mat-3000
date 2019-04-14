@@ -116,8 +116,15 @@ def game_controller():
     throwlist = []
     for player in playing_players_id:
         throws = get_all_throws(player)
-        for throw in throws:
-            throwlist.append(str(player)+","+str(throw.id)+","+str(throw.hit)+","+str(throw.mod))
+        for thr in throws:
+            throwlist.append(str(player)+","+str(thr.id)+","+str(thr.hit)+","+str(thr.mod))
+
+    # Scorelist
+    scorelist = []
+    for player in playing_players:
+        score = Score.query.filter_by(player_id=player.id).first()
+        scorelist.append(str(player) + "," + str(score.score))
+    print(scorelist)
 
     # gametype
     x01_games = ['301', '501', '701', '901']
@@ -125,6 +132,7 @@ def game_controller():
         gametype = "x01"
         socketio.emit("drawX01Controller")
         socketio.emit("drawThrows", (playerlist, throwlist))
+        socketio.emit("highlightAndScore", (active_player.name, scorelist))
     elif str(game.gametype) == "Cricket":
         gametype = "cricket"
     else:
@@ -137,6 +145,7 @@ def game_controller():
         gametype = gametype,
         playingPlayers = playerlist,
         activePlayer = active_player,
+        scorelist = scorelist,
         throwlist = throwlist,
         end_message = end_message
     )
@@ -415,8 +424,6 @@ def rematch():
 
 @socketio.on('startX01')
 def on_start_x01(data):
-    # {'players': ['Caddi', 'Jürgen'], 'x01variant': '301', 'startIn': 'Direkt', 'exitOut': 'Direkt'}
-    print(data)
     # Flush tables cause for now we handle only one active game
     clear_db()
     # Fill tables

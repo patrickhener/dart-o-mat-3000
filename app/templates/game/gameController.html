@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% if gametype == "x01" %}
-	{% block bodyparam %}onload="drawX01Controller({{ playingPlayers }}), drawThrows({{ playingPlayers }},{{ throwlist }})"{% endblock %}
+	{% block bodyparam %}onload="drawX01Controller({{ playingPlayers }}), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ activePlayer }}',{{ scorelist }})"{% endblock %}
 
 {% elif gametype == "cricket" %}
 {% endif %}

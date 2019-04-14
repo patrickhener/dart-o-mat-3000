@@ -1,7 +1,6 @@
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 
 socket.on('connect', function() {
-     console.log('Websocket connected!');
 });
 
 socket.on('redirectGameController', function(url) {
@@ -18,6 +17,10 @@ socket.on('drawThrows', function(playerlist, throwlist) {
 
 socket.on('rematchButton', function() {
 	rematchButton();
+});
+
+socket.on('highlightAndScore', function(activePlayer, scorelist) {
+	highlightAndScore(activePlayer, scorelist);
 });
 
 function drawX01Controller() {
@@ -93,15 +96,6 @@ function drawX01Controller() {
 	groupDiv4.appendChild(button);
 }
 
-//function endGame() {
-//	var message = _("Really end game?");
-//    if (confirm(message) == true) {
-//		var xhttp = new XMLHttpRequest();
-//		xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/endGame'), true);
-//		xhttp.send();
-//	}
-//}
-
 function nextPlayer() {
 	var xhttp = new XMLHttpRequest();
 	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/nextPlayer'), true);
@@ -137,6 +131,7 @@ function drawThrows(playerlist, throwlist) {
 		var tr = document.createElement("tr");
 		var tdname = document.createElement("td");
 		tdname.setAttribute("rowspan", Math.ceil(rowspan/3));
+		tdname.setAttribute("id", "name-score-" + arrayPlayer[1]);
 		tdname.innerHTML = arrayPlayer[1];
 		tr.appendChild(tdname);
 		//append throws to first table row
@@ -173,6 +168,17 @@ function drawThrows(playerlist, throwlist) {
 			}
 		}
 		table.appendChild(tr);
+	}
+}
+
+function highlightAndScore(activePlayer, scorelist) {
+    var activePlayer = document.getElementById("name-score-" + activePlayer);
+	activePlayer.style.border='5px solid white';
+	activePlayer.style.boxShadow='10px 10px 15px black';
+	for (var item in scorelist) {
+	    var array = scorelist[item].split(",");
+		var playerDiv = document.getElementById("name-score-" + array[0]);
+		playerDiv.innerHTML = array[0] + " - " + array[1];
 	}
 }
 

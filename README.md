@@ -58,14 +58,11 @@ TODO Write autostart script to startup a browser window in fullscreen displaying
 
 # Feature TODOs
 - Different Sounds to choose from
-- Game Controller to only show last two throw round per user
-- Show Player score in game controller
-- Show active player in game controller
+- Game Controller to only show last two throw round per user (Might not matter with the current gameController layout
+as the table grows downwards beneath game Controls)
 - If more than 2 player do not end game after one player get's 0/wins cricket
 
 # Bugs TODOs
-- Delete last Throws when first throw of new round
-- Average of round sum not of all Throws
 - When Bust change throws to zero and don't delete them from database
 
 # New Games TODOs
@@ -81,7 +78,10 @@ TODO Write autostart script to startup a browser window in fullscreen displaying
   - Rematch Button implemented
   - Confirmation implemented after hitting "End Game" Button
   - If Sound is on there will now also be a sound when changing player
-  - 
+  - Checkout Possibilities shown in X01 games (Dict with checkouts, handed to game via message variable)
+  - Player Scores and active Player shown in gameController
+  - Average now is calculated right
+  - Last three throws now are emptied as a new throw of a new round is done
 ## 2019-04-10 - v0.9: Alpha version
 - Working condition: It might not work that stable. There will still be bugs. Therefore it is only Alpha.
 - Ready features:
