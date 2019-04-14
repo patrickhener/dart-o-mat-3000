@@ -63,6 +63,7 @@ def get_cricket(player_id):
     cricket = Cricket.query.filter_by(player_id=player_id).first()
     return cricket
 
+
 def check_in_game(mod):
     # set active player
     active_player = Player.query.filter_by(active=True).first()
@@ -175,7 +176,7 @@ def score_x01(hit, mod):
     # check if there is a game going on
     if check_if_ongoing_game():
         # set active player
-        active_player = Player.query.filter_by(active=True).first()
+        active_player = player.query.filter_by(active=True).first()
         # get Game object
         game = Game.query.first()
         # Check if there is a ongoing round associated, if not create a new one
@@ -252,6 +253,92 @@ def score_x01(hit, mod):
         return gettext("There is no active game running")
 
 
+def score_cricket(hit, mod):
+    # Check if game is ongoing
+    if check_if_ongoing_game():
+        # set active player
+        active_player = Player.query.filter_by(active=True).first()
+        # get Game object
+        game = Game.query.first()
+        # get Cricket object of player
+        cricket = Cricket.query.filter_by(player_id=active_player.id).first()
+        # Check if there is a ongoing round associated, if not create a new one
+        if not check_if_ongoing_round(active_player):
+            rnd = Round(player_id=active_player.id, ongoing=True, throwcount=0)
+            db.session.add(rnd)
+            db.session.commit()
+        else:
+            # Set round object
+            rnd = Round.query.filter_by(player_id=active_player.id, ongoing=1).first()
+
+        # Check if ongoing round is over
+        if rnd.throwcount == 3:
+            game.nextPlayerNeeded = True
+        else:
+            # set throwcount and old score
+            throwcount = rnd.throwcount
+            if hit == 15:
+                cricket.c15 += mod
+                check_close(hit)
+                result = "15"
+            elif hit == 16:
+                cricket.c16 += mod
+                result = "16"
+            elif hit == 17:
+                cricket.c17 += mod
+                result = "17"
+            elif hit == 18:
+                cricket.c18 += mod
+                result = "18"
+            elif hit == 19:
+                cricket.c19 += mod
+                result = "19"
+            elif hit == 20:
+                cricket.c20 += mod
+                result = "20"
+            elif hit == 25:
+                cricket.c25 += mod
+                result = "25"
+            else:
+               result = "-"
+
+        throwcount += 1
+        rnd.throwcount = throwcount
+        throw = Throw(hit=hit, mod=mod, round_id=rnd.id, player_id=active_player.id)
+        if throwcount == 3:
+            game.nextPlayerNeeded = True
+            result = gettext(u"Remove Darts!")
+        db.session.add(throw)
+        db.session.commit()
+
+        return result
+
+
+    else:
+        return gettext("There is no active game running")
+
+
+def check_close(hit):
+    # Get all playing players
+    players = get_playing_players_objects()
+    closed = True
+    for player in players:
+        cricketDict = {}
+        cricketObject = Cricket.query.filter_by(player_id=player.id).first()
+        cricketDict['15'] = cricketObject.c15
+        cricketDict['16'] = cricketObject.c15
+        cricketDict['17'] = cricketObject.c15
+        cricketDict['18'] = cricketObject.c15
+        cricketDict['19'] = cricketObject.c15
+        cricketDict['20'] = cricketObject.c15
+        cricketDict['25'] = cricketObject.c15
+        if cricketDict[str(hit)] < 3:
+            closed = False
+
+    print(closed)
+    return closed
+
+
 def switch_next_player():
     # First check if the game was won
     game = Game.query.first()
@@ -320,7 +407,6 @@ def get_last_throws(player_id):
     throwlist = []
     last_round = Round.query.filter_by(player_id=player_id).order_by(Round.id.desc()).first()
     if last_round == None:
-        print("Last Round is none so hitting the if clause.")
         throwlist.append(str(player_id) + ",0,0")
         throwlist.append(str(player_id) + ",0,0")
         throwlist.append(str(player_id) + ",0,0")

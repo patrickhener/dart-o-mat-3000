@@ -13,7 +13,7 @@ from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
 # Import helper functions
 from app.mod_game.helper import clear_db, score_x01, switch_next_player, get_playing_players_objects, \
     get_playing_players_id, get_score, get_active_player, get_average, get_throws_count, get_last_throws, \
-    get_all_throws, update_throw_table, get_cricket
+    get_all_throws, update_throw_table, get_cricket, score_cricket
 
 # Import Babel Stuff
 from flask_babel import gettext
@@ -124,7 +124,6 @@ def game_controller():
     for player in playing_players:
         score = Score.query.filter_by(player_id=player.id).first()
         scorelist.append(str(player) + "," + str(score.score))
-    print(scorelist)
 
     # gametype
     x01_games = ['301', '501', '701', '901']
@@ -195,13 +194,13 @@ def scoreboard_cricket(message=None, soundeffect=None):
     player_cricket = []
     for player in playing_players:
         cricket_array = []
-        cricket_array.append(str(get_cricket(player.id).c20))
-        cricket_array.append(str(get_cricket(player.id).c19))
-        cricket_array.append(str(get_cricket(player.id).c18))
-        cricket_array.append(str(get_cricket(player.id).c17))
-        cricket_array.append(str(get_cricket(player.id).c16))
-        cricket_array.append(str(get_cricket(player.id).c15))
-        cricket_array.append(str(get_cricket(player.id).c25))
+        cricket_array.append(get_cricket(player.id).c15)
+        cricket_array.append(get_cricket(player.id).c16)
+        cricket_array.append(get_cricket(player.id).c17)
+        cricket_array.append(get_cricket(player.id).c18)
+        cricket_array.append(get_cricket(player.id).c19)
+        cricket_array.append(get_cricket(player.id).c20)
+        cricket_array.append(get_cricket(player.id).c25)
         player_cricket.append(cricket_array)
 
     scores = []
@@ -213,7 +212,7 @@ def scoreboard_cricket(message=None, soundeffect=None):
                           for name, playerid, cricket, score in zip(playing_players,playing_players_id,player_cricket,scores)]
 
     socketio.emit('drawScoreboardCricket', (player_scores_list, str(last_throws)))
-    socketio.emit('highlightActiveCricket', (active_player.name, active_player.id, rnd, message, average, throwcount))
+    socketio.emit('highlightActiveCricket', (active_player.name, active_player.id, rnd, message, throwcount))
 
     if sound:
         socketio.emit('playSound', audiofile)
@@ -224,7 +223,6 @@ def scoreboard_cricket(message=None, soundeffect=None):
         throwcount=throwcount,
         lastthrows=last_throws,
         message=message,
-        average=average,
         player=active_player.name,
         player_id=active_player.id,
         gametype=game.gametype,
@@ -339,6 +337,7 @@ def throw(hit, mod):
     # Lookup if next player has to be switched
     if game.nextPlayerNeeded:
         scoreboard_x01(gettext(u"Remove Darts"))
+        scoreboard_cricket(gettext(u"Remove Darts"))
         return gettext(u"Switch to next player first")
     else:
         # decide which game mechanism to use
@@ -365,7 +364,14 @@ def throw(hit, mod):
             game_controller()
             return do_it
         elif str(game.gametype) == "Cricket":
-            return "Cricket Game"
+            do_it = score_cricket(hit, mod)
+            if do_it == "Opened!":
+                audiofile = "open"
+            if do_it == "Closed!":
+                audiofile = "close"
+            scoreboard_cricket(do_it, audiofile)
+            game_controller()
+            return do_it
         else:
             return "Other Game Type"
 

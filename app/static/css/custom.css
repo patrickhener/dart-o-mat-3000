@@ -58,7 +58,7 @@ div#playerName {
 	padding: 10px;
 }
 
-div#playerScore, div[id^="Sum-"] {
+div#playerScore, div[id^="Sum-"], div[id^="Cricket-"] {
 	background-color: #3c5f6c;
 	padding: 10px;
 }

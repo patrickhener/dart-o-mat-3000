@@ -3,7 +3,7 @@
 <script src="{{ url_for('static', filename='js/scoreboard.js') }}"></script>
 {% endblock %}
 
-{% block bodyparam %}style="overflow: hidden;" onload='drawScoreboardCricket({{ playerlist }}, "{{ lastthrows }}"), highlightActiveCricket("{{ player }}","{{ player_id }}","{{ rndcount }}","{{ message }}"," {{ average }}","{{ throwcount }}")'{% endblock %}
+{% block bodyparam %}style="overflow: hidden;" onload='drawScoreboardCricket({{ playerlist }}, "{{ lastthrows }}"), highlightActiveCricket("{{ player }}","{{ player_id }}","{{ rndcount }}","{{ message }}","{{ throwcount }}")'{% endblock %}
 
 
 {% block content %}
@@ -17,9 +17,6 @@
 				</tr><tr>
 					<td>{% trans %}Player round{% endtrans %}:</td>
 					<td id="header-rndcount">{{ rndcount }}</td>
-				</tr><tr>
-					<td>{% trans %}Player Average{% endtrans %}:</td>
-					<td id="header-average">{{ average }}</td>
 				</tr><tr>
 					<td>{% trans %}Player Throws{% endtrans %}:</td>
 					<td id="header-throwcount">{{ throwcount }}</td>
