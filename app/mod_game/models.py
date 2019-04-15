@@ -66,6 +66,19 @@ class Cricket(Base):
         return str(self.id)
 
 
+class CricketControl(Base):
+    c20 = db.Column(db.String, nullable=True)
+    c19 = db.Column(db.String, nullable=True)
+    c18 = db.Column(db.String, nullable=True)
+    c17 = db.Column(db.String, nullable=True)
+    c16 = db.Column(db.String, nullable=True)
+    c15 = db.Column(db.String, nullable=True)
+    c25 = db.Column(db.String, nullable=True)
+
+    def _repr__(self):
+        return str(self.id)
+
+
 class Round(Base):
     player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"),
                           nullable=False)

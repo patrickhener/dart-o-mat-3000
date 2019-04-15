@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  0.9\n"
 "Report-Msgid-Bugs-To: patrickhener@gmx.de\n"
-"POT-Creation-Date: 2019-04-13 11:24+0200\n"
+"POT-Creation-Date: 2019-04-15 15:05+0200\n"
 "PO-Revision-Date: 2019-04-10 19:56+0200\n"
 "Last-Translator: Patrick Hener <patrickhener@gmx.de>\n"
 "Language: de\n"
@@ -22,50 +22,67 @@ msgstr ""
 msgid "Really end game?"
 msgstr "Spiel wirklich beenden?"
 
-#: mod_game/controllers.py:327
+#: mod_game/controllers.py:332 mod_game/controllers.py:333
 msgid "Remove Darts"
 msgstr "Darts entfernen"
 
-#: mod_game/controllers.py:328
+#: mod_game/controllers.py:334
 msgid "Switch to next player first"
 msgstr "Wechsle zuerst zum nächsten Spieler"
 
-#: mod_game/controllers.py:362
+#: mod_game/controllers.py:375 mod_game/controllers.py:376
 msgid "Throw updated"
 msgstr "Wurf geändert"
 
-#: mod_game/controllers.py:385
+#: mod_game/controllers.py:401
 msgid "Done"
 msgstr "Erledigt"
 
-#: mod_game/controllers.py:404 templates/game/gameController.html:54
+#: mod_game/controllers.py:429 mod_game/controllers.py:432
+#: templates/game/gameController.html:28 templates/game/gameController.html:47
 msgid "Rematch"
 msgstr "Erneut spielen"
 
-#: mod_game/helper.py:204
+#: mod_game/helper.py:213
 msgid "Bust! Remove Darts!"
 msgstr "Überworfen! Darts entfernen!"
 
-#: mod_game/helper.py:215
+#: mod_game/helper.py:224 mod_game/helper.py:328
 msgid "Winner!"
 msgstr "Sieger!"
 
-#: mod_game/helper.py:222
+#: mod_game/helper.py:231
 #, python-format
 msgid "Bust! %(mode)s out!"
 msgstr "Überworfen! %(mode)s aus!"
 
-#: mod_game/helper.py:233
+#: mod_game/helper.py:242
 msgid "No Out possible! Remove Darts!"
 msgstr "Sieg nicht mehr möglich! Darts entfernen!"
 
-#: mod_game/helper.py:245
+#: mod_game/helper.py:254
 msgid "Remove Darts!"
 msgstr "Darts entfernen"
 
-#: mod_game/helper.py:252 mod_game/helper.py:259
+#: mod_game/helper.py:261 mod_game/helper.py:342 mod_game/helper.py:504
 msgid "There is no active game running"
 msgstr "Aktuell ist kein Spiel gestartet"
+
+#: mod_game/helper.py:319
+msgid "Closed"
+msgstr "Geschlossen"
+
+#: mod_game/helper.py:335
+msgid " Remove Darts!"
+msgstr " Darts entfernen!"
+
+#: mod_game/helper.py:392
+msgid "Closed!"
+msgstr "Geschlossen!"
+
+#: mod_game/helper.py:423 mod_game/helper.py:444
+msgid "Scored"
+msgstr "Gepunktet"
 
 #: templates/404.html:3
 msgid "404 - That one missed!"
@@ -107,7 +124,7 @@ msgstr "Direkt"
 msgid "Condition to end the game"
 msgstr "Endbedingung"
 
-#: templates/game/admin.html:53 templates/game/scoreboardCricket.html:36
+#: templates/game/admin.html:53 templates/game/scoreboardCricket.html:33
 msgid "Variant"
 msgstr "Variante"
 
@@ -123,29 +140,27 @@ msgstr "Dir fehlt ein Spieler? Erstelle"
 msgid "one"
 msgstr "einen"
 
-#: templates/game/gameController.html:28
-msgid "Change Throws"
-msgstr "Würfe bearbeiten"
-
-#: templates/game/gameController.html:37 templates/game/gameController.html:55
-#: templates/game/gameController.html:64
-msgid "Next Player"
-msgstr "Nächster Spieler"
-
-#: templates/game/gameController.html:38 templates/game/gameController.html:56
-#: templates/game/gameController.html:65
-msgid "End Game"
-msgstr "Spiel beenden"
-
-#: templates/game/gameController.html:43
-msgid "Insert Throws"
-msgstr "Würfe einfügen"
-
-#: templates/game/gameController.html:52
+#: templates/game/gameController.html:26
 msgid "Game Controls"
 msgstr "Spielsteuerung"
 
-#: templates/game/gameController.html:76
+#: templates/game/gameController.html:29 templates/game/gameController.html:48
+msgid "Next Player"
+msgstr "Nächster Spieler"
+
+#: templates/game/gameController.html:30 templates/game/gameController.html:49
+msgid "End Game"
+msgstr "Spiel beenden"
+
+#: templates/game/gameController.html:37
+msgid "Insert Throws"
+msgstr "Würfe einfügen"
+
+#: templates/game/gameController.html:54
+msgid "Change Throws"
+msgstr "Würfe bearbeiten"
+
+#: templates/game/gameController.html:62
 msgid "Update Throw"
 msgstr "Wurf bearbeiten"
 
@@ -222,19 +237,18 @@ msgid "Player round"
 msgstr "Spieler Runde"
 
 #: templates/game/scoreboardCricket.html:21
-#: templates/game/scoreboardX01.html:18
-msgid "Player Average"
-msgstr "Wurfdurchschnitt"
-
-#: templates/game/scoreboardCricket.html:24
 #: templates/game/scoreboardX01.html:21
 msgid "Player Throws"
 msgstr "Wurfanzahl"
 
-#: templates/game/scoreboardCricket.html:33
+#: templates/game/scoreboardCricket.html:30
 #: templates/game/scoreboardX01.html:29
 msgid "Game"
 msgstr "Spiel"
+
+#: templates/game/scoreboardX01.html:18
+msgid "Player Average"
+msgstr "Wurfdurchschnitt"
 
 #: templates/game/scoreboardX01.html:32
 msgid "In"

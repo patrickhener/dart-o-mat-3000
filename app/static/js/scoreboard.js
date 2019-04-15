@@ -162,6 +162,7 @@ function drawScoreboardCricket(list, lastthrows) {
         cricketDiv.setAttribute("id", "Cricket-" + list[item].Player);
         borderDiv.appendChild(cricketDiv);
         var cricketTable = document.createElement("table");
+        cricketTable.setAttribute("class", "cricketTable");
         cricketDiv.append(cricketTable);
         var cricketArray = list[item].Cricket;
         cricketArray = cricketArray.substr(1);
@@ -178,8 +179,10 @@ function drawScoreboardCricket(list, lastthrows) {
         for (i=15;i<21;i++) {
             var row = document.createElement("tr");
             var numberColumn = document.createElement("td");
+            numberColumn.setAttribute("id", "numberColumn");
             numberColumn.innerHTML = i;
             var countColumn = document.createElement("td");
+            countColumn.setAttribute("id", "countColumn");
             if (cricketArray[i - 15] == 0) {
                 countColumn.innerHTML = "";
             }
@@ -216,6 +219,26 @@ function drawScoreboardCricket(list, lastthrows) {
         row.appendChild(countColumn);
         cricketTable.appendChild(row);
         div.appendChild(borderDiv);
+
+        for (var item in lastthrows) {
+            for (item2 in lastthrows[item]) {
+                var mod = "";
+                var array = lastthrows[item][item2].split(",");
+                var throwDiv = document.getElementById("Throws-" + array[0]);
+                var throww = document.createElement("div");
+                throww.setAttribute("id", "throw");
+                var output = "";
+                if (array[2] == "2") {
+                    output += "D";
+                }
+                else if (array[2] == "3") {
+                    output += "T";
+                }
+                output += array[1];
+                throww.innerHTML = "<h2 id='playerThrow'>" + output + "</h2>";
+                throwDiv.appendChild(throww);
+            }
+        }
      }
 
 }

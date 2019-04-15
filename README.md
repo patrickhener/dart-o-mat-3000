@@ -61,13 +61,18 @@ TODO Write autostart script to startup a browser window in fullscreen displaying
 - Game Controller to only show last two throw round per user (Might not matter with the current gameController layout
 as the table grows downwards beneath game Controls)
 - If more than 2 player do not end game after one player get's 0/wins cricket
+- Checkout table messages for X01 Double out games
 
 # Bugs TODOs
 - When Bust change throws to zero and don't delete them from database
 
 # New Games TODOs
-- Cricket game mechanism
-- Cricket scoreboard
+- Cricket TODOS:
+Cricket is working so far but a few things are still to be worked on:
+  - Sound might not be the right one. At least opened and closed have to be implemented
+  - Throw Edit does not work. need to figure a way to edit scoring as well if necesarry
+  - Implement some kind of display possibility to signal that a number is already closed (grey out table row?)
+  - Display last three throws to the scoreboard
 
 # Changelog
 ## 2019-xx-xx - v1.0: Beta version
@@ -82,6 +87,8 @@ as the table grows downwards beneath game Controls)
   - Player Scores and active Player shown in gameController
   - Average now is calculated right
   - Last three throws now are emptied as a new throw of a new round is done
+- Game added:
+  - Cricket was added with variants Normal, Cut Throat, No Score
 ## 2019-04-10 - v0.9: Alpha version
 - Working condition: It might not work that stable. There will still be bugs. Therefore it is only Alpha.
 - Ready features:

@@ -8,7 +8,7 @@ from flask import Blueprint, request, render_template, url_for, app
 from app import db, socketio, babel, IPADDR, PORT, RECOGNITION, SOUND
 
 # Import module models
-from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
+from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl
 
 # Import helper functions
 from app.mod_game.helper import clear_db, score_x01, switch_next_player, get_playing_players_objects, \
@@ -100,9 +100,6 @@ def game_controller():
     end_message = gettext(u"Really end game?")
     # Recognition [config.py]
     recognition = RECOGNITION
-    # Gather Stuff to five to gameController View
-    # Game
-    game = Game.query.first()
     # Playing Players
     playing_players = get_playing_players_objects()
 
@@ -125,23 +122,15 @@ def game_controller():
         score = Score.query.filter_by(player_id=player.id).first()
         scorelist.append(str(player) + "," + str(score.score))
 
-    # gametype
-    x01_games = ['301', '501', '701', '901']
-    if any(x in str(game.gametype) for x in x01_games):
-        gametype = "x01"
-        socketio.emit("drawX01Controller")
-        socketio.emit("drawThrows", (playerlist, throwlist))
-        socketio.emit("highlightAndScore", (active_player.name, scorelist))
-    elif str(game.gametype) == "Cricket":
-        gametype = "cricket"
-    else:
-        gametype = "unknown"
+    # Draw Scoreboard
+    socketio.emit("drawX01Controller")
+    socketio.emit("drawThrows", (playerlist, throwlist))
+    socketio.emit("highlightAndScore", (active_player.name, scorelist))
 
     # Render Template
     return render_template(
         '/game/gameController.html',
         recognition = recognition,
-        gametype = gametype,
         playingPlayers = playerlist,
         activePlayer = active_player,
         scorelist = scorelist,
@@ -155,6 +144,14 @@ def scoreboard_cricket(message=None, soundeffect=None):
     # Var for returning options
     if not message:
         message = "-"
+    if message == "Winner!":
+        socketio.emit('rematchButton')
+    elif message == "Sieger!":
+        socketio.emit('rematchButton')
+    elif message == "Winner! Remove Darts!":
+        socketio.emit('rematchButton')
+    elif message == "Sieger! Darts entfernen!":
+        socketio.emit('rematchButton')
     else:
         message = message
     if not soundeffect:
@@ -380,6 +377,7 @@ def throw(hit, mod):
 def update_throw(throw_id, new_hit, new_mod):
     update_throw_table(throw_id, new_hit, new_mod)
     scoreboard_x01(gettext(u"Throw updated"))
+    scoreboard_cricket(gettext(u"Throw updated"))
     game_controller()
     return "-"
 
@@ -410,6 +408,7 @@ def end_game():
 @mod_game.route("/rematch")
 def rematch():
     game = Game.query.first()
+    players = get_playing_players_objects()
     game.won = 0
     scores = Score.query.all()
     for score in scores:
@@ -418,9 +417,20 @@ def rematch():
     db.session.query(Throw).delete()
     db.session.query(Round).delete()
     db.session.query(Cricket).delete()
+    db.session.query(CricketControl).delete()
     db.session.commit()
     if game.gametype == "Cricket":
-        scoreboard_cricket()
+        for player in players:
+            p = Player.query.filter_by(id=player.id).first()
+            c = Cricket(c20=0,c19=0,c18=0,c17=0,c16=0,c15=0,c25=0)
+            p.crickets.append(c)
+            db.session.add(p)
+            db.session.add(c)
+            db.session.commit()
+        cc = CricketControl(c20="",c19="",c18="",c17="",c16="",c15="",c25="")
+        db.session.add(cc)
+        db.session.commit()
+        scoreboard_cricket(gettext(u"Rematch"), "startgame")
         game_controller()
     else:
         scoreboard_x01(gettext(u"Rematch"), "startgame")
@@ -479,8 +489,11 @@ def on_start_cricket(data):
     # Determine start Player by random
     a = Player.query.filter_by(name=random.choice(data['players'])).first()
     a.active = True
+    # CricketControl
+    cc = CricketControl(c20="",c19="",c18="",c17="",c16="",c15="",c25="")
     # Commit to DB
     db.session.add(a)
+    db.session.add(cc)
     db.session.commit()
 
     socketio.emit('redirectIndex', '/game/scoreboardCricket')

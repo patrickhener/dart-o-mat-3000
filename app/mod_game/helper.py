@@ -1,7 +1,7 @@
 # Import db from app
 from app import db, babel
 # Import module models
-from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw
+from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl
 # cycle and islice for nextPlayer
 from itertools import cycle, islice
 # Babel Translation
@@ -15,6 +15,7 @@ def clear_db():
     db.session.query(Cricket).delete()
     db.session.query(Throw).delete()
     db.session.query(Round).delete()
+    db.session.query(CricketControl).delete()
 
     playing_players_object = Player.query.filter_by(game_id=1).all()
     for player in playing_players_object:
@@ -147,26 +148,33 @@ def check_if_ongoing_round(active_player):
 
 
 def update_throw_table(id, hit, mod):
-    # get Throw and score
-    throw = (Throw.query.filter_by(id=id)).first()
-    score = (Score.query.filter_by(player_id=throw.player_id)).first()
-    # Calculate old points resulting of old throw
-    oldpoints = throw.hit * throw.mod
-    # Calculate new points resulting of altered throw
-    newpoints = int(hit) * int(mod)
-    # Calculate difference
-    alter_score = newpoints - oldpoints
-    # Calculate new score
-    new_score = score.score - alter_score
-    # Set Throw to new values
-    throw.hit = int(hit)
-    throw.mod = int(mod
-                    )
-    # Set Score and Park Score to new Score
-    score.score = new_score
-    score.parkScore = new_score
-    # Commit to db
-    db.session.commit()
+    game = Game.query.first()
+    if game.gametype == "Cricket":
+        # get Throw and score
+        throw = (Throw.query.filter_by(id=id)).first()
+        # TODO Implement Change Method here
+
+    else:
+        # get Throw and score
+        throw = (Throw.query.filter_by(id=id)).first()
+        score = (Score.query.filter_by(player_id=throw.player_id)).first()
+        # Calculate old points resulting of old throw
+        oldpoints = throw.hit * throw.mod
+        # Calculate new points resulting of altered throw
+        newpoints = int(hit) * int(mod)
+        # Calculate difference
+        alter_score = newpoints - oldpoints
+        # Calculate new score
+        new_score = score.score - alter_score
+        # Set Throw to new values
+        throw.hit = int(hit)
+        throw.mod = int(mod
+                        )
+        # Set Score and Park Score to new Score
+        score.score = new_score
+        score.parkScore = new_score
+        # Commit to db
+        db.session.commit()
     return "-"
 
 
@@ -176,7 +184,7 @@ def score_x01(hit, mod):
     # check if there is a game going on
     if check_if_ongoing_game():
         # set active player
-        active_player = player.query.filter_by(active=True).first()
+        active_player = Player.query.filter_by(active=True).first()
         # get Game object
         game = Game.query.first()
         # Check if there is a ongoing round associated, if not create a new one
@@ -254,14 +262,14 @@ def score_x01(hit, mod):
 
 
 def score_cricket(hit, mod):
+    # Empty result for now
+    result = ""
     # Check if game is ongoing
     if check_if_ongoing_game():
         # set active player
         active_player = Player.query.filter_by(active=True).first()
         # get Game object
         game = Game.query.first()
-        # get Cricket object of player
-        cricket = Cricket.query.filter_by(player_id=active_player.id).first()
         # Check if there is a ongoing round associated, if not create a new one
         if not check_if_ongoing_round(active_player):
             rnd = Round(player_id=active_player.id, ongoing=True, throwcount=0)
@@ -271,72 +279,222 @@ def score_cricket(hit, mod):
             # Set round object
             rnd = Round.query.filter_by(player_id=active_player.id, ongoing=1).first()
 
-        # Check if ongoing round is over
-        if rnd.throwcount == 3:
-            game.nextPlayerNeeded = True
+        # set throwcount
+        throwcount = rnd.throwcount
+
+        # Check if relevant hit
+        if hit in range(0,15):
+            result += "-"
         else:
-            # set throwcount and old score
-            throwcount = rnd.throwcount
-            if hit == 15:
-                cricket.c15 += mod
-                check_close(hit)
-                result = "15"
-            elif hit == 16:
-                cricket.c16 += mod
-                result = "16"
-            elif hit == 17:
-                cricket.c17 += mod
-                result = "17"
-            elif hit == 18:
-                cricket.c18 += mod
-                result = "18"
-            elif hit == 19:
-                cricket.c19 += mod
-                result = "19"
-            elif hit == 20:
-                cricket.c20 += mod
-                result = "20"
-            elif hit == 25:
-                cricket.c25 += mod
-                result = "25"
+            # Implement Cricket and score
+            cricket = Cricket.query.filter_by(player_id=active_player.id).first()
+            # 1. Check if hit is closed already
+            if not check_close(hit) == "closed":
+                # get current cricket counts
+                cricketDict = {}
+                cricketDict['15'] = cricket.c15
+                cricketDict['16'] = cricket.c16
+                cricketDict['17'] = cricket.c17
+                cricketDict['18'] = cricket.c18
+                cricketDict['19'] = cricket.c19
+                cricketDict['20'] = cricket.c20
+                cricketDict['25'] = cricket.c25
+                # increase count
+                cricketDict[str(hit)] += mod
+                # Write dict to database
+                cricket.c15 = cricketDict['15']
+                cricket.c16 = cricketDict['16']
+                cricket.c17 = cricketDict['17']
+                cricket.c18 = cricketDict['18']
+                cricket.c19 = cricketDict['19']
+                cricket.c20 = cricketDict['20']
+                cricket.c25 = cricketDict['25']
+                db.session.commit()
+                # 2. Now check if the number needs to be closed
+                check_to_close(hit)
+                # 3. Now check if it was not closed, then check scoring options
+                if not check_close(hit):
+                    # 4. Score
+                    result += check_to_score(hit, mod)
+                else:
+                    # If closed after last throw it returns closed
+                    result += gettext(u"Closed")
             else:
-               result = "-"
+                # This happens when already closed
+                result = "-"
+
+        # Finally Check if won
+        if check_won():
+            game.won = True
+            db.session.commit()
+            result = gettext(u"Winner!")
 
         throwcount += 1
         rnd.throwcount = throwcount
         throw = Throw(hit=hit, mod=mod, round_id=rnd.id, player_id=active_player.id)
         if throwcount == 3:
             game.nextPlayerNeeded = True
-            result = gettext(u"Remove Darts!")
+            result += gettext(u" Remove Darts!")
         db.session.add(throw)
         db.session.commit()
 
         return result
 
-
     else:
-        return gettext("There is no active game running")
+        return gettext(u"There is no active game running")
 
 
 def check_close(hit):
-    # Get all playing players
-    players = get_playing_players_objects()
-    closed = True
-    for player in players:
+    cricket_control = CricketControl.query.first()
+    cricketDict = {}
+    cricketDict['15'] = cricket_control.c15
+    cricketDict['16'] = cricket_control.c16
+    cricketDict['17'] = cricket_control.c17
+    cricketDict['18'] = cricket_control.c18
+    cricketDict['19'] = cricket_control.c19
+    cricketDict['20'] = cricket_control.c20
+    cricketDict['25'] = cricket_control.c25
+    return str(cricketDict[str(hit)])
+
+
+def check_to_close(hit):
+    close = True
+    playing_players = get_playing_players_objects()
+    for player in playing_players:
         cricketDict = {}
         cricketObject = Cricket.query.filter_by(player_id=player.id).first()
         cricketDict['15'] = cricketObject.c15
-        cricketDict['16'] = cricketObject.c15
-        cricketDict['17'] = cricketObject.c15
-        cricketDict['18'] = cricketObject.c15
-        cricketDict['19'] = cricketObject.c15
-        cricketDict['20'] = cricketObject.c15
-        cricketDict['25'] = cricketObject.c15
+        cricketDict['16'] = cricketObject.c16
+        cricketDict['17'] = cricketObject.c17
+        cricketDict['18'] = cricketObject.c18
+        cricketDict['19'] = cricketObject.c19
+        cricketDict['20'] = cricketObject.c20
+        cricketDict['25'] = cricketObject.c25
         if cricketDict[str(hit)] < 3:
-            closed = False
+            close = False
+    if close:
+        cricketControlDict = {}
+        cricket_control = CricketControl.query.first()
+        cricketControlDict['15'] = cricket_control.c15
+        cricketControlDict['16'] = cricket_control.c16
+        cricketControlDict['17'] = cricket_control.c17
+        cricketControlDict['18'] = cricket_control.c18
+        cricketControlDict['19'] = cricket_control.c19
+        cricketControlDict['20'] = cricket_control.c20
+        cricketControlDict['25'] = cricket_control.c25
+        cricketControlDict[str(hit)] = "closed"
+        cricket_control.c15 = cricketControlDict['15']
+        cricket_control.c16 = cricketControlDict['16']
+        cricket_control.c17 = cricketControlDict['17']
+        cricket_control.c18 = cricketControlDict['18']
+        cricket_control.c19 = cricketControlDict['19']
+        cricket_control.c20 = cricketControlDict['20']
+        cricket_control.c25 = cricketControlDict['25']
+        db.session.commit()
+        result = gettext(u"Closed!")
+    else:
+        result = "-"
+    return result
 
-    print(closed)
-    return closed
+
+def check_to_score(hit, mod):
+    # Get game object because we need to know variant
+    game = Game.query.first()
+    variant = game.variant
+    # Get active Player and corresponding score (Variant: Normal)
+    active_player = get_active_player()
+    # Get playing Players (Variant: Cut Throat)
+    playing_players = get_playing_players_objects()
+    # Check if opened
+    cricketDict = {}
+    cricketObject = Cricket.query.filter_by(player_id=active_player.id).first()
+    cricketDict['15'] = cricketObject.c15
+    cricketDict['16'] = cricketObject.c16
+    cricketDict['17'] = cricketObject.c17
+    cricketDict['18'] = cricketObject.c18
+    cricketDict['19'] = cricketObject.c19
+    cricketDict['20'] = cricketObject.c20
+    cricketDict['25'] = cricketObject.c25
+    if cricketDict[str(hit)] > 3:
+        if variant == "Normal":
+            if not check_close(hit) == "closed":
+                score = Score.query.filter_by(player_id=active_player.id).first()
+                points = hit * mod
+                score.score += points
+                db.session.commit()
+                return gettext(u"Scored")
+        elif variant == "Cut Throat":
+            if not check_close(hit) == "closed":
+                # Find players which have not closed yet
+                scored = False
+                for player in playing_players:
+                    cricketDict = {}
+                    cricketObject = Cricket.query.filter_by(player_id=player.id).first()
+                    cricketDict['15'] = cricketObject.c15
+                    cricketDict['16'] = cricketObject.c16
+                    cricketDict['17'] = cricketObject.c17
+                    cricketDict['18'] = cricketObject.c18
+                    cricketDict['19'] = cricketObject.c19
+                    cricketDict['20'] = cricketObject.c20
+                    cricketDict['25'] = cricketObject.c25
+                    if cricketDict[str(hit)] < 3:
+                        scored = True
+                        score = Score.query.filter_by(player_id=player.id).first()
+                        score.score += hit * mod
+                        db.session.commit()
+                if scored:
+                    return gettext(u"Scored")
+                else:
+                    return "-"
+            pass
+        elif variant == "No Score":
+            return "-"
+        else:
+            pass
+    else:
+        return "-"
+
+
+def check_won():
+    all_closed = True
+    won = True
+    game = Game.query.first()
+    playing_players = get_playing_players_objects()
+    active_player = get_active_player()
+    cricket = Cricket.query.filter_by(player_id=active_player.id).first()
+    cricketDict = {}
+    cricketDict['15'] = cricket.c15
+    cricketDict['16'] = cricket.c16
+    cricketDict['17'] = cricket.c17
+    cricketDict['18'] = cricket.c18
+    cricketDict['19'] = cricket.c19
+    cricketDict['20'] = cricket.c20
+    cricketDict['25'] = cricket.c25
+    for item in cricketDict.values():
+        if item < 3:
+            all_closed = False
+            won = False
+    if all_closed:
+       if game.variant == "Normal":
+           for player in playing_players:
+               activeScore = Score.query.filter_by(player_id=active_player.id).first()
+               playerScore = Score.query.filter_by(player_id=player.id).first()
+               if not active_player.id == player.id:
+                   if activeScore.score < playerScore.score:
+                       won = False
+       elif game.variant == "Cut Throat":
+           for player in playing_players:
+               activeScore = Score.query.filter_by(player_id=active_player.id).first()
+               playerScore = Score.query.filter_by(player_id=player.id).first()
+               if not active_player.id == player.id:
+                   if activeScore.score > playerScore.score:
+                       won = False
+       else:
+           won = True
+    else:
+        won = False
+
+    return won
 
 
 def switch_next_player():

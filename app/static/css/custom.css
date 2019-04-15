@@ -37,9 +37,13 @@ body {
 	width: 100%;
 }
 
-td[id^="-throw-"] {
-	background-color: red;
+.cricketTable {
+	color: #fff;
+	font-weight: bolder;
+	width: 50%;
+    font-size: xx-large;
 }
+
 
 a, a:hover, a:visited, a:active {
 	color: #fff;
