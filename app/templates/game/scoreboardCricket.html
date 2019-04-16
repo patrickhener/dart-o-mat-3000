@@ -3,7 +3,7 @@
 <script src="{{ url_for('static', filename='js/scoreboard.js') }}"></script>
 {% endblock %}
 
-{% block bodyparam %}style="overflow: hidden;" onload='drawScoreboardCricket({{ playerlist }}, "{{ lastthrows }}"), highlightActiveCricket("{{ player }}","{{ player_id }}","{{ rndcount }}","{{ message }}","{{ throwcount }}")'{% endblock %}
+{% block bodyparam %}style="overflow: hidden;" onload='drawScoreboardCricket({{ playerlist }}, "{{ lastthrows }}", "{{ closed }}"), highlightActiveCricket("{{ player }}","{{ player_id }}","{{ rndcount }}","{{ message }}","{{ throwcount }}")'{% endblock %}
 
 
 {% block content %}

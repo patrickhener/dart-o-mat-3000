@@ -16,8 +16,8 @@ socket.on('drawScoreboardX01', function(list, lastthrowsall, throwsum) {
     drawScoreboardX01(list, lastthrowsall, throwsum);
 });
 
-socket.on('drawScoreboardCricket', function(cricketlist, lastthrows) {
-    drawScoreboardCricket(cricketlist, lastthrows);
+socket.on('drawScoreboardCricket', function(cricketlist, lastthrows, closed) {
+    drawScoreboardCricket(cricketlist, lastthrows, closed);
 });
 
 socket.on('highlightActiveCricket', function(player, playerID, round, message, throwcount) {
@@ -129,10 +129,10 @@ function playSound(soundfile) {
     }
 };
 
-function drawScoreboardCricket(list, lastthrows) {
+function drawScoreboardCricket(list, lastthrows, closed) {
     // Format Lastthrows list
-    lastthrows = lastthrows.substr(2);
-    lastthrows = lastthrows.substr(0, lastthrows.length - 2);
+    lastthrows = lastthrows.substring(2);
+    lastthrows = lastthrows.substring(0, lastthrows.length - 2);
     lastthrows = lastthrows.split("], [");
     var div = document.getElementById("score");
     while (div.firstChild) {
@@ -164,8 +164,8 @@ function drawScoreboardCricket(list, lastthrows) {
         nameRow.appendChild(playerNameColumn);
         // Cricket array for symbol row (and numbers later on)
         var cricketArray = list[item].Cricket;
-        cricketArray = cricketArray.substr(1);
-        cricketArray = cricketArray.substr(0,cricketArray.length - 1);
+        cricketArray = cricketArray.substring(1);
+        cricketArray = cricketArray.substring(0,cricketArray.length - 1);
         // Split array
         // cricketArray[0] = 15
         // cricketArray[1] = 16
@@ -176,9 +176,10 @@ function drawScoreboardCricket(list, lastthrows) {
         // cricketArray[6] = 25
         cricketArray = cricketArray.split(", ");
         // append 15 to 20 symbol row
-        for (i=15;i<21;i++) {
+        for (i=15;i<22;i++) {
                 var countColumn = document.createElement("td");
                 countColumn.setAttribute("rowspan", "2");
+                countColumn.setAttribute("name", "c" + i);
                 countColumn.setAttribute("id", "countColumn");
                 if (cricketArray[i - 15] == 0) {
                     countColumn.innerHTML = "";
@@ -196,6 +197,7 @@ function drawScoreboardCricket(list, lastthrows) {
         }
         // append Bulls Symbol row
         countColumn.setAttribute("rowspan", "2");
+        countColumn.setAttribute("name", "c25");
         countColumn.setAttribute("id", "countColumn");
         if (cricketArray[6] == 0) {
             countColumn.innerHTML = "";
@@ -224,15 +226,17 @@ function drawScoreboardCricket(list, lastthrows) {
         messageColumn.setAttribute("id", "Message-" + list[item].Player);
         messageRow.appendChild(messageColumn);
         // Append number 15 to 20 to table
-        for (i=15;i<21;i++) {
+        for (i=15;i<22;i++) {
             var numberColumn = document.createElement("td");
             numberColumn.setAttribute("rowspan", "2");
+            numberColumn.setAttribute("name", "n" + i);
             numberColumn.setAttribute("id", "numberColumn");
             numberColumn.innerHTML = "<h2>" + i + "</h2>";
             messageRow.appendChild(numberColumn);
         }
         // Append bulls to table
         numberColumn.setAttribute("rowspan", "2");
+        numberColumn.setAttribute("name", "n25");
         numberColumn.setAttribute("id", "numberColumn");
         numberColumn.innerHTML = "<h2>Bulls</h2>";
         messageRow.appendChild(numberColumn);
@@ -245,8 +249,8 @@ function drawScoreboardCricket(list, lastthrows) {
         var output = "";
         var playerLastThrows = lastthrows[item].split(", ");
         for (var item2 in playerLastThrows) {
-            var throwArray = playerLastThrows[item2].substr(1);
-            throwArray = throwArray.substr(0, throwArray.length - 1);
+            var throwArray = playerLastThrows[item2].substring(1);
+            throwArray = throwArray.substring(0, throwArray.length - 1);
             throwArray = throwArray.split(",");
             // throwArray[0] = playerID
             // throwArray[1] = hit
@@ -268,6 +272,25 @@ function drawScoreboardCricket(list, lastthrows) {
         divCount += 1;
      }
 
+    // Closed marking
+    // Format List
+    closed = closed.toString();
+    closed = closed.substring(1);
+    closed = closed.substring(0, closed.length - 1);
+    closed = closed.split(", ");
+    // Loop through and search cXX
+    for (var item in closed) {
+        var itemToChange = closed[item].substring(1).toString();
+        itemToChange = itemToChange.substring(0, itemToChange.length - 1);
+        var elementListToChange = document.getElementsByName("c" + itemToChange);
+        for (i=0; i<elementListToChange.length; i++) {
+            elementListToChange[i].style.display = "none";
+        }
+        elementListToChange = document.getElementsByName("n" + itemToChange);
+        for (i=0; i<elementListToChange.length; i++) {
+            elementListToChange[i].style.display = "none";
+        }
+    }
 }
 
 function highlightActiveCricket(activePlayer, playerID, playerRound, message, throwcount) {
@@ -283,4 +306,3 @@ function highlightActiveCricket(activePlayer, playerID, playerRound, message, th
     var messageColumn = document.getElementById("Message-" + activePlayer);
     messageColumn.innerHTML = "<h2>" + message + "</h2>";
 }
-

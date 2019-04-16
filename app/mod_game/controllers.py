@@ -13,7 +13,7 @@ from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, Cric
 # Import helper functions
 from app.mod_game.helper import clear_db, score_x01, switch_next_player, get_playing_players_objects, \
     get_playing_players_id, get_score, get_active_player, get_average, get_throws_count, get_last_throws, \
-    get_all_throws, update_throw_table, get_cricket, score_cricket
+    get_all_throws, update_throw_table, get_cricket, score_cricket, get_closed
 
 # Import Babel Stuff
 from flask_babel import gettext
@@ -203,7 +203,13 @@ def scoreboard_cricket(message=None, soundeffect=None):
     player_scores_list = [{'Player': str(name),'PlayerID': str(playerid), 'Cricket': str(cricket), 'Score' : str(score)}
                           for name, playerid, cricket, score in zip(playing_players,playing_players_id,player_cricket,scores)]
 
-    socketio.emit('drawScoreboardCricket', (player_scores_list, str(last_throws)))
+    closed = get_closed()
+    closed_list = []
+    for x, y in closed.items():
+        if y == "closed":
+            closed_list.append(str(x))
+
+    socketio.emit('drawScoreboardCricket', (player_scores_list, str(last_throws), closed_list))
     socketio.emit('highlightActiveCricket', (active_player.name, active_player.id, rnd, message, throwcount))
 
     if sound:
@@ -219,7 +225,8 @@ def scoreboard_cricket(message=None, soundeffect=None):
         player_id=active_player.id,
         gametype=game.gametype,
         rndcount=rnd,
-        variant=game.variant
+        variant=game.variant,
+        closed=closed_list
     )
 
 
