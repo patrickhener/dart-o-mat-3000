@@ -170,11 +170,6 @@ def scoreboard_cricket(message=None, soundeffect=None):
         throwcount = get_throws_count(active_player.id)
     except AttributeError:
         throwcount = "0"
-    # Get average
-    try:
-        average = get_average(active_player.id)
-    except AttributeError:
-        average = "0"
 
     # Get last throws to show in scoreboard beneath Message Container
     last_throws = []

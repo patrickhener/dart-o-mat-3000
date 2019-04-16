@@ -30,20 +30,17 @@ body {
 	font-size: xx-large;
 }
 
+#header-cricket-left.table, #header-cricket-right.table {
+	background-color: #012432;
+	font-size: x-large;
+}
+
 #throw-update.table td a {
 	text-align: center;
 	text-decoration: none;
 	display: block;
 	width: 100%;
 }
-
-.cricketTable {
-	color: #fff;
-	font-weight: bolder;
-	width: 50%;
-    font-size: xx-large;
-}
-
 
 a, a:hover, a:visited, a:active {
 	color: #fff;
@@ -62,7 +59,7 @@ div#playerName {
 	padding: 10px;
 }
 
-div#playerScore, div[id^="Sum-"], div[id^="Cricket-"] {
+div#playerScore, div[id^="Sum-"] {
 	background-color: #3c5f6c;
 	padding: 10px;
 }
@@ -105,6 +102,50 @@ div[id^="Border-"] {
 	padding-right: 0px;
 	margin-left: 10px;
 	margin-right: 10px;
+}
+
+div[id^="Cricket-Border-"] {
+	width: 45%;
+    margin-top: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	padding-left:0px;
+	padding-right: 0px;
+}
+
+table[id^="playerTable-"] {
+    table-layout: fixed;
+	width: 100%;
+	text-align: center;
+	border-collapse: collapse;
+}
+
+table[id^="playerTable-"] td:first-child {
+    width: 40%;
+}
+
+#playerNameColumn, #playerLastThrows {
+	background-color: #012432;
+}
+
+#playerScoreColumn, td[id^="Message-"] {
+	background-color: #3c5f6c;
+}
+
+#playerLastThrows, td[id^="Message-"] {
+	height: 50px;
+}
+
+#numberColumn:nth-child(even), #countColumn:nth-child(even) {
+	background-color: #012432;
+}
+
+#numberColumn:nth-child(odd), #countColumn:nth-child(odd) {
+	background-color: #3c5f6c;
+}
+
+table[id^="playerTable-"] tr td {
+	border: 1px solid black;
 }
 
 div.jumbotron.header {

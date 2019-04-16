@@ -72,7 +72,6 @@ Cricket is working so far but a few things are still to be worked on:
   - Sound might not be the right one. At least opened and closed have to be implemented
   - Throw Edit does not work. need to figure a way to edit scoring as well if necesarry
   - Implement some kind of display possibility to signal that a number is already closed (grey out table row?)
-  - Display last three throws to the scoreboard
 
 # Changelog
 ## 2019-xx-xx - v1.0: Beta version
