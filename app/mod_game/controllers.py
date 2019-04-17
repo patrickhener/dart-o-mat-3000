@@ -8,7 +8,7 @@ from flask import Blueprint, request, render_template
 from app import db, socketio, IPADDR, PORT, RECOGNITION, SOUND
 
 # Import module models
-from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl
+from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained
 
 # Import helper functions
 from app.mod_game.helper import clear_db, score_x01, switch_next_player, get_playing_players_objects, \
@@ -382,9 +382,13 @@ def throw(hit, mod):
 
 @mod_game.route("/throw/update/<throw_id>/<new_hit>/<new_mod>")
 def update_throw(throw_id, new_hit, new_mod):
+    game = Game.query.first()
     update_throw_table(throw_id, new_hit, new_mod)
-    scoreboard_x01(gettext(u"Throw updated"))
-    scoreboard_cricket(gettext(u"Throw updated"))
+    if game.gametype == "Cricket":
+        scoreboard_cricket(gettext(u"Throw updated"))
+    elif "01" in game.gametype:
+        scoreboard_x01(gettext(u"Throw updated"))
+
     game_controller()
     return "-"
 
@@ -425,6 +429,7 @@ def rematch():
     db.session.query(Round).delete()
     db.session.query(Cricket).delete()
     db.session.query(CricketControl).delete()
+    db.session.query(PointsGained).delete()
     db.session.commit()
     if game.gametype == "Cricket":
         for player in players:

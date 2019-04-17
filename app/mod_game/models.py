@@ -31,6 +31,7 @@ class Player(Base):
     throws = db.relationship('Throw', backref='throws', lazy=True)
     scores = db.relationship('Score', backref='scores', lazy=True)
     crickets = db.relationship('Cricket', backref='crickets', lazy=True)
+    gained = db.relationship('PointsGained', backref='playergaines', lazy=True)
 
     game_id = db.Column(db.Integer, db.ForeignKey('game.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=True)
 
@@ -75,7 +76,17 @@ class CricketControl(Base):
     c15 = db.Column(db.String, nullable=True)
     c25 = db.Column(db.String, nullable=True)
 
-    def _repr__(self):
+    def __repr__(self):
+        return str(self.id)
+
+
+class PointsGained(Base):
+    points = db.Column(db.Integer, nullable=False)
+
+    throw_id = db.Column(db.Integer, db.ForeignKey('throw.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+
+    def __repr__(self):
         return str(self.id)
 
 
@@ -86,17 +97,18 @@ class Round(Base):
     throwcount = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
-        # returning id for now. Need to return other?
         return self.id
 
 
 class Throw(Base):
-    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"),
-                          nullable=False)
     hit = db.Column(db.Integer, nullable=False)
     mod = db.Column(db.Integer, nullable=False)
 
+    gained = db.relationship('PointsGained', backref='throwgaines', lazy=True)
+
     round_id = db.Column(db.Integer, db.ForeignKey('round.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"),
+                          nullable=False)
 
     def __repr__(self):
         hitcount = self.hit * self.mod

@@ -71,8 +71,7 @@ function drawScoreboardX01(list, lastthrowsall, throwsum) {
         div.appendChild(borderDiv);
     }
     for (var item in lastthrowsall) {
-        for (item2 in lastthrowsall[item]) {
-            var mod = ""
+        for (var item2 in lastthrowsall[item]) {
             var array = lastthrowsall[item][item2].split(",");
             throwDiv = document.getElementById("Throws-" + array[0]);
             var throww = document.createElement("div");
@@ -102,7 +101,7 @@ function drawScoreboardX01(list, lastthrowsall, throwsum) {
         sum.innerHTML = "<h2 id='playerSum'>" + array[1] + "</h2>";
         sumDiv.appendChild(sum);
     }
-};
+}
 
 function highlightActivePlayer(activePlayer, playerID, playerRound, message, average, throwcount) {
     var borderDiv = document.getElementById("Border-" + activePlayer);
@@ -127,7 +126,7 @@ function playSound(soundfile) {
         var audio = new Audio('http://' + document.domain + ':' + location.port + '/static/sounds/' + soundfile + '.mp3');
         audio.play();
     }
-};
+}
 
 function drawScoreboardCricket(list, lastthrows, closed) {
     // Format Lastthrows list
@@ -270,7 +269,19 @@ function drawScoreboardCricket(list, lastthrows, closed) {
         div.appendChild(borderDiv);
         // Count linebrake up
         divCount += 1;
-     }
+    }
+    // Fix layout if item in list is odd
+    if (isOdd(list.length)) {
+        // create border div for dummy
+        borderDiv = document.createElement("div");
+        borderDiv.setAttribute("id", "Cricket-Border-Dummy");
+        borderDiv.setAttribute("class", "col");
+        // create dummy Table
+        playerTable = document.createElement("table");
+        playerTable.setAttribute("id", "playerTable-Dummy");
+        borderDiv.appendChild(playerTable);
+        div.appendChild(borderDiv);
+    }
 
     // Closed marking
     // Loop through and search cXX and nXX
@@ -301,4 +312,8 @@ function highlightActiveCricket(activePlayer, playerID, playerRound, message, th
     divThrowcount.innerHTML = throwcount;
     var messageColumn = document.getElementById("Message-" + activePlayer);
     messageColumn.innerHTML = "<h2>" + message + "</h2>";
+}
+
+function isOdd(num) {
+    return num % 2;
 }
