@@ -49,12 +49,18 @@ BABEL_DEFAULT_TIMEZONE = "UTC"
 First activate the virtual environment like described above. Then run `python3 run.py`.
 To leave the virtual environment you just stop the service with `ctrl+c` and then run `deactivate`.
 
-Now you'll find the scoreboard at [http://127.0.0.1:5000/game/](http://127.0.0.1:5000/game/).
+Now you'll find the scoreboard at [http://127.0.0.1:5000/game/](http://127.0.0.1:5000/game/)
 
 # Deploy it
 TODO explain how to use gunicorn to deploy it.  
 TODO Write systemd service to start it on boot  
 TODO Write autostart script to startup a browser window in fullscreen displaying the intro page
+
+# Documentation
+For more documentation refer to:  
+[https://readthedocs.org/projects/dart-o-mat-3000](https://dart-o-mat-3000.readthedocs.io/en/latest)  
+[![Documentation Status](https://readthedocs.org/projects/dart-o-mat-3000/badge/?version=latest)](https://dart-o-mat-3000.readthedocs.io/en/latest/?badge=latest)
+
 
 # Feature TODOs
 - Different Sounds to choose from
