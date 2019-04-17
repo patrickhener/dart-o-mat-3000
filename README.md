@@ -90,7 +90,7 @@ Cricket is working so far but a few things are still to be worked on:
     - Implement Sound: Hit, NextPlayer, Winner
 
 # Changelog
-## 2019-xx-xx - v1.0: Beta version
+## 2019-04-17 - v0.9.9: Beta version
 - Working condition: Near release state. There will be minor bugs (hopefully just minor ones). Therefore it is Beta.
 - Features added:
   - Redesigned a few things to look better
