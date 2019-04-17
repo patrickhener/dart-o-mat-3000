@@ -9,5 +9,6 @@ Welcome to Dart-O-Mat 3000's documentation!
 .. toctree::
    :maxdepth: 2
 
+   contents
    about-the-project
 
