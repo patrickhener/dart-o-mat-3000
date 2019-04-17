@@ -234,6 +234,8 @@ def scoreboard_x01(message=None, soundeffect=None):
     # Var for returning options
     if not message:
         message = "-"
+    #elif condition:
+    #    message = get_checkout()
     else:
         message = message
     if message == "Winner!":

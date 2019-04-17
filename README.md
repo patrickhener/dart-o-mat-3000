@@ -98,7 +98,6 @@ Cricket is working so far but a few things are still to be worked on:
   - Rematch Button implemented
   - Confirmation implemented after hitting "End Game" Button
   - If Sound is on there will now also be a sound when changing player
-  - Checkout Possibilities shown in X01 games (Dict with checkouts, handed to game via message variable)
   - Player Scores and active Player shown in gameController
   - Average now is calculated right
   - Last three throws now are emptied as a new throw of a new round is done
