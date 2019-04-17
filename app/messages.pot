@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-15 15:05+0200\n"
+"POT-Creation-Date: 2019-04-17 09:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,23 +21,23 @@ msgstr ""
 msgid "Really end game?"
 msgstr ""
 
-#: mod_game/controllers.py:332 mod_game/controllers.py:333
+#: mod_game/controllers.py:339 mod_game/controllers.py:340
 msgid "Remove Darts"
 msgstr ""
 
-#: mod_game/controllers.py:334
+#: mod_game/controllers.py:341
 msgid "Switch to next player first"
 msgstr ""
 
-#: mod_game/controllers.py:375 mod_game/controllers.py:376
+#: mod_game/controllers.py:386 mod_game/controllers.py:387
 msgid "Throw updated"
 msgstr ""
 
-#: mod_game/controllers.py:401
+#: mod_game/controllers.py:412
 msgid "Done"
 msgstr ""
 
-#: mod_game/controllers.py:429 mod_game/controllers.py:432
+#: mod_game/controllers.py:440 mod_game/controllers.py:443
 #: templates/game/gameController.html:28 templates/game/gameController.html:47
 msgid "Rematch"
 msgstr ""
@@ -46,7 +46,7 @@ msgstr ""
 msgid "Bust! Remove Darts!"
 msgstr ""
 
-#: mod_game/helper.py:224 mod_game/helper.py:328
+#: mod_game/helper.py:224 mod_game/helper.py:334
 msgid "Winner!"
 msgstr ""
 
@@ -63,24 +63,24 @@ msgstr ""
 msgid "Remove Darts!"
 msgstr ""
 
-#: mod_game/helper.py:261 mod_game/helper.py:342 mod_game/helper.py:504
+#: mod_game/helper.py:261 mod_game/helper.py:348 mod_game/helper.py:500
 msgid "There is no active game running"
 msgstr ""
 
-#: mod_game/helper.py:319
-msgid "Closed"
+#: mod_game/helper.py:317
+msgid " Opened!"
 msgstr ""
 
-#: mod_game/helper.py:335
+#: mod_game/helper.py:322
+msgid " Scored!"
+msgstr ""
+
+#: mod_game/helper.py:325
+msgid " Closed!"
+msgstr ""
+
+#: mod_game/helper.py:341
 msgid " Remove Darts!"
-msgstr ""
-
-#: mod_game/helper.py:392
-msgid "Closed!"
-msgstr ""
-
-#: mod_game/helper.py:423 mod_game/helper.py:444
-msgid "Scored"
 msgstr ""
 
 #: templates/404.html:3

@@ -273,15 +273,11 @@ function drawScoreboardCricket(list, lastthrows, closed) {
      }
 
     // Closed marking
-    // Format List
-    closed = closed.toString();
-    closed = closed.substring(1);
-    closed = closed.substring(0, closed.length - 1);
-    closed = closed.split(", ");
-    // Loop through and search cXX
+    // Loop through and search cXX and nXX
     for (var item in closed) {
-        var itemToChange = closed[item].substring(1).toString();
-        itemToChange = itemToChange.substring(0, itemToChange.length - 1);
+        // var itemToChange = closed[item].substring(1).toString();
+        var itemToChange = closed[item];
+        // itemToChange = itemToChange.substring(0, itemToChange.length - 1);
         var elementListToChange = document.getElementsByName("c" + itemToChange);
         for (i=0; i<elementListToChange.length; i++) {
             elementListToChange[i].style.display = "none";

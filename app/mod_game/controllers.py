@@ -2,10 +2,10 @@
 import random
 
 # Import flask dependencies
-from flask import Blueprint, request, render_template, url_for, app
+from flask import Blueprint, request, render_template
 
 # Import the database and socketio object from the main app module
-from app import db, socketio, babel, IPADDR, PORT, RECOGNITION, SOUND
+from app import db, socketio, IPADDR, PORT, RECOGNITION, SOUND
 
 # Import module models
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl
@@ -130,34 +130,32 @@ def game_controller():
     # Render Template
     return render_template(
         '/game/gameController.html',
-        recognition = recognition,
-        playingPlayers = playerlist,
-        activePlayer = active_player,
-        scorelist = scorelist,
-        throwlist = throwlist,
-        end_message = end_message
+        recognition=recognition,
+        playingPlayers=playerlist,
+        activePlayer=active_player,
+        scorelist=scorelist,
+        throwlist=throwlist,
+        end_message=end_message
     )
 
 
 @mod_game.route("/scoreboardCricket")
 def scoreboard_cricket(message=None, soundeffect=None):
     # Var for returning options
-    if not message:
-        message = "-"
-    if message == "Winner!":
-        socketio.emit('rematchButton')
-    elif message == "Sieger!":
-        socketio.emit('rematchButton')
-    elif message == "Winner! Remove Darts!":
-        socketio.emit('rematchButton')
-    elif message == "Sieger! Darts entfernen!":
-        socketio.emit('rematchButton')
-    else:
-        message = message
     if not soundeffect:
         audiofile = None
     else:
         audiofile = soundeffect
+    if not message:
+        message = "-"
+    if "Winner" in message:
+        audiofile = "winner"
+        socketio.emit('rematchButton')
+    elif "Sieger" in message:
+        audiofile = "winner"
+        socketio.emit('rematchButton')
+    else:
+        message = message
     # Check if sound is enabled [config.py]
     sound = SOUND
     # Get general data to draw scoreboard
@@ -185,7 +183,7 @@ def scoreboard_cricket(message=None, soundeffect=None):
 
     player_cricket = []
     for player in playing_players:
-        cricket_array = []
+        cricket_array = list()
         cricket_array.append(get_cricket(player.id).c15)
         cricket_array.append(get_cricket(player.id).c16)
         cricket_array.append(get_cricket(player.id).c17)
@@ -200,8 +198,9 @@ def scoreboard_cricket(message=None, soundeffect=None):
         score = Score.query.filter_by(player_id=player.id).first()
         scores.append(str(score.score))
 
-    player_scores_list = [{'Player': str(name),'PlayerID': str(playerid), 'Cricket': str(cricket), 'Score' : str(score)}
-                          for name, playerid, cricket, score in zip(playing_players,playing_players_id,player_cricket,scores)]
+    player_scores_list = [{'Player': str(name), 'PlayerID': str(playerid), 'Cricket': str(cricket), 'Score': str(score)}
+                          for name, playerid, cricket, score
+                          in zip(playing_players, playing_players_id, player_cricket, scores)]
 
     closed = get_closed()
     closed_list = []
@@ -274,7 +273,7 @@ def scoreboard_x01(message=None, soundeffect=None):
         sum_of_throws = 0
         sum_id = ""
         try:
-            for i in range (0,3):
+            for i in range(0, 3):
                 split = item[i].split(",")
                 hit = int(split[1])
                 mod = int(split[2])
@@ -295,7 +294,9 @@ def scoreboard_x01(message=None, soundeffect=None):
     for player in playing_players:
         player_scores.append(get_score(player.id))
 
-    player_scores_list = [{'Player': str(name), 'PlayerID': str(playerid), 'Score': str(score)} for name, playerid, score in zip(playing_players, playing_players_id, player_scores)]
+    player_scores_list = [{'Player': str(name), 'PlayerID': str(playerid), 'Score': str(score)}
+                          for name, playerid, score
+                          in zip(playing_players, playing_players_id, player_scores)]
 
     socketio.emit('drawScoreboardX01', (player_scores_list, last_throws, sum_throws))
     socketio.emit('highlightActive', (active_player.name, active_player.id, rnd, message, average, throwcount))
@@ -364,9 +365,13 @@ def throw(hit, mod):
             return do_it
         elif str(game.gametype) == "Cricket":
             do_it = score_cricket(hit, mod)
-            if do_it == "Opened!":
+            if "Opened" in do_it:
                 audiofile = "open"
-            if do_it == "Closed!":
+            if "Geöffnet" in do_it:
+                audiofile = "open"
+            if "Closed" in do_it:
+                audiofile = "close"
+            if "Geschlossen" in do_it:
                 audiofile = "close"
             scoreboard_cricket(do_it, audiofile)
             game_controller()
@@ -424,12 +429,12 @@ def rematch():
     if game.gametype == "Cricket":
         for player in players:
             p = Player.query.filter_by(id=player.id).first()
-            c = Cricket(c20=0,c19=0,c18=0,c17=0,c16=0,c15=0,c25=0)
+            c = Cricket(c20=0, c19=0, c18=0, c17=0, c16=0, c15=0, c25=0)
             p.crickets.append(c)
             db.session.add(p)
             db.session.add(c)
             db.session.commit()
-        cc = CricketControl(c20="",c19="",c18="",c17="",c16="",c15="",c25="")
+        cc = CricketControl(c20="", c19="", c18="", c17="", c16="", c15="", c25="")
         db.session.add(cc)
         db.session.commit()
         scoreboard_cricket(gettext(u"Rematch"), "startgame")
@@ -475,9 +480,9 @@ def on_start_cricket(data):
     clear_db()
     # Fill tables
     variant = data['variant']
-    g = Game(gametype='Cricket',variant=variant)
+    g = Game(gametype='Cricket', variant=variant)
     for player in data['players']:
-        c = Cricket(c20=0,c19=0,c18=0,c17=0,c16=0,c15=0,c25=0)
+        c = Cricket(c20=0, c19=0, c18=0, c17=0, c16=0, c15=0, c25=0)
         s = Score(score=0, parkScore=0, initialScore=0)
         p = Player.query.filter_by(name=player).first()
         g.players.append(p)
@@ -492,7 +497,7 @@ def on_start_cricket(data):
     a = Player.query.filter_by(name=random.choice(data['players'])).first()
     a.active = True
     # CricketControl
-    cc = CricketControl(c20="",c19="",c18="",c17="",c16="",c15="",c25="")
+    cc = CricketControl(c20="", c19="", c18="", c17="", c16="", c15="", c25="")
     # Commit to DB
     db.session.add(a)
     db.session.add(cc)

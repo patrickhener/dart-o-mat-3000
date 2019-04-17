@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  0.9\n"
 "Report-Msgid-Bugs-To: patrickhener@gmx.de\n"
-"POT-Creation-Date: 2019-04-15 15:05+0200\n"
+"POT-Creation-Date: 2019-04-17 09:39+0200\n"
 "PO-Revision-Date: 2019-04-10 19:56+0200\n"
 "Last-Translator: Patrick Hener <patrickhener@gmx.de>\n"
 "Language: de\n"
@@ -22,23 +22,23 @@ msgstr ""
 msgid "Really end game?"
 msgstr "Spiel wirklich beenden?"
 
-#: mod_game/controllers.py:332 mod_game/controllers.py:333
+#: mod_game/controllers.py:339 mod_game/controllers.py:340
 msgid "Remove Darts"
 msgstr "Darts entfernen"
 
-#: mod_game/controllers.py:334
+#: mod_game/controllers.py:341
 msgid "Switch to next player first"
 msgstr "Wechsle zuerst zum nächsten Spieler"
 
-#: mod_game/controllers.py:375 mod_game/controllers.py:376
+#: mod_game/controllers.py:386 mod_game/controllers.py:387
 msgid "Throw updated"
 msgstr "Wurf geändert"
 
-#: mod_game/controllers.py:401
+#: mod_game/controllers.py:412
 msgid "Done"
 msgstr "Erledigt"
 
-#: mod_game/controllers.py:429 mod_game/controllers.py:432
+#: mod_game/controllers.py:440 mod_game/controllers.py:443
 #: templates/game/gameController.html:28 templates/game/gameController.html:47
 msgid "Rematch"
 msgstr "Erneut spielen"
@@ -47,7 +47,7 @@ msgstr "Erneut spielen"
 msgid "Bust! Remove Darts!"
 msgstr "Überworfen! Darts entfernen!"
 
-#: mod_game/helper.py:224 mod_game/helper.py:328
+#: mod_game/helper.py:224 mod_game/helper.py:334
 msgid "Winner!"
 msgstr "Sieger!"
 
@@ -64,25 +64,25 @@ msgstr "Sieg nicht mehr möglich! Darts entfernen!"
 msgid "Remove Darts!"
 msgstr "Darts entfernen"
 
-#: mod_game/helper.py:261 mod_game/helper.py:342 mod_game/helper.py:504
+#: mod_game/helper.py:261 mod_game/helper.py:348 mod_game/helper.py:500
 msgid "There is no active game running"
 msgstr "Aktuell ist kein Spiel gestartet"
 
-#: mod_game/helper.py:319
-msgid "Closed"
-msgstr "Geschlossen"
+#: mod_game/helper.py:317
+msgid " Opened!"
+msgstr " Geöffnet!"
 
-#: mod_game/helper.py:335
+#: mod_game/helper.py:322
+msgid " Scored!"
+msgstr " Gepunktet!"
+
+#: mod_game/helper.py:325
+msgid " Closed!"
+msgstr " Geschlossen!"
+
+#: mod_game/helper.py:341
 msgid " Remove Darts!"
 msgstr " Darts entfernen!"
-
-#: mod_game/helper.py:392
-msgid "Closed!"
-msgstr "Geschlossen!"
-
-#: mod_game/helper.py:423 mod_game/helper.py:444
-msgid "Scored"
-msgstr "Gepunktet"
 
 #: templates/404.html:3
 msgid "404 - That one missed!"
@@ -257,7 +257,3 @@ msgstr "Start"
 #: templates/game/scoreboardX01.html:35
 msgid "Out"
 msgstr "Ende"
-
-#~ msgid "Bust!"
-#~ msgstr "Überworfen!"
-
