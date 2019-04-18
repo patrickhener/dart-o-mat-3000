@@ -23,6 +23,14 @@ socket.on('highlightAndScore', function(activePlayer, scorelist) {
 	highlightAndScore(activePlayer, scorelist);
 });
 
+socket.on('drawATC', function (number) {
+	drawATC(number);
+});
+
+socket.on('highlightATC', function (player_number_list) {
+	highlightATC(player_number_list);
+});
+
 function drawX01Controller() {
 	var div = document.getElementById("x01-controls");
 	while (div.firstChild) {
@@ -318,4 +326,66 @@ function rematch() {
 	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/rematch'), true);
 	xhttp.send();
 	location.reload();
+}
+
+function drawATC(number) {
+	var div = document.getElementById("x01-controls");
+	while (div.firstChild) {
+		div.removeChild(div.firstChild);
+	}
+	var borderDiv = document.getElementById("x01-controls");
+	var groupDiv = document.createElement("div");
+	borderDiv.appendChild(groupDiv);
+	groupDiv.setAttribute("class", "btn-group");
+	groupDiv.setAttribute("role", "group");
+	groupDiv.setAttribute("id", "button-matrix");
+	var button = document.createElement("button");
+	button.setAttribute("class", "btn btn-outline-primary btn-lg");
+	button.innerHTML = "Single";
+	button.setAttribute("onclick", "sendATC("+ number + ",1)");
+	groupDiv.appendChild(button);
+	button = document.createElement("button");
+	button.setAttribute("class", "btn btn-outline-primary btn-lg");
+	button.innerHTML = "Double";
+	button.setAttribute("onclick", "sendATC(" + number + ",2)");
+	groupDiv.appendChild(button);
+	button = document.createElement("button");
+	button.setAttribute("class", "btn btn-outline-primary btn-lg");
+	button.innerHTML = "Triple";
+	button.setAttribute("onclick", "sendATC(" + number + ",3)");
+	groupDiv.appendChild(button);
+	var groupDiv2 = document.createElement("div");
+	borderDiv.appendChild(groupDiv2);
+	groupDiv2.setAttribute("class", "btn-group");
+	groupDiv2.setAttribute("role", "group");
+	groupDiv2.setAttribute("id", "button-matrix-2");
+	button = document.createElement("button");
+	button.setAttribute("class", "btn btn-outline-primary btn-lg");
+	button.innerHTML = "Miss";
+	button.setAttribute("onclick", "sendATC(0,1)");
+	groupDiv2.appendChild(button);
+
+
+	console.log(number);
+}
+
+function highlightATC (activePlayer_number_list) {
+	console.log("Hit highlightATC");
+}
+
+function sendATC(hit,mod) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState == 4 && this.status == 200) {
+			var response = xhttp.responseText;
+			if (response.includes("Darts")) {
+				xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/nextPlayer'), true);
+				xhttp.send();
+			}
+			//location.reload();
+		}
+	};
+	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/throw/' + hit + '/' + mod), true);
+	xhttp.send();
+	console.log("SendATC");
 }

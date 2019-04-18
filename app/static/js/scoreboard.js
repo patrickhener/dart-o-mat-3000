@@ -12,6 +12,10 @@ socket.on('playSound', function(soundfile) {
     playSound(soundfile);
 });
 
+socket.on('drawScoreboardATC', function(playerlist) {
+    drawScoreboardATC(playerlist);
+});
+
 socket.on('drawScoreboardX01', function(list, lastthrowsall, throwsum) {
     drawScoreboardX01(list, lastthrowsall, throwsum);
 });
@@ -28,11 +32,19 @@ socket.on('highlightActive', function(player, playerID, round, message, average,
     highlightActivePlayer(player, playerID, round, message, average, throwcount);
 });
 
+socket.on('highlightATC', function(activePlayer, rnd, throwcount, message) {
+    highlightATC(activePlayer, rnd, throwcount, message);
+});
+
 socket.on('redirectX01', function(url) {
     window.location.href = url;
 });
 
 socket.on('redirectCricket', function(url) {
+    window.location.href = url;
+});
+
+socket.on('redirectATC', function(url) {
     window.location.href = url;
 });
 
@@ -118,7 +130,6 @@ function highlightActivePlayer(activePlayer, playerID, playerRound, message, ave
     divThrowcount.innerHTML = throwcount;
     var messageDiv = document.getElementsByName("Message-" + activePlayer);
     messageDiv[0].innerHTML = "<h1>" + message + "</h1>";
-    var throwDiv = document.getElementById("Throws-" + playerID);
 };
 
 function playSound(soundfile) {
@@ -312,6 +323,52 @@ function highlightActiveCricket(activePlayer, playerID, playerRound, message, th
     divThrowcount.innerHTML = throwcount;
     var messageColumn = document.getElementById("Message-" + activePlayer);
     messageColumn.innerHTML = "<h2>" + message + "</h2>";
+}
+
+function drawScoreboardATC(list) {
+    var div = document.getElementById("score");
+    while (div.firstChild) {
+        div.removeChild(div.firstChild);
+    }
+    for (var item in list) {
+        var borderDiv = document.createElement("div");
+        borderDiv.setAttribute("class", "col");
+        borderDiv.setAttribute("id", "Border-" + list[item].Player);
+        var nameDiv = document.createElement("div");
+        nameDiv.setAttribute("name", "Player-" + list[item].Player);
+        nameDiv.setAttribute("id", "playerName");
+        nameDiv.innerHTML = "<h1 id='playerName'>" + list[item].Player + "</h1>";
+        borderDiv.appendChild(nameDiv);
+        var numberDiv = document.createElement("div");
+        numberDiv.setAttribute("name", "Number-" + list[item].Player);
+        numberDiv.setAttribute("id", "playerNumber");
+        numberDiv.innerHTML = "<h1 id='playerNumber'>" + list[item].Number + "</h1>";
+        borderDiv.appendChild(numberDiv);
+        var messageDiv = document.createElement("div");
+        messageDiv.setAttribute("name", "Message-" + list[item].Player);
+        messageDiv.setAttribute("id", "playerMessage");
+        messageDiv.innerHTML = "";
+        borderDiv.appendChild(messageDiv);
+        var throwDiv = document.createElement("div");
+        throwDiv.setAttribute("id", "Throws-" + list[item].PlayerID);
+        borderDiv.appendChild(throwDiv);
+        div.appendChild(borderDiv);
+    }
+}
+
+function highlightATC(activePlayer, playerRound, throwcount, message) {
+    var borderDiv = document.getElementById("Border-" + activePlayer);
+    borderDiv.style.border='5px solid white';
+    borderDiv.style.boxShadow='10px 10px 15px black';
+    var headerLeft = document.getElementById("header-left");
+    var divActivePlayer = document.getElementById("header-activePlayer");
+    divActivePlayer.innerHTML = activePlayer;
+    var divRndcount = document.getElementById("header-rndcount");
+    divRndcount.innerHTML = playerRound;
+    var divThrowcount = document.getElementById("header-throwcount");
+    divThrowcount.innerHTML = throwcount;
+    var messageDiv = document.getElementsByName("Message-" + activePlayer);
+    messageDiv[0].innerHTML = "<h1>" + message + "</h1>";
 }
 
 function isOdd(num) {

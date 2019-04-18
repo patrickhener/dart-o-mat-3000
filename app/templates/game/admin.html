@@ -22,6 +22,7 @@
 			<select class="form-control" id="gametype" onchange="hideshow()">
 				<option value="x01">X01</option>
 				<option value="cricket">Cricket</option>
+				<option value="aroundtheclock">Around the Clock</option>
 			</select>
 		</div>
 		<div class="form-group" id="div-x01variant">
@@ -51,10 +52,17 @@
 		</div>
 		<div class="form-group" id="div-variant">
 			<label for="variant">{% trans %}Variant{% endtrans%}:</label>
-			<select class="form-control"id="variant" name="variant">
+			<select class="form-control" id="variant" name="variant">
 				<option value="Normal">Normal</option>
 				<option value="Cut Throat">Cut Throat</option>
 				<option value="No Score">No Score</option>
+			</select>
+		</div>
+		<div class="form-group" id="div-atc-variant">
+			<label for="atc-variant">{% trans %}Variant{% endtrans %}:</label>
+			<select class="form-control" id="atc-variant" name="atc-variant">
+				<option value="Normal">Normal</option>
+				<option value="{% trans %}Fast{% endtrans %}">{% trans %}Fast{% endtrans %}</option>
 			</select>
 		</div>
 		<button class="btn btn-outline-primary btn-lg" type="submit">{% trans %}Start Game{% endtrans %}</button>

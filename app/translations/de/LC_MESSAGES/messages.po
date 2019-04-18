@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  0.9\n"
 "Report-Msgid-Bugs-To: patrickhener@gmx.de\n"
-"POT-Creation-Date: 2019-04-17 09:39+0200\n"
+"POT-Creation-Date: 2019-04-18 13:53+0200\n"
 "PO-Revision-Date: 2019-04-10 19:56+0200\n"
 "Last-Translator: Patrick Hener <patrickhener@gmx.de>\n"
 "Language: de\n"
@@ -22,67 +22,75 @@ msgstr ""
 msgid "Really end game?"
 msgstr "Spiel wirklich beenden?"
 
-#: mod_game/controllers.py:339 mod_game/controllers.py:340
+#: mod_game/controllers.py:407 mod_game/controllers.py:408
+#: mod_game/controllers.py:409
 msgid "Remove Darts"
 msgstr "Darts entfernen"
 
-#: mod_game/controllers.py:341
+#: mod_game/controllers.py:410
 msgid "Switch to next player first"
 msgstr "Wechsle zuerst zum nächsten Spieler"
 
-#: mod_game/controllers.py:386 mod_game/controllers.py:387
+#: mod_game/controllers.py:462 mod_game/controllers.py:464
+#: mod_game/helper.py:376
 msgid "Throw updated"
 msgstr "Wurf geändert"
 
-#: mod_game/controllers.py:412
+#: mod_game/controllers.py:493
 msgid "Done"
 msgstr "Erledigt"
 
-#: mod_game/controllers.py:440 mod_game/controllers.py:443
-#: templates/game/gameController.html:28 templates/game/gameController.html:47
+#: mod_game/controllers.py:523 mod_game/controllers.py:536
+#: mod_game/controllers.py:539 templates/game/gameController.html:28
+#: templates/game/gameController.html:47
 msgid "Rematch"
 msgstr "Erneut spielen"
 
-#: mod_game/helper.py:213
+#: mod_game/helper.py:440
 msgid "Bust! Remove Darts!"
 msgstr "Überworfen! Darts entfernen!"
 
-#: mod_game/helper.py:224 mod_game/helper.py:334
+#: mod_game/helper.py:451 mod_game/helper.py:549 mod_game/helper.py:602
 msgid "Winner!"
 msgstr "Sieger!"
 
-#: mod_game/helper.py:231
+#: mod_game/helper.py:458
 #, python-format
 msgid "Bust! %(mode)s out!"
 msgstr "Überworfen! %(mode)s aus!"
 
-#: mod_game/helper.py:242
+#: mod_game/helper.py:469
 msgid "No Out possible! Remove Darts!"
 msgstr "Sieg nicht mehr möglich! Darts entfernen!"
 
-#: mod_game/helper.py:254
+#: mod_game/helper.py:481 mod_game/helper.py:611 mod_game/helper.py:622
 msgid "Remove Darts!"
 msgstr "Darts entfernen"
 
-#: mod_game/helper.py:261 mod_game/helper.py:348 mod_game/helper.py:500
+#: mod_game/helper.py:488 mod_game/helper.py:564 mod_game/helper.py:628
+#: mod_game/helper.py:794
 msgid "There is no active game running"
 msgstr "Aktuell ist kein Spiel gestartet"
 
-#: mod_game/helper.py:317
+#: mod_game/helper.py:530
 msgid " Opened!"
 msgstr " Geöffnet!"
 
-#: mod_game/helper.py:322
+#: mod_game/helper.py:535
 msgid " Scored!"
 msgstr " Gepunktet!"
 
-#: mod_game/helper.py:325
+#: mod_game/helper.py:537
 msgid " Closed!"
 msgstr " Geschlossen!"
 
-#: mod_game/helper.py:341
+#: mod_game/helper.py:557
 msgid " Remove Darts!"
 msgstr " Darts entfernen!"
+
+#: mod_game/helper.py:604
+msgid "Hit"
+msgstr "Getroffen"
 
 #: templates/404.html:3
 msgid "404 - That one missed!"
@@ -108,35 +116,41 @@ msgstr "Spieler"
 msgid "Choose your game type"
 msgstr "Spiel wählen"
 
-#: templates/game/admin.html:28
+#: templates/game/admin.html:29
 msgid "Which X01 do you want to play"
 msgstr "Welches X01 möchtest du spielen"
 
-#: templates/game/admin.html:37
+#: templates/game/admin.html:38
 msgid "Condition to get into the game"
 msgstr "Startbedingung"
 
-#: templates/game/admin.html:39 templates/game/admin.html:47
+#: templates/game/admin.html:40 templates/game/admin.html:48
 msgid "Straight"
 msgstr "Direkt"
 
-#: templates/game/admin.html:45
+#: templates/game/admin.html:46
 msgid "Condition to end the game"
 msgstr "Endbedingung"
 
-#: templates/game/admin.html:53 templates/game/scoreboardCricket.html:33
+#: templates/game/admin.html:54 templates/game/admin.html:62
+#: templates/game/scoreboardATC.html:33
+#: templates/game/scoreboardCricket.html:33
 msgid "Variant"
 msgstr "Variante"
 
-#: templates/game/admin.html:60
+#: templates/game/admin.html:65
+msgid "Fast"
+msgstr "Schnell"
+
+#: templates/game/admin.html:68
 msgid "Start Game"
 msgstr "Spiel Starten"
 
-#: templates/game/admin.html:63
+#: templates/game/admin.html:71
 msgid "You are missing a user? Create "
 msgstr "Dir fehlt ein Spieler? Erstelle"
 
-#: templates/game/admin.html:63
+#: templates/game/admin.html:71
 msgid "one"
 msgstr "einen"
 
@@ -226,21 +240,25 @@ msgstr "zurück"
 msgid "to the game setup when done"
 msgstr "zu den Spieleinstellungen, wenn du fertig bist"
 
+#: templates/game/scoreboardATC.html:15
 #: templates/game/scoreboardCricket.html:15
 #: templates/game/scoreboardX01.html:12
 msgid "Active Player"
 msgstr "Aktiver Spieler"
 
+#: templates/game/scoreboardATC.html:18
 #: templates/game/scoreboardCricket.html:18
 #: templates/game/scoreboardX01.html:15
 msgid "Player round"
 msgstr "Spieler Runde"
 
+#: templates/game/scoreboardATC.html:21
 #: templates/game/scoreboardCricket.html:21
 #: templates/game/scoreboardX01.html:21
 msgid "Player Throws"
 msgstr "Wurfanzahl"
 
+#: templates/game/scoreboardATC.html:30
 #: templates/game/scoreboardCricket.html:30
 #: templates/game/scoreboardX01.html:29
 msgid "Game"
@@ -257,3 +275,4 @@ msgstr "Start"
 #: templates/game/scoreboardX01.html:35
 msgid "Out"
 msgstr "Ende"
+

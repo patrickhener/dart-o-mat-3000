@@ -15,9 +15,13 @@
     {% endblock %}
 {% endblock %}
 
-{% block bodyparam %}onload="drawX01Controller({{ playingPlayers }}), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ activePlayer }}',{{ scorelist }})"{% endblock %}
-
-
+{% block bodyparam %}
+{% if atc %}
+onload="drawATC({{ number }}), drawThrows({{ playingPlayers }},{{ throwlist}}, highlightATC('{{ player_number_list }}'))"
+{% else %}
+onload="drawX01Controller({{ playingPlayers }}), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ activePlayer }}',{{ scorelist }})"
+{% endif %}
+{% endblock %}
 {% block content %}
 	<div class="container">
 

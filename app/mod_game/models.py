@@ -32,6 +32,7 @@ class Player(Base):
     scores = db.relationship('Score', backref='scores', lazy=True)
     crickets = db.relationship('Cricket', backref='crickets', lazy=True)
     gained = db.relationship('PointsGained', backref='playergaines', lazy=True)
+    numbers = db.relationship('ATC', backref='numbers', lazy=True)
 
     game_id = db.Column(db.Integer, db.ForeignKey('game.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=True)
 
@@ -113,3 +114,13 @@ class Throw(Base):
     def __repr__(self):
         hitcount = self.hit * self.mod
         return str(hitcount)
+
+
+class ATC(Base):
+    number = db.Column(db.Integer, nullable=True)
+
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"),
+                          nullable=False)
+
+    def __repr__(self):
+        return str(self.number)

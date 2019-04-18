@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block head %}
+<script src="{{ url_for('static', filename='js/scoreboard.js') }}"></script>
+{% endblock %}
+
+{% block bodyparam %}style="overflow: hidden;" onload='drawScoreboardATC({{ playerlist }}),highlightATC("{{ player }}","{{ rnd }}","{{ throwcount }}","{{ message }}")'{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid" id="content">
+	<div id="scoreheader" class="row border-bottom border-top rounded">
+		<div class="col">
+			<table id="header-cricket-left" class="table table-sm table-dark table-striped">
+				<tr>
+					<td>{% trans %}Active Player{% endtrans %}:</td>
+					<td id="header-activePlayer">{{ player }}</td>
+				</tr><tr>
+					<td>{% trans %}Player round{% endtrans %}:</td>
+					<td id="header-rndcount">{{ rndcount }}</td>
+				</tr><tr>
+					<td>{% trans %}Player Throws{% endtrans %}:</td>
+					<td id="header-throwcount">{{ throwcount }}</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="col">
+			<table id="header-cricket-right" class="table table-sm table-dark table-striped">
+				<tr>
+					<td>{% trans %}Game{% endtrans %}:</td>
+					<td>{{ gametype }}</td>
+				</tr><tr>
+					<td>{% trans %}Variant{% endtrans %}:</td>
+					<td>{{ variant }}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<br>
+	<div class="row border-top rounded" id="score"></div>
+</div>
+<br>
+
+{% endblock %}

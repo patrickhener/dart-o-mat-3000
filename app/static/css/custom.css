@@ -48,7 +48,7 @@ a, a:hover, a:visited, a:active {
 	text-decoration: underline;
 }
 
-h1#playerName,h1#playerScore, h2#playerSum, h2#playerThrow {
+h1#playerName,h1#playerScore, h1#playerNumber, h2#playerSum, h2#playerThrow {
 	text-align: center;
 	vertical-align: middle;
 }
@@ -59,7 +59,7 @@ div#playerName {
 	padding: 10px;
 }
 
-div#playerScore, div[id^="Sum-"] {
+div#playerScore, div#playerNumber, div[id^="Sum-"] {
 	background-color: #3c5f6c;
 	padding: 10px;
 }

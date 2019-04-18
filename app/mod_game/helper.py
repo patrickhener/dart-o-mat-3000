@@ -1,7 +1,7 @@
 # Import db from app
 from app import db, socketio
 # Import module models
-from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained
+from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC
 # cycle and islice for nextPlayer
 from itertools import cycle, islice
 # Babel Translation
@@ -146,6 +146,7 @@ def clear_db():
     db.session.query(Round).delete()
     db.session.query(CricketControl).delete()
     db.session.query(PointsGained).delete()
+    db.session.query(ATC).delete()
 
     playing_players_object = Player.query.filter_by(game_id=1).all()
     for player in playing_players_object:
@@ -372,7 +373,7 @@ def update_throw_table(throw_id, hit, mod):
                 db.session.commit()
 
             # Redraw scoreboard after change
-            socketio.emit('redrawCricket',gettext(u"Throw updated"))
+            socketio.emit('redrawCricket', gettext(u"Throw updated"))
 
     # This handles X01 games
     elif "01" in game.gametype:
@@ -389,12 +390,27 @@ def update_throw_table(throw_id, hit, mod):
         new_score = score.score - alter_score
         # Set Throw to new values
         throw.hit = int(hit)
-        throw.mod = int(mod
-                        )
+        throw.mod = int(mod)
         # Set Score and Park Score to new Score
         score.score = new_score
         score.parkScore = new_score
         # Commit to db
+        db.session.commit()
+
+    # This handles Around the Clock games
+    elif game.gametype == "ATC":
+        # get Throw
+        throw = Throw.query.filter_by(id=throw_id).first()
+        # decrease the number again
+        number = ATC.query.filter_by(player_id=throw.player_id).first()
+        if game.variant == "Normal":
+            number.number -= 1
+        else:
+            number.number -= throw.mod
+        # Set Throw to new values
+        throw.hit = int(hit)
+        throw.mod = int(mod)
+        # Commit to DB
         db.session.commit()
 
     # This handles any other gametype for now.
@@ -563,6 +579,70 @@ def score_cricket(hit, mod):
         return gettext(u"There is no active game running")
 
 
+def score_atc(hit, mod):
+    # check if there is a game going on
+    if check_if_ongoing_game():
+        # Get active player
+        active_player = get_active_player()
+        # Get players number to hit
+        number_to_hit = ATC.query.filter_by(player_id=active_player.id).first()
+        # Get game variant
+        game = Game.query.first()
+        # Check if there is a ongoing round associated, if not create a new one
+        if not check_if_ongoing_round(active_player):
+            rnd = Round(player_id=active_player.id, ongoing=True, throwcount=0)
+            db.session.add(rnd)
+            db.session.commit()
+        else:
+            # Set round object
+            rnd = Round.query.filter_by(player_id=active_player.id, ongoing=1).first()
+
+        # Check if ongoing round is over
+        if rnd.throwcount == 3:
+            game.nextPlayerNeeded = True
+        else:
+            # set throwcount and old score
+            throwcount = rnd.throwcount
+            # Score
+            if number_to_hit.number == int(hit):
+                if game.variant == "Normal":
+                    number_to_hit.number += 1
+                else:
+                    number_to_hit.number += mod
+
+                # Check won
+                if number_to_hit.number > 20:
+                    number_to_hit.number = 0
+                    game.won = True
+                    result = gettext(u"Winner!")
+                else:
+                    result = gettext(u"Hit")
+
+                throwcount += 1
+                rnd.throwcount = throwcount
+                throw = Throw(hit=hit, mod=mod, round_id=rnd.id, player_id=active_player.id)
+                if throwcount == 3:
+                    game.nextPlayerNeeded = True
+                    result = gettext(u"Remove Darts!")
+                db.session.add(throw)
+                db.session.commit()
+                return result
+            else:
+                result = "-"
+                throwcount += 1
+                rnd.throwcount = throwcount
+                throw = Throw(hit=hit, mod=mod, round_id=rnd.id, player_id=active_player.id)
+                if throwcount == 3:
+                    game.nextPlayerNeeded = True
+                    result = gettext(u"Remove Darts!")
+                db.session.add(throw)
+                db.session.commit()
+                return result
+    else:
+        # Output if no game is running
+        return gettext("There is no active game running")
+
+
 def get_cricket_dict(player_id):
     cricket = Cricket.query.filter_by(player_id=player_id).first()
     cricket_dict = dict()
@@ -636,19 +716,15 @@ def check_to_close(hit):
 
 
 def check_to_score(hit, mod, hit_before, player_id):
-    print("check_to_score gets called with hit {} mod {} hit_before {} player_id {}".format(hit, mod, hit_before,  player_id))
     # init scored
     scored = False
     # Get game object because we need to know variant
     game = Game.query.first()
     variant = game.variant
-    # Get active Player and corresponding score (Variant: Normal)
-    active_player = get_active_player()
     # Get playing Players (Variant: Cut Throat)
     playing_players = get_playing_players_objects()
     # Check if opened
     cricket_dict = get_cricket_dict(player_id=player_id)
-    print("cricket dict in check_to_score is: {}".format(cricket_dict))
     if cricket_dict[str(hit)] > 3:
         # Calculate relevant mod agains hit before count
         already_hit_subsctraction = 3 - hit_before
@@ -807,7 +883,8 @@ def get_last_throws(player_id):
         if not last_throws == []:
             try:
                 for i in range(0, 3):
-                    throwlist.append(str(player_id) + "," + str(last_throws[i].id) + "," + str(last_throws[i].hit) + "," + str(last_throws[i].mod))
+                    throwlist.append(str(player_id) + "," + str(last_throws[i].id) + "," + str(last_throws[i].hit)
+                                     + "," + str(last_throws[i].mod))
             except:
                 print("Exception handled, lolz")
         else:
