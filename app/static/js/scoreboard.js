@@ -77,13 +77,13 @@ function drawScoreboardX01(list, lastthrowsall, throwsum) {
             var throww = document.createElement("div");
             throww.setAttribute("id", "throw");
             var output = "";
-            if (array[2] == "2") {
+            if (array[3] == "2") {
                 output += "D";
             }
-            else if (array[2] == "3") {
+            else if (array[3] == "3") {
                 output += "T";
             }
-            output += array[1];
+            output += array[2];
             throww.innerHTML = "<h2 id='playerThrow'>" + output + "</h2>";
             throwDiv.appendChild(throww);
         }
@@ -254,13 +254,13 @@ function drawScoreboardCricket(list, lastthrows, closed) {
             // throwArray[0] = playerID
             // throwArray[1] = hit
             // throwArray[2] = mod
-            if (throwArray[2] == "2") {
+            if (throwArray[3] == "2") {
                 output += "D";
             }
-            else if (throwArray[2] == "3") {
+            else if (throwArray[3] == "3") {
                 output += "T";
             }
-            output += throwArray[1];
+            output += throwArray[2];
             output += " ";
         }
         lastThrowsColumn.innerHTML = "<h2>" + output + "</h2>";

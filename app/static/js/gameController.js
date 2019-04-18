@@ -121,50 +121,37 @@ function drawThrows(playerlist, throwlist) {
 		// arrayPlayer[1] = PlayerName
 		var arrayPlayer = playerlist[player].split(",");
 
-		// Determine rowspan and insert first tr with first td with name
-		var rowspan = 0;
-		for (i=0; i<throwlist.length; i++) {
-			if(throwlist[i][0] == playerlist[player][0])
-				rowspan++;
-		}
-
 		var tr = document.createElement("tr");
 		var tdname = document.createElement("td");
-		tdname.setAttribute("rowspan", Math.ceil(rowspan/3));
-		tdname.setAttribute("id", "name-score-" + arrayPlayer[1]);
+		tdname.setAttribute("id","name-score-" + arrayPlayer[1]);
 		tdname.innerHTML = arrayPlayer[1];
 		tr.appendChild(tdname);
+
 		//append throws to first table row
-		var rowCount = 0;
 		for (var thr in throwlist) {
-			// Split up array
-			// arrayThrow[0] = PlayerID
-			// arrayThrow[1] = ThrowID
-			// arrayThrow[2] = Hit Number
-			// arrayThrow[3] = Hit Modifier
-			var arrayThrow = throwlist[thr].split(",");
-			// if playerID matches
-			if(arrayThrow[0] == arrayPlayer[0]) {
-				// new row after three throws
-				if (rowCount == 3) {
-					table.appendChild(tr);
-					var tr = document.createElement("tr");
-					rowCount = 0;
+			for (i=0; i < throwlist[thr].length; i++) {
+			    // Split up array
+				// throwArray[0] = PlayerID
+				// throwArray[1] = ThrowID
+				// throwArray[2] = Hit
+				// throwArray[3] = Mod
+			    var throwArray = throwlist[thr][i].split(",");
+				// if playerID matches
+				if(throwArray[0] == arrayPlayer[0]) {
+					tdbutton = document.createElement("td");
+					tdbutton.setAttribute("id", "player-" + arrayPlayer[0] + "-throw-" + throwArray[1]);
+					// Pretty output with D for double and T for triple
+					var output = ""
+					if (throwArray[3] == "2") {
+						output += "D";
+					}
+					else if (throwArray[3] == "3") {
+						output += "T";
+					}
+					output += throwArray[2];
+					tdbutton.innerHTML = "<a href=javascript:updateMenu(" + throwArray[1] + ")>" + output + "</a>";
+					tr.appendChild(tdbutton);
 				}
-				tdbutton = document.createElement("td");
-				tdbutton.setAttribute("id", "player-" + arrayPlayer[0] + "-throw-" + arrayThrow[1]);
-				// Pretty output with D for double and T for triple
-				var output = ""
-				if (arrayThrow[3] == "2") {
-					output += "D";
-				}
-				else if (arrayThrow[3] == "3") {
-					output += "T";
-				}
-				output += arrayThrow[2];
-				tdbutton.innerHTML = "<a href=javascript:updateMenu(" + arrayThrow[1] + ")>" + output + "</a>";
-				tr.appendChild(tdbutton);
-				rowCount += 1;
 			}
 		}
 		table.appendChild(tr);

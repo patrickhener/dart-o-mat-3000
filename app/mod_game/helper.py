@@ -155,6 +155,17 @@ def clear_db():
     db.session.commit()
 
 
+def get_checkout(score):
+    if score < 171:
+        if str(score) in checkout_dict:
+            checkout = checkout_dict[str(score)]
+            return checkout
+        else:
+            return "-"
+    else:
+        return "-"
+
+
 def get_active_player():
     active_player_object = Player.query.filter_by(active=True).first()
     return active_player_object
@@ -786,7 +797,7 @@ def get_last_throws(player_id):
         if not last_throws == []:
             try:
                 for i in range(0, 3):
-                    throwlist.append(str(player_id) + "," + str(last_throws[i].hit) + "," + str(last_throws[i].mod))
+                    throwlist.append(str(player_id) + "," + str(last_throws[i].id) + "," + str(last_throws[i].hit) + "," + str(last_throws[i].mod))
             except:
                 print("Exception handled, lolz")
         else:

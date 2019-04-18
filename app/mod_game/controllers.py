@@ -13,7 +13,7 @@ from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, Cric
 # Import helper functions
 from app.mod_game.helper import clear_db, score_x01, switch_next_player, get_playing_players_objects, \
     get_playing_players_id, get_score, get_active_player, get_average, get_throws_count, get_last_throws, \
-    get_all_throws, update_throw_table, get_cricket, score_cricket, get_closed
+    get_all_throws, update_throw_table, get_cricket, score_cricket, get_closed, get_checkout
 
 # Import Babel Stuff
 from flask_babel import gettext
@@ -109,12 +109,11 @@ def game_controller():
 
     playing_players_id = get_playing_players_id()
     active_player = get_active_player()
-    # Throws
-    throwlist = []
-    for player in playing_players_id:
-        throws = get_all_throws(player)
-        for thr in throws:
-            throwlist.append(str(player)+","+str(thr.id)+","+str(thr.hit)+","+str(thr.mod))
+
+    # Get last throws
+    last_throws = []
+    for player in playing_players:
+        last_throws.append(get_last_throws(player.id))
 
     # Scorelist
     scorelist = []
@@ -124,7 +123,7 @@ def game_controller():
 
     # Draw Scoreboard
     socketio.emit("drawX01Controller")
-    socketio.emit("drawThrows", (playerlist, throwlist))
+    socketio.emit("drawThrows", (playerlist, last_throws))
     socketio.emit("highlightAndScore", (active_player.name, scorelist))
 
     # Render Template
@@ -134,7 +133,7 @@ def game_controller():
         playingPlayers=playerlist,
         activePlayer=active_player,
         scorelist=scorelist,
-        throwlist=throwlist,
+        throwlist=last_throws,
         end_message=end_message
     )
 
@@ -234,8 +233,6 @@ def scoreboard_x01(message=None, soundeffect=None):
     # Var for returning options
     if not message:
         message = "-"
-    #elif condition:
-    #    message = get_checkout()
     else:
         message = message
     if message == "Winner!":
@@ -299,6 +296,11 @@ def scoreboard_x01(message=None, soundeffect=None):
     player_scores_list = [{'Player': str(name), 'PlayerID': str(playerid), 'Score': str(score)}
                           for name, playerid, score
                           in zip(playing_players, playing_players_id, player_scores)]
+
+    # Get player checkout table
+    if get_score(active_player.id) < 171:
+        if not get_score(active_player.id) == 0:
+            message = get_checkout(get_score(active_player.id))
 
     socketio.emit('drawScoreboardX01', (player_scores_list, last_throws, sum_throws))
     socketio.emit('highlightActive', (active_player.name, active_player.id, rnd, message, average, throwcount))
