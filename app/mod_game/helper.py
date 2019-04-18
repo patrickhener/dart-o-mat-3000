@@ -1,5 +1,5 @@
 # Import db from app
-from app import db
+from app import db, socketio
 # Import module models
 from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained
 # cycle and islice for nextPlayer
@@ -318,6 +318,9 @@ def update_throw_table(throw_id, hit, mod):
                 score = Score.query.filter_by(player_id=player_id).first()
                 # reduce score again
                 score.score -= gp.points
+                # remove points gained entry
+                db.session.query(PointsGained).filter(PointsGained.id == gp.id).delete()
+                db.session.commit()
 
             # CASE 1-3: Correct Throw count
             # Find cricket array for player and update count
@@ -349,10 +352,11 @@ def update_throw_table(throw_id, hit, mod):
             if int(hit) > 14:
                 # First book in the new hit to cricket_dict
                 cricket_dict = get_cricket_dict(throw.player_id)
+                hit_before_increase = cricket_dict[str(hit)]
                 cricket_dict[str(hit)] += int(mod)
                 set_cricket_dict(throw.player_id, cricket_dict)
                 # 3. look if there are new points
-                result = check_to_score(int(hit), int(mod))
+                check_to_score(int(hit), int(mod), hit_before_increase, throw.player_id)
 
                 # now check if the corrected throw might close something
                 cricket_control_dict = get_cricket_control()
@@ -360,12 +364,15 @@ def update_throw_table(throw_id, hit, mod):
 
                 # if not closed -> check to close
                 if not closed_status == "closed":
-                    result = check_to_close(hit)
+                    check_to_close(hit)
 
                 # Commit to db
                 throw.hit = int(hit)
                 throw.mod = int(mod)
                 db.session.commit()
+
+            # Redraw scoreboard after change
+            socketio.emit('redrawCricket',gettext(u"Throw updated"))
 
     # This handles X01 games
     elif "01" in game.gametype:
@@ -523,7 +530,7 @@ def score_cricket(hit, mod):
                 # 3. Now check if it was not closed, then check scoring options
                 if not check_close(hit):
                     if cricket_dict[str(hit)] > 3:
-                        if check_to_score(hit, mod, hit_before_increase):
+                        if check_to_score(hit, mod, hit_before_increase, active_player.id):
                             result += gettext(u" Scored!")
                 else:
                     result += gettext(u" Closed!")
@@ -628,8 +635,8 @@ def check_to_close(hit):
     return close
 
 
-def check_to_score(hit, mod, hit_before):
-    print("Function check_to_score gets called with hit {} mod {} hit_before {}".format(hit, mod, hit_before))
+def check_to_score(hit, mod, hit_before, player_id):
+    print("check_to_score gets called with hit {} mod {} hit_before {} player_id {}".format(hit, mod, hit_before,  player_id))
     # init scored
     scored = False
     # Get game object because we need to know variant
@@ -640,7 +647,8 @@ def check_to_score(hit, mod, hit_before):
     # Get playing Players (Variant: Cut Throat)
     playing_players = get_playing_players_objects()
     # Check if opened
-    cricket_dict = get_cricket_dict(player_id=active_player.id)
+    cricket_dict = get_cricket_dict(player_id=player_id)
+    print("cricket dict in check_to_score is: {}".format(cricket_dict))
     if cricket_dict[str(hit)] > 3:
         # Calculate relevant mod agains hit before count
         already_hit_subsctraction = 3 - hit_before
@@ -652,13 +660,13 @@ def check_to_score(hit, mod, hit_before):
             if not check_close(hit) == "closed":
                 # Scoring
                 scored = True
-                score = Score.query.filter_by(player_id=active_player.id).first()
+                score = Score.query.filter_by(player_id=player_id).first()
                 # check out last cricket dict number
                 points = hit * relevant_mod
                 score.score += points
                 # Setup gained Points for updateThrow
                 throw_id = Throw.query.order_by(Throw.id.desc()).first()
-                gained_points = PointsGained(points=points, throw_id=throw_id.id, player_id=active_player.id)
+                gained_points = PointsGained(points=points, throw_id=throw_id.id+1, player_id=player_id)
                 db.session.add(gained_points)
                 db.session.commit()
                 return scored
@@ -675,7 +683,7 @@ def check_to_score(hit, mod, hit_before):
                         score.score += points
                         # Setup gained Points for updateThrow
                         throw_id = Throw.query.order_by(Throw.id.desc()).first()
-                        gained_points = PointsGained(points=points, throw_id=throw_id.id, player_id=player.id)
+                        gained_points = PointsGained(points=points, throw_id=throw_id.id+1, player_id=player.id)
                         db.session.add(gained_points)
                         db.session.commit()
 

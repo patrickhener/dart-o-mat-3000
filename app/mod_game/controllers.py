@@ -107,7 +107,6 @@ def game_controller():
     for player in playing_players:
         playerlist.append(str(player.id) + "," + str(player))
 
-    playing_players_id = get_playing_players_id()
     active_player = get_active_player()
 
     # Get last throws
@@ -515,3 +514,8 @@ def on_start_cricket(data):
     socketio.emit('redirectIndex', '/game/scoreboardCricket')
     socketio.emit('redirectAdmin', '/game/gameController')
     scoreboard_cricket()
+
+
+@socketio.on('redrawCricket')
+def redraw_cricket(message):
+    scoreboard_cricket(message)
