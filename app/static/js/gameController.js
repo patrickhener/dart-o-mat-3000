@@ -203,6 +203,10 @@ function sendThrow(hit) {
 	xhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
 			var response = xhttp.responseText;
+			if (response.includes("Darts")) {
+				xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/nextPlayer'), true);
+				xhttp.send();
+			}
 			//location.reload();
 		}
 	};
