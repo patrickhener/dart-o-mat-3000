@@ -35,8 +35,8 @@ socket.on('drawATC', function (number) {
 	drawATC(number);
 });
 
-socket.on('highlightATC', function (activePlayer) {
-	highlightATC(activePlayer);
+socket.on('highlightATC', function (player_number_list, activePlayer) {
+	highlightATC(player_number_list, activePlayer);
 });
 
 function drawX01Controller() {
@@ -425,7 +425,14 @@ function drawATC(number) {
 	groupDiv2.appendChild(button);
 }
 
-function highlightATC(activePlayer) {
+function highlightATC(player_number_list, activePlayer) {
+	// Substitute Playername with Playername + number to hit
+	for (var item in player_number_list) {
+	    var split = player_number_list[item].split(",");
+		var playerDiv = document.getElementById("name-score-" + split[0]);
+		playerDiv.innerHTML = split[0] + " - " + split[1];
+	}
+	// Highlight active Player
 	var activePlayerDiv = document.getElementById("name-score-" + activePlayer);
 	activePlayerDiv.style.border='5px solid white';
 	activePlayerDiv.style.boxShadow='10px 10px 15px black';

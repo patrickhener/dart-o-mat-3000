@@ -123,28 +123,29 @@ def game_controller():
         scorelist.append(str(player) + "," + str(score.score))
 
     # ATC Settings
-    number_to_hit = 0
-    player_number_list = {}
+    active_player_number_to_hit = 0
+    player_number_list = []
     if game.gametype == "ATC":
-        number_to_hit = ATC.query.filter_by(player_id=active_player.id).first().number
-        # Missing player_number_list to get filled in with player ID and number to hit
-        # Should then be displayed in GameController via highlightATC instead of just active_player.name
+        active_player_number_to_hit = ATC.query.filter_by(player_id=active_player.id).first().number
+        for player in playing_players:
+            player_number_to_hit = ATC.query.filter_by(player_id=player.id).first().number
+            player_number_list.append(str(player.name) + "," + str(player_number_to_hit))
+
+        print("player_number_list is {}".format(player_number_list))
 
     # Draw Scoreboard
     socketio.emit("drawThrows", (playerlist, last_throws))
 
     if game.gametype == "ATC":
-        socketio.emit("drawATC",  number_to_hit)
-        socketio.emit('highlightATC', active_player.name)
+        socketio.emit("drawATC", active_player_number_to_hit)
+        socketio.emit('highlightATC', (player_number_list, active_player.name))
 
     elif game.gametype == "Cricket":
         socketio.emit("drawCricketController")
-        #socketio.emit("drawThrows", (playerlist, last_throws))
         socketio.emit("highlightCricket", active_player.name)
 
     else:
         socketio.emit("drawX01Controller")
-        #socketio.emit("drawThrows", (playerlist, last_throws))
         socketio.emit("highlightAndScore", (active_player.name, scorelist))
 
     # Render Template
@@ -154,7 +155,7 @@ def game_controller():
         gametype=game.gametype,
         variant=game.variant,
         player_number_list=player_number_list,
-        number=number_to_hit,
+        number=active_player_number_to_hit,
         playingPlayers=playerlist,
         activePlayer=active_player,
         scorelist=scorelist,
