@@ -18,8 +18,16 @@ Python
 ======
 
 As the first requirements you will need `Python3` and `Python3-Pip`.
-You might wanna refer to the official documentation on how to install `python <https://docs.python.org/3/>`_ and `pip <https://pip.pypa.io/en/stable/installing/>`_
+You might wanna refer to the official documentation on how to install |python| and |pip|
 for your specific operating system.
+
+.. |python| raw:: html
+
+    <a href="https://docs.python.org/3/" target="_blank">Python</a>
+
+.. |pip| raw:: html
+
+    <a href="https://pip.pypa.io/en/stable/installing/" target="_blank">pip</a>
 
 Virtual Environment
 ===================

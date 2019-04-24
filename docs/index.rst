@@ -21,3 +21,4 @@ Then you are very welcome to try out **Dart-O-Mat 3000**!
    Games
    TODOs
    Changelog
+   Donate

@@ -22,7 +22,11 @@ The development server will restart everytime you change code and save it.
 It will directly crash and give you stack traces if you have an error.
 This is very convenient for developing.
 
-Navigate your browser to `<http://localhost:5000/game/>`_ to see if it is working.
+Navigate your browser to |localhost| to see if it is working.
+
+.. |localhost| raw:: html
+
+    <a href="http://localhost:5000/game/" target="_blank">http://localhost:5000/game/</a>
 
 Deploying for production
 ========================

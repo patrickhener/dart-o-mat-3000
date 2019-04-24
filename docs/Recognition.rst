@@ -7,7 +7,11 @@ Recognition
 Recommendation on recognition software
 ======================================
 
-As this project is developed depending on the `recognition software <https://github.com/nluede/cvdarts>`_ of Niels Lüdemann it is recommended to use it.
+As this project is developed depending on the |recognition_software| of Niels Lüdemann it is recommended to use it.
+
+.. |recognition_software| raw:: html
+
+    <a href="https://github.com/nluede/cvdarts" target="_blank">recognition software</a>
 
 RESTful API Requests
 ====================
