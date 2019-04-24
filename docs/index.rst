@@ -15,7 +15,9 @@ Then you are very welcome to try out **Dart-O-Mat 3000**!
 
    About-the-project
    Installation
+   Recognition
    Configuration
    Deploy-and-run
    Games
+   TODOs
    Changelog

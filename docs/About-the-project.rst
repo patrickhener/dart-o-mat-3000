@@ -52,4 +52,4 @@ Together it will build a nice and smooth experience while playing.
 Ready to start?
 ===============
 
-So you feel like you want to test it out yourself? Then go ahead and check out how to :ref:`install <Installation>` everything.
+So you feel like you want to test it out yourself? Then go ahead and check out how information on :ref:`recognition software <Recognition>` and how to :ref:`install <Installation>` everything.

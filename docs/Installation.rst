@@ -4,6 +4,19 @@
 Installation
 ============
 
+Git
+===
+
+It is recommended to clone the project with git. So you will need to install git for your specific operating system.
+Afterwards you can clone the project like so:
+
+.. code-block:: bash
+
+    git clone https://github.com/patrickhener/dart-o-mat-3000.git
+
+Python
+======
+
 As the first requirements you will need `Python3` and `Python3-Pip`.
 You might wanna refer to the official documentation on how to install `python <https://docs.python.org/3/>`_ and `pip <https://pip.pypa.io/en/stable/installing/>`_
 for your specific operating system.
