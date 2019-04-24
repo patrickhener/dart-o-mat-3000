@@ -7,68 +7,128 @@
 {% block bodyparam %}onload="hide()"{% endblock %}
 
 {% block content %}
-<div class="container">
-	<form name="setup" id="setup" action="javascript:submitGame();">
-		<div id="playerlist" class="form-group">
-			<label for="player">{% trans %}Players{% endtrans %}: </label>
-			<select size="4" class="form-control" id="player" name="player" multiple required>
-				{% for player in players %}
-				<option value="{{ player }}">{{ player }}</option>
-				{% endfor %}
-			</select>
-		</div>
-		<div class="form-group">
-			<label for="gametype">{% trans %}Choose your game type{% endtrans %}: </label>
-			<select class="form-control" id="gametype" onchange="hideshow()">
-				<option value="x01">X01</option>
-				<option value="cricket">Cricket</option>
-				<option value="aroundtheclock">Around the Clock</option>
-			</select>
-		</div>
-		<div class="form-group" id="div-x01variant">
-			<label for="x01variant">{% trans %}Which X01 do you want to play{% endtrans %}: </label>
-			<select class="form-control" id="x01variant" name="x01variant">
-				<option value="301">301</option>
-				<option value="501">501</option>
-				<option value="701">701</option>
-				<option value="901">901</option>
-			</select>
-		</div>
-		<div class="form-group" id="div-startIn">
-			<label for="startIn">{% trans %}Condition to get into the game{% endtrans %}:</label>
-			<select class="form-control" id="startIn" name="startIn">
-				<option value="{% trans %}Straight{% endtrans %}">{% trans %}Straight{% endtrans %}</option>
-				<option value="Double">Double</option>
-				<option value="Master">Master</option>
-			</select>
-		</div>
-		<div class="form-group" id="div-exitOut">
-			<label for="exitOut">{% trans %}Condition to end the game{% endtrans %}:</label>
-			<select class="form-control" id="exitOut" name="exitOut">
-				<option value="{% trans %}Straight{% endtrans %}">{% trans %}Straight{% endtrans %}</option>
-				<option value="Double">Double</option>
-				<option value="Master">Master</option>
-			</select>
-		</div>
-		<div class="form-group" id="div-variant">
-			<label for="variant">{% trans %}Variant{% endtrans%}:</label>
-			<select class="form-control" id="variant" name="variant">
-				<option value="Normal">Normal</option>
-				<option value="Cut Throat">Cut Throat</option>
-				<option value="No Score">No Score</option>
-			</select>
-		</div>
-		<div class="form-group" id="div-atc-variant">
-			<label for="atc-variant">{% trans %}Variant{% endtrans %}:</label>
-			<select class="form-control" id="atc-variant" name="atc-variant">
-				<option value="Normal">Normal</option>
-				<option value="{% trans %}Fast{% endtrans %}">{% trans %}Fast{% endtrans %}</option>
-			</select>
-		</div>
-		<button class="btn btn-outline-primary btn-lg" type="submit">{% trans %}Start Game{% endtrans %}</button>
-	</form>
-	<hr>
-	<p>{% trans %}You are missing a user? Create {% endtrans %} <a href="{{ url_for('game.manageuser') }}">{% trans %}one{% endtrans %}!</a></p>
+<div class="container-fluid">
+    <div class="row">
+        <div id="Gamesetup" class="col">
+            <h3>{% trans %}Game Setup{% endtrans %}</h3>
+            <form name="setup" id="setup" action="javascript:submitGame();">
+                <div id="playerlist" class="form-group">
+                    <label for="player">{% trans %}Players{% endtrans %}: </label>
+                    <select size="4" class="form-control" id="player" name="player" multiple required>
+                        {% for player in players %}
+                        <option value="{{ player }}">{{ player }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="gametype">{% trans %}Choose your game type{% endtrans %}: </label>
+                    <select class="form-control" id="gametype" onchange="hideshow()">
+                        <option value="x01">X01</option>
+                        <option value="cricket">Cricket</option>
+                        <option value="aroundtheclock">Around the Clock</option>
+                    </select>
+                </div>
+                <div class="form-group" id="div-x01variant">
+                    <label for="x01variant">{% trans %}Which X01 do you want to play{% endtrans %}: </label>
+                    <select class="form-control" id="x01variant" name="x01variant">
+                        <option value="301">301</option>
+                        <option value="501">501</option>
+                        <option value="701">701</option>
+                        <option value="901">901</option>
+                    </select>
+                </div>
+                <div class="form-group" id="div-startIn">
+                    <label for="startIn">{% trans %}Condition to get into the game{% endtrans %}:</label>
+                    <select class="form-control" id="startIn" name="startIn">
+                        <option value="{% trans %}Straight{% endtrans %}">{% trans %}Straight{% endtrans %}</option>
+                        <option value="Double">Double</option>
+                        <option value="Master">Master</option>
+                    </select>
+                </div>
+                <div class="form-group" id="div-exitOut">
+                    <label for="exitOut">{% trans %}Condition to end the game{% endtrans %}:</label>
+                    <select class="form-control" id="exitOut" name="exitOut">
+                        <option value="{% trans %}Straight{% endtrans %}">{% trans %}Straight{% endtrans %}</option>
+                        <option value="Double">Double</option>
+                        <option value="Master">Master</option>
+                    </select>
+                </div>
+                <div class="form-group" id="div-variant">
+                    <label for="variant">{% trans %}Variant{% endtrans%}:</label>
+                    <select class="form-control" id="variant" name="variant">
+                        <option value="Normal">Normal</option>
+                        <option value="Cut Throat">Cut Throat</option>
+                        <option value="No Score">No Score</option>
+                    </select>
+                </div>
+                <div class="form-group" id="div-atc-variant">
+                    <label for="atc-variant">{% trans %}Variant{% endtrans %}:</label>
+                    <select class="form-control" id="atc-variant" name="atc-variant">
+                        <option value="Normal">Normal</option>
+                        <option value="{% trans %}Fast{% endtrans %}">{% trans %}Fast{% endtrans %}</option>
+                    </select>
+                </div>
+                <button class="btn btn-outline-primary btn-lg" type="submit">{% trans %}Start Game{% endtrans %}
+                </button>
+            </form>
+            <hr>
+            <p>{% trans %}You are missing a user? Create {% endtrans %} <a href="{{ url_for('game.manageuser') }}">{%
+                trans
+                %}one{% endtrans %}!</a></p>
+            <hr>
+        </div>
+        <div id="rules" class="col">
+            <h3 align="center">{% trans %}Game Rules{% endtrans %}</h3>
+
+            <div id="x01-rules">
+                <p><b>{% trans %}Basic Rules{% endtrans %}</b></p>
+                <p>{% trans %}In a game of X01 the object is for one player or a team to be the first to reach zero from
+                    starting total of X01.{% endtrans %}</p>
+                <p>{% trans %}In simple terms, after three darts are thrown, the throwing player subtracts the total
+                    scored from his current total until he reaches zero.{% endtrans %}</p>
+                <p><i>{% trans %}Straight{% endtrans %}</i></p>
+                <p>{% trans %}When choosing straight no condition to start into or end the game are in place.{% endtrans %}</p>
+                <p><i>{% trans %}Double/Master In{% endtrans %}</i></p>
+                <p>{% trans %}In order to start substracting points each player has to hit a double (Double in) or a
+                    double/triple (Master in).{% endtrans %}</p>
+                <p><i>{% trans %}Double/Master Out{% endtrans %}</i></p>
+                <p>{% trans %}In order to reach zero each player must finish by throwing a double (Double out) or a
+                    double/triple (Master out). Example: If player one has 36 remaining he must hit double 18 to win,
+                    while if player two has 45 remaining he must hit single 5, double 20 to win.{% endtrans %}</p>
+            </div>
+
+            <div id="cricket-rules" style="display: none">
+                <p><b>{% trans %}Basic Rules{% endtrans %}</b></p>
+                <p>{% trans %}The object of Cricket is to close all numbers from 15 to 20, and the bull's eye before
+                    the opponent does. To close a number, a player must score three of that number (any combination of
+                    singles doubles and triples).{% endtrans %}</p>
+                <p><b>{% trans %}Scoring & Winning{% endtrans %}</b></p>
+                <p><i>Normal</i></p>
+                <p>{% trans %}Once a player closes a number every subsequent score on that number increases their score,
+                    unless the other player has closed that number as well. The player who has closed all numbers and
+                    whose score is not lower than the opponent's, wins the game.{% endtrans %}</p>
+                <p><i>Cut Throat</i></p>
+                <p>{% trans %}Once a player closes a number every subsequent score on that number increases the score
+                    of other players unless the other player has closed that number as well. The player who has closed
+                    all numbers and whose score is not higher than the opponent's, wins the game.{% endtrans %}</p>
+                <p><i>No Score</i></p>
+                <p>{% trans %}No score will be tracked throughout the game. The player who has closed all numbers
+                    wins the game.{% endtrans %}</p>
+            </div>
+
+            <div id="atc-rules" style="display: none">
+                <p><b>{% trans %}Basic Rules{% endtrans %}</b></p>
+                <p>{% trans %}The object of Around The Clock is to score all numbers from 1 to 20 in the exact order.
+                    {% endtrans %}</p>
+                <p><i>Normal</i></p>
+                <p>{% trans %}Any combination of single, double or trible will count +1 on the number which has to
+                    be hit next.{% endtrans %}</p>
+                <p><i>{% trans %}Fast{% endtrans %}</i></p>
+                <p>{% trans %}Single will count +1, double will count +2 and triple will even count +3 on the number
+                    which has to be hit next.{% endtrans %}</p>
+            </div>
+        </div>
+    </div>
 </div>
 <br>
 {% endblock %}

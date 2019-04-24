@@ -18,7 +18,9 @@ Then you are very welcome to try out **Dart-O-Mat 3000**!
    Recognition
    Configuration
    Deploy-and-run
+   Pages
    Games
    TODOs
    Changelog
+   API
    Donate

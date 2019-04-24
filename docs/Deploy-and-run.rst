@@ -15,7 +15,7 @@ Remember to activate the virtual environment first, if you happen to use one: `.
 
 .. code-block:: bash
 
-    python ./run.py
+    ./run.py
 
 You will now have a rich output of what is happening whilst you play.
 The development server will restart everytime you change code and save it.
