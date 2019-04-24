@@ -21,6 +21,9 @@ project = 'Dart-O-Mat 3000'
 copyright = '2019, Patrick Hener'
 author = 'Patrick Hener'
 
+# -- Fix content.rst error
+master_doc = 'index'
+
 
 # -- General configuration ---------------------------------------------------
 
