@@ -1,78 +1,82 @@
 {% extends "base.html" %}
 {% block head %}
 <script src="{{ url_for('static', filename='js/gameController.js') }}"></script>
-    {% block script %}
-        <script>
-            function endGame() {
-                var message = "{{ end_message }}";
-                if (confirm(message) == true) {
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/endGame'), true);
-                    xhttp.send();
-                }
-            }
-        </script>
-    {% endblock %}
+{% block script %}
+<script>
+    function endGame() {
+        var message = "{{ end_message }}";
+        if (confirm(message) == true) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/endGame'), true);
+            xhttp.send();
+        }
+    }
+</script>
+{% endblock %}
 {% endblock %}
 
+<!-- Body param -->
 {% block bodyparam %}
-{% if atc %}
-onload="drawATC({{ number }}), drawThrows({{ playingPlayers }},{{ throwlist}}, highlightATC('{{ player_number_list }}'))"
+{% if gametype == "Cricket" %}
+onload="drawCricketController(), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightCricket('{{ activePlayer }}')"
+
+{% elif gametype == "ATC" %}
+onload="drawATC({{ number }}), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightATC('{{ activePlayer }}')"
+
 {% else %}
-onload="drawX01Controller({{ playingPlayers }}), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ activePlayer }}',{{ scorelist }})"
+onload="drawX01Controller(), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ activePlayer }}',{{ scorelist }})"
+
 {% endif %}
-{% endblock %}
+{% endblock %}}
+
+<!-- Content -->
 {% block content %}
-	<div class="container">
-
-	{% if not recognition %}
-		<div id="gameControls" class="row">
-			<div><h3>{% trans %}Game Controls{% endtrans %}</h3></div>
-			<div id="buttons" class="col">
-				<button onclick="rematch()" style="display: none;" id="rematch" class="btn btn-outline-primary btn-lg">{% trans %}Rematch{% endtrans %}</button>
-				<button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">{% trans %}Next Player{% endtrans %}</button>
-				<button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">{% trans %}End Game{% endtrans %}</button>
-			</div>
-		</div>
-
-		<br><hr>
-
-		<div id="controls" class="row">
-			<div><h3>{% trans %}Insert Throws{% endtrans %}</h3></div>
-			<div id="x01-controls" class="col">
-			</div>
-		</div>
-
-		<br><hr>
-
-	{% else %}
-		<p>Maybe show status here?</p>
-		<div id="gameControls" class="col">
-			<button onclick="rematch()" style="display: none;" id="rematch" class="btn btn-outline-primary btn-lg">{% trans %}Rematch{% endtrans %}</button>
-			<button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">{% trans %}Next Player{% endtrans %}</button>
-			<button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">{% trans %}End Game{% endtrans %}</button>
-		</div>
-	{% endif %}
-
-        <div id="throws" class="row">
-            <div><h3>{% trans %}Change Throws{% endtrans %}</h3></div>
-            <div id="frame" class="col"></div>
+<div class="container">
+    <div id="gameControls" class="row">
+        <div><h3>{% trans %}Game Controls{% endtrans %}</h3></div>
+        <div id="buttons" class="col">
+            <button onclick="rematch()" style="display: none;" id="rematch" class="btn btn-outline-primary btn-lg">{%
+                trans %}Rematch{% endtrans %}
+            </button>
+            <button onclick="nextPlayer()" id="nextPlayer" class="btn btn-outline-primary btn-lg">{%
+                trans %}Next Player{% endtrans %}
+            </button>
+            <button onclick="endGame()" id="endGame" class="btn btn-outline-primary btn-lg">{% trans %}End Game{%
+                endtrans %}
+            </button>
         </div>
+    </div>
+    <br>
+    <hr>
 
-		<!-- modal for updateThrow -->
-		<div id="updateModal" class="modal">
-			<div id="modal-content" class="modal-content">
-				<div class="modal-header">
-					<h2>{% trans %}Update Throw{% endtrans %}</h2>
-					<span class="close">&times;</span>
-				</div>
-				<div id="modalPadding">
-					<div id="modal-body" class="modal-body"></div>
-				</div>
-				<div class="modal-footer"></div>
-			</div>
-		</div>
-	</div>
-	<!-- modal end -->
-	<br>
+    <div id="controlsframe" class="row">
+        <div><h3>{% trans %}Insert Throws{% endtrans %}</h3></div>
+        <div id="controls" class="col">
+        </div>
+    </div>
+
+    <br>
+    <hr>
+
+    <div id="throws" class="row">
+        <div><h3>{% trans %}Change Throws{% endtrans %}</h3></div>
+        <div id="frame" class="col"></div>
+    </div>
+
+    <!-- modal for updateThrow -->
+    <div id="updateModal" class="modal">
+        <div id="modal-content" class="modal-content">
+            <div class="modal-header">
+                <h2>{% trans %}Update Throw{% endtrans %}</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div id="modalPadding">
+                <div id="modal-body" class="modal-body"></div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+<!-- modal end -->
+<br>
 {% endblock %}

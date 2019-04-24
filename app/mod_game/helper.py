@@ -10,7 +10,7 @@ from flask_babel import gettext
 
 # Dictionaries
 checkout_dict = {
-    "170": "T0 T20 Bull",
+    "170": "T20 T20 Bull",
     "167": "T20 T19 Bull",
     "164": "T19 T19 Bull",
     "161": "T20 T17 Bull",
@@ -378,8 +378,8 @@ def update_throw_table(throw_id, hit, mod):
     # This handles X01 games
     elif "01" in game.gametype:
         # get Throw and score
-        throw = (Throw.query.filter_by(id=throw_id)).first()
-        score = (Score.query.filter_by(player_id=throw.player_id)).first()
+        throw = Throw.query.filter_by(id=throw_id).first()
+        score = Score.query.filter_by(player_id=throw.player_id).first()
         # Calculate old points resulting of old throw
         oldpoints = throw.hit * throw.mod
         # Calculate new points resulting of altered throw

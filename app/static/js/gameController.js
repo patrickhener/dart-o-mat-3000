@@ -11,6 +11,10 @@ socket.on('drawX01Controller', function() {
 	drawX01Controller();
 });
 
+socket.on('drawCricketController', function() {
+	drawCricketController();
+});
+
 socket.on('drawThrows', function(playerlist, throwlist) {
 	drawThrows(playerlist, throwlist);
 });
@@ -23,6 +27,10 @@ socket.on('highlightAndScore', function(activePlayer, scorelist) {
 	highlightAndScore(activePlayer, scorelist);
 });
 
+socket.on('highlightCricket', function(activePlayer) {
+	highlightAndScore(activePlayer);
+});
+
 socket.on('drawATC', function (number) {
 	drawATC(number);
 });
@@ -32,11 +40,11 @@ socket.on('highlightATC', function (activePlayer) {
 });
 
 function drawX01Controller() {
-	var div = document.getElementById("x01-controls");
+	var div = document.getElementById("controls");
 	while (div.firstChild) {
 		div.removeChild(div.firstChild);
 	}
-	var borderDiv = document.getElementById("x01-controls");
+	var borderDiv = document.getElementById("controls");
 	var groupDiv = document.createElement("div");
 	groupDiv.setAttribute("class", "btn-group");
 	groupDiv.setAttribute("role", "group");
@@ -104,6 +112,57 @@ function drawX01Controller() {
 	groupDiv4.appendChild(button);
 }
 
+function drawCricketController() {
+	var div = document.getElementById("controls");
+	while (div.firstChild) {
+		div.removeChild(div.firstChild);
+	}
+	var borderDiv = document.getElementById("controls");
+	var groupDiv = document.createElement("div");
+	borderDiv.appendChild(groupDiv);
+	groupDiv.setAttribute("class", "btn-group");
+	groupDiv.setAttribute("role", "group");
+	groupDiv.setAttribute("id", "button-matrix");
+	borderDiv.appendChild(groupDiv);
+	for (i=15; i<21; i++) {
+		var button = document.createElement("button");
+		button.setAttribute("class", "btn btn-outline-primary btn-lg");
+		button.innerHTML = i;
+		button.setAttribute("onclick", "sendThrow(" + button.innerHTML + ")");
+		groupDiv.appendChild(button);
+	}
+	button = document.createElement("button");
+	button.setAttribute("class", "btn btn-outline-primary btn-lg");
+	button.innerHTML = "25";
+	button.setAttribute("onclick", "sendThrow(" + button.innerHTML + ")");
+	groupDiv.appendChild(button);
+	var groupDiv2 = document.createElement("div");
+	groupDiv2.setAttribute("class", "btn-group");
+	groupDiv2.setAttribute("role", "group");
+	groupDiv2.setAttribute("id", "button-matrix-row-2");
+	borderDiv.appendChild(groupDiv2);
+	button = document.createElement("button");
+	button.setAttribute("class", "btn btn-outline-primary btn-lg");
+	button.innerHTML = "0";
+	button.setAttribute("onclick", "sendThrow(" + button.innerHTML + ")");
+	groupDiv2.appendChild(button);
+	button = document.createElement("button");
+	button.setAttribute("class", "btn btn-outline-primary btn-lg");
+	button.setAttribute("data-toggle", "button");
+	button.setAttribute("role", "button");
+	button.setAttribute("id", "double");
+	button.innerHTML = "Double";
+	groupDiv2.appendChild(button);
+	button = document.createElement("button");
+	button.setAttribute("class", "btn btn-outline-primary btn-lg");
+	button.setAttribute("data-toggle", "button");
+	button.setAttribute("role", "button");
+	button.setAttribute("id", "triple");
+	button.innerHTML = "Triple";
+	groupDiv2.appendChild(button);
+
+}
+
 function nextPlayer() {
 	var xhttp = new XMLHttpRequest();
 	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/nextPlayer'), true);
@@ -167,9 +226,9 @@ function drawThrows(playerlist, throwlist) {
 }
 
 function highlightAndScore(activePlayer, scorelist) {
-    var activePlayer = document.getElementById("name-score-" + activePlayer);
-	activePlayer.style.border='5px solid white';
-	activePlayer.style.boxShadow='10px 10px 15px black';
+    var activePlayerDiv = document.getElementById("name-score-" + activePlayer);
+	activePlayerDiv.style.border = '5px solid white';
+	activePlayerDiv.style.boxShadow = '10px 10px 15px black';
 	for (var item in scorelist) {
 	    var array = scorelist[item].split(",");
 		var playerDiv = document.getElementById("name-score-" + array[0]);
@@ -329,11 +388,11 @@ function rematch() {
 }
 
 function drawATC(number) {
-	var div = document.getElementById("x01-controls");
+	var div = document.getElementById("controls");
 	while (div.firstChild) {
 		div.removeChild(div.firstChild);
 	}
-	var borderDiv = document.getElementById("x01-controls");
+	var borderDiv = document.getElementById("controls");
 	var groupDiv = document.createElement("div");
 	borderDiv.appendChild(groupDiv);
 	groupDiv.setAttribute("class", "btn-group");
@@ -364,13 +423,18 @@ function drawATC(number) {
 	button.innerHTML = "Miss";
 	button.setAttribute("onclick", "sendATC(0,1)");
 	groupDiv2.appendChild(button);
-
-
-	console.log(number);
 }
 
-function highlightATC (activePlayer) {
-	console.log("Hit highlightATC");
+function highlightATC(activePlayer) {
+	var activePlayerDiv = document.getElementById("name-score-" + activePlayer);
+	activePlayerDiv.style.border='5px solid white';
+	activePlayerDiv.style.boxShadow='10px 10px 15px black';
+}
+
+function highlightCricket(activePlayer) {
+	var activePlayerDiv = document.getElementById("name-score-" + activePlayer);
+	activePlayerDiv.style.border='5px solid white';
+	activePlayerDiv.style.boxShadow='10px 10px 15px black';
 }
 
 function sendATC(hit,mod) {
@@ -387,5 +451,4 @@ function sendATC(hit,mod) {
 	};
 	xhttp.open("GET", ('http://' + document.domain + ':' + location.port + '/game/throw/' + hit + '/' + mod), true);
 	xhttp.send();
-	console.log("SendATC");
 }

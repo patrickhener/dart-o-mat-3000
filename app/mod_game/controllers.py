@@ -122,28 +122,36 @@ def game_controller():
         score = Score.query.filter_by(player_id=player.id).first()
         scorelist.append(str(player) + "," + str(score.score))
 
+    # ATC Settings
+    number_to_hit = 0
+    player_number_list = {}
     if game.gametype == "ATC":
         number_to_hit = ATC.query.filter_by(player_id=active_player.id).first().number
-        player_number_list = {}
+        # Missing player_number_list to get filled in with player ID and number to hit
+        # Should then be displayed in GameController via highlightATC instead of just active_player.name
 
     # Draw Scoreboard
-    if game.gametype == "ATC":
-        atc_bool = True
-        socketio.emit("drawATC",  number_to_hit)
-        socketio.emit('highlightATC', player_number_list)
-    else:
-        atc_bool = False
-        socketio.emit("drawX01Controller")
-        socketio.emit("highlightAndScore", (active_player.name, scorelist))
-
     socketio.emit("drawThrows", (playerlist, last_throws))
 
-    # Render Template
     if game.gametype == "ATC":
-        return render_template(
+        socketio.emit("drawATC",  number_to_hit)
+        socketio.emit('highlightATC', active_player.name)
+
+    elif game.gametype == "Cricket":
+        socketio.emit("drawCricketController")
+        #socketio.emit("drawThrows", (playerlist, last_throws))
+        socketio.emit("highlightCricket", active_player.name)
+
+    else:
+        socketio.emit("drawX01Controller")
+        #socketio.emit("drawThrows", (playerlist, last_throws))
+        socketio.emit("highlightAndScore", (active_player.name, scorelist))
+
+    # Render Template
+    return render_template(
         '/game/gameController.html',
         recognition=recognition,
-        atc=atc_bool,
+        gametype=game.gametype,
         variant=game.variant,
         player_number_list=player_number_list,
         number=number_to_hit,
@@ -153,19 +161,6 @@ def game_controller():
         throwlist=last_throws,
         end_message=end_message
     )
-
-    else:
-        return render_template(
-            '/game/gameController.html',
-            recognition=recognition,
-            atc=atc_bool,
-            variant=game.variant,
-            playingPlayers=playerlist,
-            activePlayer=active_player,
-            scorelist=scorelist,
-            throwlist=last_throws,
-            end_message=end_message
-        )
 
 
 @mod_game.route("/scoreboardCricket")
@@ -311,7 +306,7 @@ def scoreboard_x01(message=None, soundeffect=None):
                 sum_id = split[0]
             sum_throws.append(str(sum_id) + "," + str(sum_of_throws))
         except IndexError:
-            sum_throws.append(str(sum_id) + ",0")
+            sum_throws.append(str(item[0].split(",")[0]) + ",0")
 
     game = Game.query.first()
     try:
@@ -447,10 +442,7 @@ def throw(hit, mod):
         scoreboard_atc(gettext(u"Remove Darts"))
         return gettext(u"Switch to next player first")
     else:
-        # decide which game mechanism to use
-        x01_games = ['301', '501', '701', '901']
-
-        if any(x in str(game.gametype) for x in x01_games):
+        if "01" in game.gametype:
             do_it = score_x01(hit, mod)
             # TODO Find a better way of doing with babel
             if do_it == "Winner!":
@@ -509,17 +501,28 @@ def update_throw(throw_id, new_hit, new_mod):
 
 @mod_game.route("/nextPlayer")
 def next_player():
+    # Do the switch
     do_it = switch_next_player()
+    # Get game object
     game = Game.query.first()
+    # Get Sound
+    sound = SOUND
+    # Switch over what to do
     if game.gametype == "Cricket":
         scoreboard_cricket(do_it)
-        socketio.emit("playSound", "startgame")
+        if sound:
+            socketio.emit("playSound", "startgame")
+
     elif game.gametype == "ATC":
         scoreboard_atc(do_it)
-        socketio.emit("playSound", "startgame")
+        if sound:
+            socketio.emit("playSound", "startgame")
+
     else:
         scoreboard_x01(do_it)
-        socketio.emit("playSound", "startgame")
+        if sound:
+            socketio.emit("playSound", "startgame")
+
     game_controller()
     return do_it
 
