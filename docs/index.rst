@@ -7,8 +7,15 @@ Welcome to Dart-O-Mat 3000!
 ===========================================
 
 So you found your way here because you want to play steel dart but you don't want to bother counting, right?
-Then you are very welcome to try out **Dart-O-Mat 3000***!
+Then you are very welcome to try out **Dart-O-Mat 3000**!
 
 
 .. toctree::
    :maxdepth: 2
+
+   About-the-project
+   Installation
+   Configuration
+   Deploy-and-run
+   Games
+   Changelog
