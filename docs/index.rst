@@ -3,11 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Dart-O-Mat 3000's documentation!
+Welcome to Dart-O-Mat 3000!
 ===========================================
+
+So you found your way here because you want to play steel dart but you don't want to bother counting, right?
+Then you are very welcome to try out **Dart-O-Mat 3000***!
+
 
 .. toctree::
    :maxdepth: 2
-
-   contents
-
