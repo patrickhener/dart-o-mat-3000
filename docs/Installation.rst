@@ -15,7 +15,7 @@ It is recommended to use a virtual environment to keep your pip clean. If you do
 
 To install and activate the virtual environment do the following:
 
-.. code-block::
+.. code-block:: bash
 
     pip install --user virtualenv
     python -m venv ./venv
@@ -27,7 +27,7 @@ Install python package requirements
 To install the requirements you can use *pip* again like shown in the code block below. Keep in mind that you can do this either
 within a virtual environment or not.
 
-.. code-block::
+.. code-block:: bash
 
     pip install --user -r requirements.txt
 
