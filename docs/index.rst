@@ -10,5 +10,4 @@ Welcome to Dart-O-Mat 3000's documentation!
    :maxdepth: 2
 
    contents
-   about-the-project
 
