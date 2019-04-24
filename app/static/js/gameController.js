@@ -27,8 +27,8 @@ socket.on('drawATC', function (number) {
 	drawATC(number);
 });
 
-socket.on('highlightATC', function (player_number_list) {
-	highlightATC(player_number_list);
+socket.on('highlightATC', function (activePlayer) {
+	highlightATC(activePlayer);
 });
 
 function drawX01Controller() {
@@ -369,7 +369,7 @@ function drawATC(number) {
 	console.log(number);
 }
 
-function highlightATC (activePlayer_number_list) {
+function highlightATC (activePlayer) {
 	console.log("Hit highlightATC");
 }
 

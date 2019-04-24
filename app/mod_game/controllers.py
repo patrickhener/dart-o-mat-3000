@@ -139,7 +139,8 @@ def game_controller():
     socketio.emit("drawThrows", (playerlist, last_throws))
 
     # Render Template
-    return render_template(
+    if game.gametype == "ATC":
+        return render_template(
         '/game/gameController.html',
         recognition=recognition,
         atc=atc_bool,
@@ -152,6 +153,19 @@ def game_controller():
         throwlist=last_throws,
         end_message=end_message
     )
+
+    else:
+        return render_template(
+            '/game/gameController.html',
+            recognition=recognition,
+            atc=atc_bool,
+            variant=game.variant,
+            playingPlayers=playerlist,
+            activePlayer=active_player,
+            scorelist=scorelist,
+            throwlist=last_throws,
+            end_message=end_message
+        )
 
 
 @mod_game.route("/scoreboardCricket")
@@ -290,8 +304,8 @@ def scoreboard_x01(message=None, soundeffect=None):
         try:
             for i in range(0, 3):
                 split = item[i].split(",")
-                hit = int(split[1])
-                mod = int(split[2])
+                hit = int(split[2])
+                mod = int(split[3])
                 count = hit * mod
                 sum_of_throws += count
                 sum_id = split[0]
