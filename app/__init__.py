@@ -32,8 +32,9 @@ babel = Babel(app)
 
 # HTTP error handling
 @app.errorhandler(404)
-def not_found(error):
+def not_found():
     return render_template('404.html'), 404
+
 
 # Import a module / component using its blueprint handler variable (mod_game)
 from app.mod_game.controllers import mod_game as game_module

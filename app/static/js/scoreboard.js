@@ -48,6 +48,18 @@ socket.on('redirectATC', function(url) {
     window.location.href = url;
 });
 
+socket.on('drawPodiumX01', function(podium, word) {
+   drawPodiumX01(podium, word);
+});
+
+socket.on('drawPodiumCricket', function(podium, word) {
+    drawPodiumCricket(podium, word);
+});
+
+socket.on('drawPodiumATC', function(podium, word) {
+    drawPodiumATC(podium, word);
+});
+
 // Functions
 function drawScoreboardX01(list, lastthrowsall, throwsum) {
     var div = document.getElementById("score");
@@ -119,7 +131,6 @@ function highlightActivePlayer(activePlayer, playerID, playerRound, message, ave
     var borderDiv = document.getElementById("Border-" + activePlayer);
     borderDiv.style.border='5px solid white';
     borderDiv.style.boxShadow='10px 10px 15px black';
-    var headerLeft = document.getElementById("header-left");
     var divActivePlayer = document.getElementById("header-activePlayer");
     divActivePlayer.innerHTML = activePlayer;
     var divRndcount = document.getElementById("header-rndcount");
@@ -360,7 +371,6 @@ function highlightATC(activePlayer, playerRound, throwcount, message) {
     var borderDiv = document.getElementById("Border-" + activePlayer);
     borderDiv.style.border='5px solid white';
     borderDiv.style.boxShadow='10px 10px 15px black';
-    var headerLeft = document.getElementById("header-left");
     var divActivePlayer = document.getElementById("header-activePlayer");
     divActivePlayer.innerHTML = activePlayer;
     var divRndcount = document.getElementById("header-rndcount");
@@ -373,4 +383,40 @@ function highlightATC(activePlayer, playerRound, throwcount, message) {
 
 function isOdd(num) {
     return num % 2;
+}
+
+function drawPodiumX01(podium, word) {
+    if (podium) {
+        for (var item in podium) {
+            // array[0] = playerName
+            // array[1] = podium place
+            var array = podium[item].split(",");
+            var scoreDiv = document.getElementsByName("Score-" + array[0]);
+            scoreDiv[0].innerHTML = "<h1 id='playerScore'>" + word + " " + array[1] + "</h1>";
+        }
+    }
+}
+
+function drawPodiumCricket(podium, word) {
+    if (podium) {
+        for (var item in podium) {
+            // array[0] = playerName
+            // array[1] = podium place
+            var array = podium[item].split(",");
+            var messageTD = document.getElementById("Message-" + array[0]);
+            messageTD.innerHTML = "<h2>" + word + " " + array[1] + "</h2>";
+        }
+    }
+}
+
+function drawPodiumATC(podium, word) {
+    if (podium) {
+        for (var item in podium) {
+            // array[0] = playerName
+            // array[1] = podium place
+            var array = podium[item].split(",");
+            var messageDiv = document.getElementsByName("Message-" + array[0]);
+            messageDiv[0].innerHTML = "<h1>" + word + " " + array[1] + "</h1>";
+        }
+    }
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-24 14:45+0200\n"
+"POT-Creation-Date: 2019-04-25 12:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,77 +17,115 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 
-#: mod_game/controllers.py:100
+#: mod_game/controllers.py:106
 msgid "Really end game?"
 msgstr ""
 
-#: mod_game/controllers.py:441 mod_game/controllers.py:442
-#: mod_game/controllers.py:443
-msgid "Remove Darts"
+#: mod_game/controllers.py:146
+msgid "Single"
 msgstr ""
 
-#: mod_game/controllers.py:444
-msgid "Switch to next player first"
+#: mod_game/controllers.py:147
+msgid "Miss"
 msgstr ""
 
-#: mod_game/controllers.py:493 mod_game/controllers.py:495
-#: mod_game/controllers.py:497 mod_game/helper.py:376
-msgid "Throw updated"
-msgstr ""
-
-#: mod_game/controllers.py:538
-msgid "Done"
-msgstr ""
-
-#: mod_game/controllers.py:568 mod_game/controllers.py:581
-#: mod_game/controllers.py:584 templates/game/gameController.html:39
-msgid "Rematch"
-msgstr ""
-
-#: mod_game/helper.py:455
-msgid "Bust! Remove Darts!"
-msgstr ""
-
-#: mod_game/helper.py:466 mod_game/helper.py:564 mod_game/helper.py:617
+#: mod_game/controllers.py:188 mod_game/controllers.py:286
+#: mod_game/controllers.py:293 mod_game/controllers.py:404
+#: mod_game/controllers.py:485 mod_game/helper.py:484 mod_game/helper.py:503
+#: mod_game/helper.py:607 mod_game/helper.py:676
 msgid "Winner!"
 msgstr ""
 
-#: mod_game/helper.py:473
+#: mod_game/controllers.py:190 mod_game/helper.py:605
+msgid " Next Winner"
+msgstr ""
+
+#: mod_game/controllers.py:192 mod_game/helper.py:617
+msgid " Game Over!"
+msgstr ""
+
+#: mod_game/controllers.py:195 mod_game/helper.py:589
+msgid " Scored!"
+msgstr ""
+
+#: mod_game/controllers.py:289 mod_game/controllers.py:410
+#: mod_game/helper.py:505 mod_game/helper.py:685
+msgid "Game Over!"
+msgstr ""
+
+#: mod_game/controllers.py:295 mod_game/controllers.py:406
+#: mod_game/helper.py:482 mod_game/helper.py:674
+msgid "Next Winner"
+msgstr ""
+
+#: mod_game/controllers.py:364
+msgid "Place"
+msgstr ""
+
+#: mod_game/controllers.py:408 mod_game/helper.py:687
+msgid "Hit"
+msgstr ""
+
+#: mod_game/controllers.py:478 mod_game/controllers.py:479
+#: mod_game/controllers.py:480
+msgid "Remove Darts"
+msgstr ""
+
+#: mod_game/controllers.py:481
+msgid "Switch to next player first"
+msgstr ""
+
+#: mod_game/controllers.py:487 mod_game/helper.py:469
+msgid "Bust! Remove Darts!"
+msgstr ""
+
+#: mod_game/controllers.py:489 mod_game/helper.py:523
+msgid "No Out possible! Remove Darts!"
+msgstr ""
+
+#: mod_game/controllers.py:496 mod_game/helper.py:584
+msgid " Opened!"
+msgstr ""
+
+#: mod_game/controllers.py:498 mod_game/helper.py:591
+msgid " Closed!"
+msgstr ""
+
+#: mod_game/controllers.py:517 mod_game/controllers.py:519
+#: mod_game/controllers.py:521 mod_game/helper.py:390
+msgid "Throw updated"
+msgstr ""
+
+#: mod_game/controllers.py:562
+msgid "Done"
+msgstr ""
+
+#: mod_game/controllers.py:594 mod_game/controllers.py:608
+#: mod_game/controllers.py:615 templates/game/gameController.html:39
+msgid "Rematch"
+msgstr ""
+
+#: mod_game/helper.py:273 templates/game/admin.html:43
+#: templates/game/admin.html:51 templates/game/admin.html:89
+msgid "Straight"
+msgstr ""
+
+#: mod_game/helper.py:512
 #, python-format
 msgid "Bust! %(mode)s out!"
 msgstr ""
 
-#: mod_game/helper.py:484
-msgid "No Out possible! Remove Darts!"
-msgstr ""
-
-#: mod_game/helper.py:496 mod_game/helper.py:626 mod_game/helper.py:637
+#: mod_game/helper.py:535 mod_game/helper.py:694 mod_game/helper.py:705
 msgid "Remove Darts!"
 msgstr ""
 
-#: mod_game/helper.py:503 mod_game/helper.py:579 mod_game/helper.py:643
-#: mod_game/helper.py:809
+#: mod_game/helper.py:542 mod_game/helper.py:632 mod_game/helper.py:711
+#: mod_game/helper.py:878
 msgid "There is no active game running"
 msgstr ""
 
-#: mod_game/helper.py:545
-msgid " Opened!"
-msgstr ""
-
-#: mod_game/helper.py:550
-msgid " Scored!"
-msgstr ""
-
-#: mod_game/helper.py:552
-msgid " Closed!"
-msgstr ""
-
-#: mod_game/helper.py:572
+#: mod_game/helper.py:625
 msgid " Remove Darts!"
-msgstr ""
-
-#: mod_game/helper.py:619
-msgid "Hit"
 msgstr ""
 
 #: templates/404.html:3
@@ -126,11 +164,6 @@ msgstr ""
 msgid "Condition to get into the game"
 msgstr ""
 
-#: templates/game/admin.html:43 templates/game/admin.html:51
-#: templates/game/admin.html:88
-msgid "Straight"
-msgstr ""
-
 #: templates/game/admin.html:49
 msgid "Condition to end the game"
 msgstr ""
@@ -141,7 +174,7 @@ msgstr ""
 msgid "Variant"
 msgstr ""
 
-#: templates/game/admin.html:68 templates/game/admin.html:125
+#: templates/game/admin.html:68 templates/game/admin.html:126
 msgid "Fast"
 msgstr ""
 
@@ -157,51 +190,51 @@ msgstr ""
 msgid "one"
 msgstr ""
 
-#: templates/game/admin.html:80
+#: templates/game/admin.html:81
 msgid "Game Rules"
 msgstr ""
 
-#: templates/game/admin.html:83 templates/game/admin.html:100
-#: templates/game/admin.html:119
+#: templates/game/admin.html:84 templates/game/admin.html:101
+#: templates/game/admin.html:120
 msgid "Basic Rules"
 msgstr ""
 
-#: templates/game/admin.html:84
+#: templates/game/admin.html:85
 msgid ""
 "In a game of X01 the object is for one player or a team to be the first "
 "to reach zero from\n"
 "                    starting total of X01."
 msgstr ""
 
-#: templates/game/admin.html:86
+#: templates/game/admin.html:87
 msgid ""
 "In simple terms, after three darts are thrown, the throwing player "
 "subtracts the total\n"
 "                    scored from his current total until he reaches zero."
 msgstr ""
 
-#: templates/game/admin.html:89
+#: templates/game/admin.html:90
 msgid ""
 "When choosing straight no condition to start into or end the game are in "
 "place."
 msgstr ""
 
-#: templates/game/admin.html:90
+#: templates/game/admin.html:91
 msgid "Double/Master In"
 msgstr ""
 
-#: templates/game/admin.html:91
+#: templates/game/admin.html:92
 msgid ""
 "In order to start substracting points each player has to hit a double "
 "(Double in) or a\n"
 "                    double/triple (Master in)."
 msgstr ""
 
-#: templates/game/admin.html:93
+#: templates/game/admin.html:94
 msgid "Double/Master Out"
 msgstr ""
 
-#: templates/game/admin.html:94
+#: templates/game/admin.html:95
 msgid ""
 "In order to reach zero each player must finish by throwing a double "
 "(Double out) or a\n"
@@ -211,7 +244,7 @@ msgid ""
 "single 5, double 20 to win."
 msgstr ""
 
-#: templates/game/admin.html:101
+#: templates/game/admin.html:102
 msgid ""
 "The object of Cricket is to close all numbers from 15 to 20, and the "
 "bull's eye before\n"
@@ -220,11 +253,11 @@ msgid ""
 "                    singles doubles and triples)."
 msgstr ""
 
-#: templates/game/admin.html:104
+#: templates/game/admin.html:105
 msgid "Scoring & Winning"
 msgstr ""
 
-#: templates/game/admin.html:106
+#: templates/game/admin.html:107
 msgid ""
 "Once a player closes a number every subsequent score on that number "
 "increases their score,\n"
@@ -234,7 +267,7 @@ msgid ""
 "the game."
 msgstr ""
 
-#: templates/game/admin.html:110
+#: templates/game/admin.html:111
 msgid ""
 "Once a player closes a number every subsequent score on that number "
 "increases the score\n"
@@ -244,28 +277,28 @@ msgid ""
 "opponent's, wins the game."
 msgstr ""
 
-#: templates/game/admin.html:114
+#: templates/game/admin.html:115
 msgid ""
 "No score will be tracked throughout the game. The player who has closed "
 "all numbers\n"
 "                    wins the game."
 msgstr ""
 
-#: templates/game/admin.html:120
+#: templates/game/admin.html:121
 msgid ""
 "The object of Around The Clock is to score all numbers from 1 to 20 in "
 "the exact order.\n"
 "                    "
 msgstr ""
 
-#: templates/game/admin.html:123
+#: templates/game/admin.html:124
 msgid ""
 "Any combination of single, double or trible will count +1 on the number "
 "which has to\n"
 "                    be hit next."
 msgstr ""
 
-#: templates/game/admin.html:126
+#: templates/game/admin.html:127
 msgid ""
 "Single will count +1, double will count +2 and triple will even count +3 "
 "on the number\n"

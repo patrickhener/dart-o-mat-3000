@@ -8,12 +8,12 @@ from flask import Blueprint, request, render_template
 from app import db, socketio, IPADDR, PORT, RECOGNITION, SOUND
 
 # Import module models
-from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC
+from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium
 
 # Import helper functions
 from app.mod_game.helper import clear_db, score_x01, switch_next_player, get_playing_players_objects, \
     get_playing_players_id, get_score, get_active_player, get_average, get_throws_count, get_last_throws, \
-    get_all_throws, update_throw_table, get_cricket, score_cricket, get_closed, get_checkout, score_atc
+    update_throw_table, get_cricket, score_cricket, get_closed, get_checkout, score_atc, check_other_players
 
 # Import Babel Stuff
 from flask_babel import gettext
@@ -46,6 +46,12 @@ sounddict = {
     "20": "beep",
     "25": "bull",
     "50": "doublebull",
+    "winner": "winner",
+    "score": "score",
+    "bust": "bust",
+    "open": "open",
+    "close": "close",
+    "start": "startgame",
 }
 
 # Routes
@@ -136,8 +142,12 @@ def game_controller():
     # Draw Scoreboard
     socketio.emit("drawThrows", (playerlist, last_throws))
 
+    # Translations
+    single = gettext(u"Single")
+    miss = gettext(u"Miss")
+
     if game.gametype == "ATC":
-        socketio.emit("drawATC", active_player_number_to_hit)
+        socketio.emit("drawATC", (active_player_number_to_hit, single, miss))
         socketio.emit('highlightATC', (player_number_list, active_player.name))
 
     elif game.gametype == "Cricket":
@@ -160,7 +170,9 @@ def game_controller():
         activePlayer=active_player,
         scorelist=scorelist,
         throwlist=last_throws,
-        end_message=end_message
+        end_message=end_message,
+        single=single,
+        miss=miss
     )
 
 
@@ -173,12 +185,15 @@ def scoreboard_cricket(message=None, soundeffect=None):
         audiofile = soundeffect
     if not message:
         message = "-"
-    if "Winner" in message:
-        audiofile = "winner"
+    if gettext("Winner!") in message:
+        audiofile = sounddict["winner"]
+    elif gettext(" Next Winner") in message:
+        audiofile = sounddict["winner"]
+    elif gettext(" Game Over!") in message:
+        audiofile = sounddict["winner"]
         socketio.emit('rematchButton')
-    elif "Sieger" in message:
-        audiofile = "winner"
-        socketio.emit('rematchButton')
+    elif gettext(" Scored!") in message:
+        audiofile = sounddict["score"]
     else:
         message = message
     # Check if sound is enabled [config.py]
@@ -233,8 +248,21 @@ def scoreboard_cricket(message=None, soundeffect=None):
         if y == "closed":
             closed_list.append(str(x))
 
+
+    # Get Podium
+    podium = Podium.query.all()
+    podium_list = []
+    if podium:
+        for place in podium:
+            podium_list.append(str(place.name) + "," + str(place.place))
+    else:
+        podium_list = ""
+
+    word = gettext(u"Place")
+
     socketio.emit('drawScoreboardCricket', (player_scores_list, str(last_throws), closed_list))
     socketio.emit('highlightActiveCricket', (active_player.name, active_player.id, rnd, message, throwcount))
+    socketio.emit('drawPodiumCricket', (podium_list, word))
 
     if sound:
         socketio.emit('playSound', audiofile)
@@ -261,15 +289,24 @@ def scoreboard_x01(message=None, soundeffect=None):
         message = "-"
     else:
         message = message
-    if message == "Winner!":
-        socketio.emit('rematchButton')
-    elif message == "Sieger!":
-        socketio.emit('rematchButton')
 
     if not soundeffect:
         audiofile = None
     else:
         audiofile = soundeffect
+
+    if len(Player.query.filter_by(game_id=1).all()) == 2:
+        if message == gettext("Winner!"):
+            socketio.emit('rematchButton')
+    else:
+        if message == gettext("Game Over!"):
+            audiofile = sounddict["winner"]
+            socketio.emit('rematchButton')
+
+    if message == gettext("Winner!"):
+        audiofile = sounddict["winner"]
+    elif message == gettext("Next Winner"):
+        audiofile = sounddict["winner"]
     # Check if sound is enabled [config.py]
     sound = SOUND
     # Get general data to draw scoreboard
@@ -328,8 +365,20 @@ def scoreboard_x01(message=None, soundeffect=None):
         if not get_score(active_player.id) == 0:
             message = get_checkout(get_score(active_player.id))
 
+    # Get Podium
+    podium = Podium.query.all()
+    podium_list = []
+    if podium:
+        for place in podium:
+            podium_list.append(str(place.name) + "," + str(place.place))
+    else:
+        podium_list = ""
+
+    word = gettext(u"Place")
+
     socketio.emit('drawScoreboardX01', (player_scores_list, last_throws, sum_throws))
     socketio.emit('highlightActive', (active_player.name, active_player.id, rnd, message, average, throwcount))
+    socketio.emit('drawPodiumX01', (podium_list, word))
     if sound:
         socketio.emit('playSound', audiofile)
 
@@ -363,16 +412,15 @@ def scoreboard_atc(message=None, soundeffect=None):
     else:
         audiofile = soundeffect
 
-    if message == "Winner!":
-        audiofile = "winner"
+    if message == gettext("Winner!"):
+        audiofile = sounddict["winner"]
+    elif message == gettext("Next Winner"):
+        audiofile = sounddict["winner"]
+    elif message == gettext("Hit"):
+        audiofile = sounddict["25"]
+    elif message == gettext("Game Over!"):
+        audiofile = sounddict["winner"]
         socketio.emit('rematchButton')
-    elif message == "Sieger!":
-        audiofile = "winner"
-        socketio.emit('rematchButton')
-    elif message == "Hit!":
-        audiofile = "bull"
-    elif message == "Getroffen":
-        audiofile = "bull"
 
     # Check if sound is enabled [config.py]
     sound = SOUND
@@ -405,8 +453,21 @@ def scoreboard_atc(message=None, soundeffect=None):
     except:
         rnd = 1
 
+    # Get Podium
+    podium = Podium.query.all()
+    podium_list = []
+    if podium:
+        for place in podium:
+            podium_list.append(str(place.name) + "," + str(place.place))
+    else:
+        podium_list = ""
+
+    word = gettext(u"Place")
+
     socketio.emit('drawScoreboardATC', player_number_list)
     socketio.emit('highlightATC', (active_player.name, rnd, throwcount, message))
+    socketio.emit('drawPodiumATC', (podium_list, word))
+
     if sound:
         socketio.emit('playSound', audiofile)
 
@@ -418,7 +479,7 @@ def scoreboard_atc(message=None, soundeffect=None):
         rndcount=rnd,
         throwcount=throwcount,
         gametype="Around the Clock",
-        variant=game.variant,
+        variant=game.variant
     )
 
 
@@ -445,33 +506,20 @@ def throw(hit, mod):
     else:
         if "01" in game.gametype:
             do_it = score_x01(hit, mod)
-            # TODO Find a better way of doing with babel
-            if do_it == "Winner!":
+            if do_it == gettext("Winner!"):
                 audiofile = "winner"
-            if do_it == "Sieger!":
-                audiofile = "winner"
-            if do_it == "Bust! Remove Darts!":
+            if do_it == gettext("Bust! Remove Darts!"):
                 audiofile = "bust"
-            if do_it == "Überworfen! Darts entfernen!":
-                audiofile = "bust"
-            if do_it == "No Out possible! Remove Darts!":
-                audiofile = "bust"
-            if do_it == "Sieg nicht mehr möglich! Darts entfernen!":
-                audiofile = "bust"
-            if do_it == "Bust!":
+            if do_it == gettext("No Out possible! Remove Darts!"):
                 audiofile = "bust"
             scoreboard_x01(do_it, audiofile)
             game_controller()
             return do_it
         elif str(game.gametype) == "Cricket":
             do_it = score_cricket(hit, mod)
-            if "Opened" in do_it:
+            if gettext(" Opened!") in do_it:
                 audiofile = "open"
-            if "Geöffnet" in do_it:
-                audiofile = "open"
-            if "Closed" in do_it:
-                audiofile = "close"
-            if "Geschlossen" in do_it:
+            if gettext(" Closed!") in do_it:
                 audiofile = "close"
             scoreboard_cricket(do_it, audiofile)
             game_controller()
@@ -512,17 +560,17 @@ def next_player():
     if game.gametype == "Cricket":
         scoreboard_cricket(do_it)
         if sound:
-            socketio.emit("playSound", "startgame")
+            socketio.emit("playSound", sounddict["start"])
 
     elif game.gametype == "ATC":
         scoreboard_atc(do_it)
         if sound:
-            socketio.emit("playSound", "startgame")
+            socketio.emit("playSound", sounddict["start"])
 
     else:
         scoreboard_x01(do_it)
         if sound:
-            socketio.emit("playSound", "startgame")
+            socketio.emit("playSound", sounddict["start"])
 
     game_controller()
     return do_it
@@ -553,10 +601,12 @@ def rematch():
     db.session.query(CricketControl).delete()
     db.session.query(PointsGained).delete()
     db.session.query(ATC).delete()
+    db.session.query(Podium).delete()
     db.session.commit()
     if game.gametype == "Cricket":
         for player in players:
             p = Player.query.filter_by(id=player.id).first()
+            p.out = False
             c = Cricket(c20=0, c19=0, c18=0, c17=0, c16=0, c15=0, c25=0)
             p.crickets.append(c)
             db.session.add(p)
@@ -570,18 +620,23 @@ def rematch():
     elif game.gametype == "ATC":
         for player in players:
             atc = ATC(number=1)
-            score = Score(score=0,parkScore=0,initialScore=0)
+            score = Score(score=0, parkScore=0, initialScore=0)
             p = Player.query.filter_by(name=player.name).first()
+            p.out = False
             p.numbers.append(atc)
             p.scores.append(score)
             db.session.add(p)
             db.session.add(score)
             db.session.add(atc)
             db.session.commit()
-        scoreboard_atc(gettext(u"Rematch"), "startgame")
+        scoreboard_atc(gettext(u"Rematch"), sounddict["start"])
         game_controller()
     else:
-        scoreboard_x01(gettext(u"Rematch"), "startgame")
+        for player in players:
+            p = Player.query.filter_by(id=player.id).first()
+            p.out = False
+            db.session.commit()
+        scoreboard_x01(gettext(u"Rematch"), sounddict["start"])
         game_controller()
     return "-"
 
@@ -596,6 +651,7 @@ def on_start_x01(data):
     for player in data['players']:
         s = Score(score=scorecount, parkScore=scorecount, initialScore=scorecount)
         p = Player.query.filter_by(name=player).first()
+        p.out = False
         g.players.append(p)
         p.scores.append(s)
         db.session.add(g)
@@ -626,6 +682,7 @@ def on_start_cricket(data):
         c = Cricket(c20=0, c19=0, c18=0, c17=0, c16=0, c15=0, c25=0)
         s = Score(score=0, parkScore=0, initialScore=0)
         p = Player.query.filter_by(name=player).first()
+        p.out = False
         g.players.append(p)
         p.crickets.append(c)
         p.scores.append(s)
@@ -658,8 +715,9 @@ def on_start_atc(data):
     g = Game(gametype='ATC', variant=variant)
     for player in data['players']:
         atc = ATC(number=1)
-        score = Score(score=0,parkScore=0,initialScore=0)
+        score = Score(score=0, parkScore=0, initialScore=0)
         p = Player.query.filter_by(name=player).first()
+        p.out = False
         g.players.append(p)
         p.numbers.append(atc)
         p.scores.append(score)

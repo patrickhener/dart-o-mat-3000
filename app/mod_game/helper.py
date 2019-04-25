@@ -1,7 +1,7 @@
 # Import db from app
 from app import db, socketio
 # Import module models
-from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC
+from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium
 # cycle and islice for nextPlayer
 from itertools import cycle, islice
 # Babel Translation
@@ -147,10 +147,12 @@ def clear_db():
     db.session.query(CricketControl).delete()
     db.session.query(PointsGained).delete()
     db.session.query(ATC).delete()
+    db.session.query(Podium).delete()
 
     playing_players_object = Player.query.filter_by(game_id=1).all()
     for player in playing_players_object:
         player.game_id = None
+        player.out = None
         player.active = 0
 
     db.session.commit()
@@ -176,6 +178,16 @@ def get_playing_players():
     playing_players_object = Player.query.filter_by(game_id=1).all()
     list_of_playing_players = []
     # Fill in active Players list
+    for player in playing_players_object:
+        list_of_playing_players.append(player.name)
+
+    return list_of_playing_players
+
+
+def get_playing_players_not_out():
+    playing_players_object = Player.query.filter_by(game_id=1, out=0).all()
+    list_of_playing_players = []
+    #Fill in active Players list
     for player in playing_players_object:
         list_of_playing_players.append(player.name)
 
@@ -251,14 +263,16 @@ def check_out_game(mod):
         return True
 
 
+def check_other_players():
+    players = Player.query.filter_by(out=False).all()
+    return len(players)
+
+
 def check_out_possible(new_score):
     game = Game.query.first()
-    if not (game.outGame == "Straight"):
-        if not (game.outGame == "Direkt"):
-            if new_score == 1:
-                return False
-            else:
-                return True
+    if not (game.outGame == gettext("Straight")):
+        if new_score == 1:
+            return False
         else:
             return True
     else:
@@ -458,12 +472,37 @@ def score_x01(hit, mod):
                 # TODO Here might be the best place to implement statistics function
                 #
                 if check_out_game(mod):
-                    game.won = True
-                    throwcount += 1
-                    rnd.throwcount = throwcount
-                    player_score.score = 0
-                    db.session.commit()
-                    return gettext(u"Winner!")
+                    # Check if there are other players left to play
+                    if check_other_players() > 2:
+                        # Check for wording
+                        # If there is already a first place wording is different
+                        # First Place will be gettext(u"Winner!")
+                        # Every other placement will be something else
+                        if Podium.query.first():
+                            result = gettext(u"Next Winner")
+                        else:
+                            result = gettext(u"Winner!")
+                        # Do Podium Things
+                        set_podium(active_player.id)
+                        throwcount += 1
+                        rnd.throwcount = throwcount
+                        player_score.score = 0
+                        db.session.commit()
+
+                        return result
+                    else:
+                        set_podium(active_player.id)
+                        set_last_podium()
+                        game.won = True
+                        throwcount += 1
+                        rnd.throwcount = throwcount
+                        player_score.score = 0
+                        db.session.commit()
+                        # Check wording for games with just two players
+                        if len(Player.query.filter_by(game_id=1).all()) == 2:
+                            return gettext(u"Winner!")
+                        else:
+                            return gettext(u"Game Over!")
                 else:
                     game.nextPlayerNeeded = True
                     throwcount += 1
@@ -557,11 +596,25 @@ def score_cricket(hit, mod):
                 set_cricket_dict(active_player.id, cricket_dict)
                 result = "-"
 
-        # Finally Check if won
-        if check_won():
-            game.won = True
-            db.session.commit()
-            result = gettext(u"Winner!")
+        # Finally Check if Player is out
+        if check_won_cricket():
+            # Check if there are other players left to play
+            if check_other_players() > 2:
+                # Wording
+                if Podium.query.first():
+                    result = gettext(u" Next Winner")
+                else:
+                    result = gettext(u"Winner!")
+                # Do Podium Things
+                set_podium(active_player.id)
+                db.session.commit()
+            else:
+                # Game is over
+                set_podium(active_player.id)
+                set_last_podium()
+                game.won = True
+                db.session.commit()
+                result += gettext(u" Game Over!")
 
         # Do final round handling
         throwcount += 1
@@ -612,9 +665,24 @@ def score_atc(hit, mod):
 
                 # Check won
                 if number_to_hit.number > 20:
-                    number_to_hit.number = 0
-                    game.won = True
-                    result = gettext(u"Winner!")
+                    # Player won, now check podium things
+                    # If there are still more than 2 not out player do Podium things
+                    if check_other_players() > 2:
+                        # Do Podium Things
+                        # Check wording for result
+                        if Podium.query.first():
+                            result = gettext(u"Next Winner")
+                        else:
+                            result = gettext(u"Winner!")
+                        set_podium(active_player.id)
+                        number_to_hit.number = 0
+                    # Else Game is over
+                    else:
+                        set_podium(active_player.id)
+                        set_last_podium()
+                        number_to_hit.number = 0
+                        game.won = True
+                        result = gettext(u"Game Over!")
                 else:
                     result = gettext(u"Hit")
 
@@ -768,7 +836,7 @@ def check_to_score(hit, mod, hit_before, player_id):
         return scored
 
 
-def check_won():
+def check_won_cricket():
     all_closed = True
     won = True
     game = Game.query.first()
@@ -779,6 +847,7 @@ def check_won():
         if item < 3:
             all_closed = False
             won = False
+
     if all_closed:
         if game.variant == "Normal":
             for player in playing_players:
@@ -810,10 +879,8 @@ def switch_next_player():
     else:
         # Then set active Player round ongoing to 0 and nextPlayerNeeded in Game to 0
         active_player_object = Player.query.filter_by(active=True).first()
+        # else just switch player as always
         active_player_round = Round.query.filter_by(player_id=active_player_object.id, ongoing=1).first()
-        # TODO This might to be removed again. Time will bring results
-        position_list_active_player = 0
-        # TODO This might to be removed again. Time will bring results
         try:
             active_player_round.ongoing = False
         except AttributeError:
@@ -821,7 +888,7 @@ def switch_next_player():
         game.nextPlayerNeeded = False
         # Initialize variables to work with
         key = []
-        list_of_playing_players = get_playing_players()
+        list_of_playing_players = get_playing_players_not_out()
         # Find key of active player in list
         for i, x in enumerate(list_of_playing_players):
             if x == str(active_player_object):
@@ -911,3 +978,38 @@ def get_closed():
     cricket_dict['20'] = cricket_control.c20
     cricket_dict['25'] = cricket_control.c25
     return cricket_dict
+
+
+def set_podium(player_id):
+    # Get Podium Objects
+    podium = Podium.query.all()
+    # Get Player Object
+    player = Player.query.filter_by(id=player_id).first()
+    # If there are any Objects
+    if podium:
+        p = Podium(place=len(podium)+1, name=player.name, player_id=player_id)
+    # No Objects yet, so 1st Place
+    else:
+        p = Podium(place=1, name=player.name, player_id=player_id)
+
+    switch_next_player()
+
+    player.out = True
+    player.active = False
+    db.session.add(p)
+    db.session.commit()
+
+    return "Done"
+
+
+def set_last_podium():
+    # Get Podium Objects
+    podium = Podium.query.all()
+    # Get looser player
+    looser = Player.query.filter_by(game_id=1, out=0).first()
+    p = Podium(place=len(podium)+1, name=looser.name, player_id=looser.id)
+    looser.out = True
+    db.session.add(p)
+    db.session.commit()
+
+    return "Done"

@@ -21,7 +21,7 @@
 onload="drawCricketController(), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightCricket('{{ activePlayer }}')"
 
 {% elif gametype == "ATC" %}
-onload="drawATC({{ number }}), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightATC({{ player_number_list }}, '{{ activePlayer }}')"
+onload="drawATC({{ number }},'{{ single }}','{{ miss }}'), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightATC({{ player_number_list }}, '{{ activePlayer }}')"
 
 {% else %}
 onload="drawX01Controller(), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ activePlayer }}',{{ scorelist }})"

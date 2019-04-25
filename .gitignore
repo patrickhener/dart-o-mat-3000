@@ -1,5 +1,6 @@
 *.pyc
 .idea/
+.venv/
 /app/mod_game/database.db
 __pychache__
 /docs/_build

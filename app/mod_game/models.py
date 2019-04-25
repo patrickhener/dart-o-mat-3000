@@ -26,6 +26,7 @@ class Game(Base):
 class Player(Base):
     name = db.Column(db.String, unique=True, nullable=False)
     active = db.Column(db.Boolean)
+    out = db.Column(db.Boolean)
 
     rounds = db.relationship('Round', backref='rounds', lazy=True)
     throws = db.relationship('Throw', backref='throws', lazy=True)
@@ -33,6 +34,7 @@ class Player(Base):
     crickets = db.relationship('Cricket', backref='crickets', lazy=True)
     gained = db.relationship('PointsGained', backref='playergaines', lazy=True)
     numbers = db.relationship('ATC', backref='numbers', lazy=True)
+    podiums = db.relationship('Podium', backref='podiums', lazy=True)
 
     game_id = db.Column(db.Integer, db.ForeignKey('game.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=True)
 
@@ -124,3 +126,14 @@ class ATC(Base):
 
     def __repr__(self):
         return str(self.number)
+
+
+class Podium(Base):
+    place = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String, nullable=False)
+
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"),
+                          nullable=False)
+
+    def __repr__(self):
+        return str(self.place)

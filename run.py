@@ -4,4 +4,5 @@ import eventlet
 
 eventlet.monkey_patch()
 
-socketio.run(app, host=IFACE, port=PORT)
+if __name__ == "__main__":
+    socketio.run(app, host=IFACE, port=PORT)

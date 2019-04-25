@@ -31,8 +31,8 @@ socket.on('highlightCricket', function(activePlayer) {
 	highlightAndScore(activePlayer);
 });
 
-socket.on('drawATC', function (number) {
-	drawATC(number);
+socket.on('drawATC', function (number, single, miss) {
+	drawATC(number, single, miss);
 });
 
 socket.on('highlightATC', function (player_number_list, activePlayer) {
@@ -387,7 +387,7 @@ function rematch() {
 	location.reload();
 }
 
-function drawATC(number) {
+function drawATC(number, single, miss) {
 	var div = document.getElementById("controls");
 	while (div.firstChild) {
 		div.removeChild(div.firstChild);
@@ -400,7 +400,7 @@ function drawATC(number) {
 	groupDiv.setAttribute("id", "button-matrix");
 	var button = document.createElement("button");
 	button.setAttribute("class", "btn btn-outline-primary btn-lg");
-	button.innerHTML = "Single";
+	button.innerHTML = single;
 	button.setAttribute("onclick", "sendATC("+ number + ",1)");
 	groupDiv.appendChild(button);
 	button = document.createElement("button");
@@ -420,7 +420,7 @@ function drawATC(number) {
 	groupDiv2.setAttribute("id", "button-matrix-2");
 	button = document.createElement("button");
 	button.setAttribute("class", "btn btn-outline-primary btn-lg");
-	button.innerHTML = "Miss";
+	button.innerHTML = miss;
 	button.setAttribute("onclick", "sendATC(0,1)");
 	groupDiv2.appendChild(button);
 }
