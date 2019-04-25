@@ -12,7 +12,8 @@ Features
 Bugs
 ====
 
-Currently there are no bugs to be resolved.
+* Find out which font to install to properly display crossed circle in cricket. Otherwise this will be a square
+
 
 New Games
 =========

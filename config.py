@@ -1,6 +1,6 @@
 import os
 # Custom IP and Port Config, needed for example in QR Code generation
-IPADDR = '192.168.1.160'  # QRCode IP
+IPADDR = '192.168.1.172'  # QRCode IP
 IFACE = '0.0.0.0'  # Server Interface IP
 PORT = 5000
 RECOGNITION = False  # Use Recognition or not. If not you will have buttons to insert Score in gameController
@@ -10,8 +10,8 @@ BABEL_DEFAULT_LOCALE = "de"
 BABEL_DEFAULT_TIMEZONE = "UTC"
 
 # Statement for enabling the development environment
-DEBUG = True
-TESTING = True
+DEBUG = False
+TESTING = False
 
 # Define the application directory
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))

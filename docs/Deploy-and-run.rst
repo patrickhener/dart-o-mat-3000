@@ -145,6 +145,16 @@ It will have this content
             listen 80;
             server_name localhost;
 
+            location /socket.io/ {
+		proxy_http_version 1.1;
+
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "upgrade";
+
+		proxy_pass http://localhost:5000/socket.io/;
+            }
+
+
             location / {
                 include proxy_params;
                 proxy_pass http://localhost:5000/;
@@ -164,7 +174,16 @@ Now we enable the site by linking to this file
 Test if it is working
 ^^^^^^^^^^^^^^^^^^^^^
 
-You now should be able to get your **Dart-O-Mat 3000** at either http://localhost directly on the machine or at it's corresponding IP address like for example http://192.168.1.10
+You now should be able to get your **Dart-O-Mat 3000** at either |localhost2| directly on the machine or at it's corresponding IP address like for example |ip2|
+
+
+.. |localhost2| raw:: html
+
+        <a href="http://localhost/game/" target="_blank">http://localhost/game/</a>
+
+.. |ip2| raw:: html
+
+        <a href="http://192.168.1.10/game/" target="_blank">http://192.168.1.10/game/</a>
 
 Setup config.py for production
 ------------------------------
@@ -179,7 +198,9 @@ You should be sure to choose the correct configuration flags in config.py in the
 
 As we are not testing or developing in this scenario be sure to choose False for both of this flags. Also you need to choose the right IP address so the QR code will be drawn accordingly.
 
+Be sure to restart the **dom3000.service** afterwards issueing the command `sudo systemctl restart dom3000.service`
+
 Autostart browser and index page
 --------------------------------
 
-* TODO Write autostart script to startup a browser window in fullscreen displaying the intro page
+
