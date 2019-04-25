@@ -8,7 +8,6 @@ Features
 ========
 
 * Different Sounds to choose from
-* If more than 2 player do not end game after one player get's 0/wins cricket
 
 Bugs
 ====

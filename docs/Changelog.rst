@@ -2,6 +2,23 @@
 Changelog
 =========
 
+2019-xx-xx - v1.0: Raymond van Barneveld
+========================================
+Working condition: Release state. There should not be bugs (although there will be for sure). This is the first official release.
+
+Features added:
+
+* Redesigned a few things again to work better
+* Fixed a whole lot of bugs
+* Further translation into DE
+
+Game added:
+
+* Around the Clock (numeric order)
+* Variants: Normal, Fast
+
+**Documentation has been switched over to readthedocs.org**
+
 2019-04-17 - v0.9.9: Beta version
 =================================
 Working condition: Near release state. There will be minor bugs (hopefully just minor ones). Therefore it is Beta.
