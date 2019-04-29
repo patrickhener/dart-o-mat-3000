@@ -2,9 +2,9 @@
 Changelog
 =========
 
-2019-xx-xx - v1.0: Raymond van Barneveld
+2019-04-29 - v0.9.9.1: Pre-release Version
 ========================================
-Working condition: Release state. There should not be bugs (although there will be for sure). This is the first official release.
+Working condition: Pre-Release state. There should not be bugs (although there will be for sure). This is still a pre-release.
 
 Features added:
 
