@@ -11,7 +11,7 @@ from flask import Blueprint, request, render_template
 from flask_babel import gettext
 
 # Import module models
-from .models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium
+from .models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium, Split
 
 # Import helper functions
 from .helper import clear_db, switch_next_player, get_playing_players_objects, get_playing_players_id, get_score, \
@@ -28,6 +28,10 @@ from .cricket import update_throw_table as cricket_update_throw_table
 # Import X01 functions
 from .x01 import get_checkout, score_x01
 from .x01 import update_throw_table as x01_update_throw_table
+
+# Import Split-Score functions
+from .splitscore import score_split, build_podium
+from .splitscore import update_throw_table as split_update_throw_table
 
 # Define the blueprint: 'game', set its url prefix: app.url/game
 mod_game = Blueprint('game', __name__, url_prefix='/game')
@@ -65,7 +69,7 @@ sounddict = {
     "start": "startgame",
 }
 
-# Routes
+# General routes
 @mod_game.route("/")
 def index():
     return render_template('/game/index.html', ipaddr=IPADDR, port=PORT)
@@ -187,6 +191,191 @@ def game_controller():
     )
 
 
+@mod_game.route("/throw/<int:hit>/<int:mod>")
+def throw(hit, mod):
+    game = Game.query.first()
+    # Determine which sound to play
+    audiofile = None
+    if mod == 2:
+        if hit == 25:
+            audiofile = sounddict["50"]
+        else:
+            audiofile = sounddict[str(hit)]
+    else:
+        if hit in range(0, 26):
+            audiofile = sounddict[str(hit)]
+
+    # Lookup if next player has to be switched
+    if game.nextPlayerNeeded:
+        scoreboard_x01(gettext(u"Remove Darts"))
+        scoreboard_cricket(gettext(u"Remove Darts"))
+        scoreboard_atc(gettext(u"Remove Darts"))
+        scoreboard_split(gettext(u"Remove Darts"))
+        return gettext(u"Switch to next player first")
+    else:
+        if "01" in game.gametype:
+            do_it = score_x01(hit, mod)
+            if do_it == gettext("Winner!"):
+                audiofile = "winner"
+            if do_it == gettext("Bust! Remove Darts!"):
+                audiofile = "bust"
+            if do_it == gettext("No Out possible! Remove Darts!"):
+                audiofile = "bust"
+            scoreboard_x01(do_it, audiofile)
+            game_controller()
+            return do_it
+        elif str(game.gametype) == "Cricket":
+            do_it = score_cricket(hit, mod)
+            if gettext(" Opened!") in do_it:
+                audiofile = "open"
+            if gettext(" Closed!") in do_it:
+                audiofile = "close"
+            scoreboard_cricket(do_it, audiofile)
+            game_controller()
+            return do_it
+        elif str(game.gametype) == "ATC":
+            do_it = score_atc(hit, mod)
+            scoreboard_atc(do_it, audiofile)
+            game_controller()
+            return do_it
+        elif str(game.gametype) == "Split":
+            do_it = score_split(hit, mod)
+            scoreboard_split(do_it, audiofile)
+            game_controller()
+            if do_it == gettext("Game Over!"):
+                word = gettext(u"Place")
+                socketio.emit('drawPodiumSplit', (build_podium(), word))
+
+            return do_it
+        else:
+            return "Other Game Type"
+
+
+@mod_game.route("/throw/update/<throw_id>/<new_hit>/<new_mod>")
+def update_throw(throw_id, new_hit, new_mod):
+    game = Game.query.first()
+    if game.gametype == "Cricket":
+        cricket_update_throw_table(throw_id, new_hit, new_mod)
+        scoreboard_cricket(gettext(u"Throw updated"))
+    elif "01" in game.gametype:
+        x01_update_throw_table(throw_id, new_hit, new_mod)
+        scoreboard_x01(gettext(u"Throw updated"))
+    elif game.gametype == "ATC":
+        atc_update_throw_table(throw_id, new_hit, new_mod)
+        scoreboard_atc(gettext(u"Throw updated"))
+    elif game.gametype == "Split":
+        split_update_throw_table(throw_id, new_hit, new_mod)
+        scoreboard_split(gettext(u"Throw updated"))
+
+    game_controller()
+    return "-"
+
+
+@mod_game.route("/nextPlayer")
+def next_player():
+    # Do the switch
+    do_it = switch_next_player()
+    # Get game object
+    game = Game.query.first()
+    # Get Sound
+    sound = SOUND
+    # Switch over what to do
+    if game.gametype == "Cricket":
+        scoreboard_cricket(do_it)
+        if sound:
+            socketio.emit("playSound", sounddict["start"])
+
+    elif game.gametype == "ATC":
+        scoreboard_atc(do_it)
+        if sound:
+            socketio.emit("playSound", sounddict["start"])
+
+    elif game.gametype == "Split":
+        scoreboard_split(do_it)
+        if sound:
+            socketio.emit("playSound", sounddict["start"])
+
+    else:
+        scoreboard_x01(do_it)
+        if sound:
+            socketio.emit("playSound", sounddict["start"])
+
+    game_controller()
+    return do_it
+
+
+@mod_game.route("/endGame")
+def end_game():
+    clear_db()
+    socketio.emit('redirectX01', "/game/")
+    socketio.emit('redirectCricket', "/game/")
+    socketio.emit('redirectATC', "/game/")
+    socketio.emit('redirectSplit', "/game/")
+    socketio.emit('redirectGameController', "/game/admin")
+    return gettext(u"Done")
+
+
+@mod_game.route("/rematch")
+def rematch():
+    game = Game.query.first()
+    players = get_playing_players_objects()
+    game.won = 0
+    scores = Score.query.all()
+    for score in scores:
+        score.score = score.initialScore
+        score.parkScore = score.initialScore
+    db.session.query(Throw).delete()
+    db.session.query(Round).delete()
+    db.session.query(Cricket).delete()
+    db.session.query(CricketControl).delete()
+    db.session.query(PointsGained).delete()
+    db.session.query(ATC).delete()
+    db.session.query(Podium).delete()
+    db.session.commit()
+    if game.gametype == "Cricket":
+        for player in players:
+            p = Player.query.filter_by(id=player.id).first()
+            p.out = False
+            c = Cricket(c20=0, c19=0, c18=0, c17=0, c16=0, c15=0, c25=0)
+            p.crickets.append(c)
+            db.session.add(p)
+            db.session.add(c)
+            db.session.commit()
+        cc = CricketControl(c20="", c19="", c18="", c17="", c16="", c15="", c25="")
+        db.session.add(cc)
+        db.session.commit()
+        scoreboard_cricket(gettext(u"Rematch"), "startgame")
+        game_controller()
+    elif game.gametype == "ATC":
+        for player in players:
+            atc = ATC(number=1)
+            score = Score(score=0, parkScore=0, initialScore=0)
+            p = Player.query.filter_by(name=player.name).first()
+            p.out = False
+            p.numbers.append(atc)
+            p.scores.append(score)
+            db.session.add(p)
+            db.session.add(score)
+            db.session.add(atc)
+            db.session.commit()
+        scoreboard_atc(gettext(u"Rematch"), sounddict["start"])
+        game_controller()
+    elif game.gametype == "Split":
+        splits = Split.query.all()
+        for split in splits:
+            split.next_hit="15"
+            db.session.commit()
+    else:
+        for player in players:
+            p = Player.query.filter_by(id=player.id).first()
+            p.out = False
+            db.session.commit()
+        scoreboard_x01(gettext(u"Rematch"), sounddict["start"])
+        game_controller()
+    return "-"
+
+
+# Cricket routes
 @mod_game.route("/scoreboardCricket")
 def scoreboard_cricket(message=None, soundeffect=None):
     # Var for returning options
@@ -259,7 +448,6 @@ def scoreboard_cricket(message=None, soundeffect=None):
         if y == "closed":
             closed_list.append(str(x))
 
-
     # Get Podium
     podium = Podium.query.all()
     podium_list = []
@@ -293,6 +481,47 @@ def scoreboard_cricket(message=None, soundeffect=None):
     )
 
 
+@socketio.on('startCricket')
+def on_start_cricket(data):
+    # Flush tables cause for now we handle only one active game
+    clear_db()
+    # Fill tables
+    variant = data['variant']
+    g = Game(gametype='Cricket', variant=variant)
+    for player in data['players']:
+        c = Cricket(c20=0, c19=0, c18=0, c17=0, c16=0, c15=0, c25=0)
+        s = Score(score=0, parkScore=0, initialScore=0)
+        p = Player.query.filter_by(name=player).first()
+        p.out = False
+        g.players.append(p)
+        p.crickets.append(c)
+        p.scores.append(s)
+        db.session.add(g)
+        db.session.add(p)
+        db.session.add(c)
+        db.session.add(s)
+        db.session.commit()
+    # Determine start Player by random
+    a = Player.query.filter_by(name=random.choice(data['players'])).first()
+    a.active = True
+    # CricketControl
+    cc = CricketControl(c20="", c19="", c18="", c17="", c16="", c15="", c25="")
+    # Commit to DB
+    db.session.add(a)
+    db.session.add(cc)
+    db.session.commit()
+
+    socketio.emit('redirectIndex', '/game/scoreboardCricket')
+    socketio.emit('redirectAdmin', '/game/gameController')
+    scoreboard_cricket()
+
+
+@socketio.on('redrawCricket')
+def redraw_cricket(message):
+    scoreboard_cricket(message)
+
+
+# X01 routes
 @mod_game.route("/scoreboardX01")
 def scoreboard_x01(message=None, soundeffect=None):
     # Var for returning options
@@ -410,6 +639,37 @@ def scoreboard_x01(message=None, soundeffect=None):
     )
 
 
+@socketio.on('startX01')
+def on_start_x01(data):
+    # Flush tables cause for now we handle only one active game
+    clear_db()
+    # Fill tables
+    scorecount = int(data['x01variant'])
+    g = Game(gametype=data['x01variant'], inGame=data['startIn'], outGame=data['exitOut'])
+    for player in data['players']:
+        s = Score(score=scorecount, parkScore=scorecount, initialScore=scorecount)
+        p = Player.query.filter_by(name=player).first()
+        p.out = False
+        g.players.append(p)
+        p.scores.append(s)
+        db.session.add(g)
+        db.session.add(p)
+        db.session.add(s)
+        db.session.commit()
+    # Determine start Player by random
+    a = Player.query.filter_by(name=random.choice(data['players'])).first()
+    a.active = True
+    # Commit to DB
+    db.session.add(a)
+    db.session.commit()
+
+    scoreboard_x01()
+    game_controller()
+    socketio.emit('redirectIndex', '/game/scoreboardX01')
+    socketio.emit('redirectAdmin', '/game/gameController')
+
+
+# ATC routes
 @mod_game.route("/scoreboardATC")
 def scoreboard_atc(message=None, soundeffect=None):
     # Var for returning options
@@ -494,231 +754,6 @@ def scoreboard_atc(message=None, soundeffect=None):
     )
 
 
-@mod_game.route("/throw/<int:hit>/<int:mod>")
-def throw(hit, mod):
-    game = Game.query.first()
-    # Determine which sound to play
-    audiofile = None
-    if mod == 2:
-        if hit == 25:
-            audiofile = sounddict["50"]
-        else:
-            audiofile = sounddict[str(hit)]
-    else:
-        if hit in range(0, 26):
-            audiofile = sounddict[str(hit)]
-
-    # Lookup if next player has to be switched
-    if game.nextPlayerNeeded:
-        scoreboard_x01(gettext(u"Remove Darts"))
-        scoreboard_cricket(gettext(u"Remove Darts"))
-        scoreboard_atc(gettext(u"Remove Darts"))
-        return gettext(u"Switch to next player first")
-    else:
-        if "01" in game.gametype:
-            do_it = score_x01(hit, mod)
-            if do_it == gettext("Winner!"):
-                audiofile = "winner"
-            if do_it == gettext("Bust! Remove Darts!"):
-                audiofile = "bust"
-            if do_it == gettext("No Out possible! Remove Darts!"):
-                audiofile = "bust"
-            scoreboard_x01(do_it, audiofile)
-            game_controller()
-            return do_it
-        elif str(game.gametype) == "Cricket":
-            do_it = score_cricket(hit, mod)
-            if gettext(" Opened!") in do_it:
-                audiofile = "open"
-            if gettext(" Closed!") in do_it:
-                audiofile = "close"
-            scoreboard_cricket(do_it, audiofile)
-            game_controller()
-            return do_it
-        elif str(game.gametype) == "ATC":
-            do_it = score_atc(hit, mod)
-            scoreboard_atc(do_it, audiofile)
-            game_controller()
-            return do_it
-        else:
-            return "Other Game Type"
-
-
-@mod_game.route("/throw/update/<throw_id>/<new_hit>/<new_mod>")
-def update_throw(throw_id, new_hit, new_mod):
-    game = Game.query.first()
-    if game.gametype == "Cricket":
-        cricket_update_throw_table(throw_id, new_hit, new_mod)
-        scoreboard_cricket(gettext(u"Throw updated"))
-    elif "01" in game.gametype:
-        x01_update_throw_table(throw_id, new_hit, new_mod)
-        scoreboard_x01(gettext(u"Throw updated"))
-    elif game.gametype == "ATC":
-        atc_update_throw_table(throw_id, new_hit, new_mod)
-        scoreboard_atc(gettext(u"Throw updated"))
-
-    game_controller()
-    return "-"
-
-
-@mod_game.route("/nextPlayer")
-def next_player():
-    # Do the switch
-    do_it = switch_next_player()
-    # Get game object
-    game = Game.query.first()
-    # Get Sound
-    sound = SOUND
-    # Switch over what to do
-    if game.gametype == "Cricket":
-        scoreboard_cricket(do_it)
-        if sound:
-            socketio.emit("playSound", sounddict["start"])
-
-    elif game.gametype == "ATC":
-        scoreboard_atc(do_it)
-        if sound:
-            socketio.emit("playSound", sounddict["start"])
-
-    else:
-        scoreboard_x01(do_it)
-        if sound:
-            socketio.emit("playSound", sounddict["start"])
-
-    game_controller()
-    return do_it
-
-
-@mod_game.route("/endGame")
-def end_game():
-    clear_db()
-    socketio.emit('redirectX01', "/game/")
-    socketio.emit('redirectCricket', "/game/")
-    socketio.emit('redirectATC', "/game/")
-    socketio.emit('redirectGameController', "/game/admin")
-    return gettext(u"Done")
-
-
-@mod_game.route("/rematch")
-def rematch():
-    game = Game.query.first()
-    players = get_playing_players_objects()
-    game.won = 0
-    scores = Score.query.all()
-    for score in scores:
-        score.score = score.initialScore
-        score.parkScore = score.initialScore
-    db.session.query(Throw).delete()
-    db.session.query(Round).delete()
-    db.session.query(Cricket).delete()
-    db.session.query(CricketControl).delete()
-    db.session.query(PointsGained).delete()
-    db.session.query(ATC).delete()
-    db.session.query(Podium).delete()
-    db.session.commit()
-    if game.gametype == "Cricket":
-        for player in players:
-            p = Player.query.filter_by(id=player.id).first()
-            p.out = False
-            c = Cricket(c20=0, c19=0, c18=0, c17=0, c16=0, c15=0, c25=0)
-            p.crickets.append(c)
-            db.session.add(p)
-            db.session.add(c)
-            db.session.commit()
-        cc = CricketControl(c20="", c19="", c18="", c17="", c16="", c15="", c25="")
-        db.session.add(cc)
-        db.session.commit()
-        scoreboard_cricket(gettext(u"Rematch"), "startgame")
-        game_controller()
-    elif game.gametype == "ATC":
-        for player in players:
-            atc = ATC(number=1)
-            score = Score(score=0, parkScore=0, initialScore=0)
-            p = Player.query.filter_by(name=player.name).first()
-            p.out = False
-            p.numbers.append(atc)
-            p.scores.append(score)
-            db.session.add(p)
-            db.session.add(score)
-            db.session.add(atc)
-            db.session.commit()
-        scoreboard_atc(gettext(u"Rematch"), sounddict["start"])
-        game_controller()
-    else:
-        for player in players:
-            p = Player.query.filter_by(id=player.id).first()
-            p.out = False
-            db.session.commit()
-        scoreboard_x01(gettext(u"Rematch"), sounddict["start"])
-        game_controller()
-    return "-"
-
-
-@socketio.on('startX01')
-def on_start_x01(data):
-    # Flush tables cause for now we handle only one active game
-    clear_db()
-    # Fill tables
-    scorecount = int(data['x01variant'])
-    g = Game(gametype=data['x01variant'], inGame=data['startIn'], outGame=data['exitOut'])
-    for player in data['players']:
-        s = Score(score=scorecount, parkScore=scorecount, initialScore=scorecount)
-        p = Player.query.filter_by(name=player).first()
-        p.out = False
-        g.players.append(p)
-        p.scores.append(s)
-        db.session.add(g)
-        db.session.add(p)
-        db.session.add(s)
-        db.session.commit()
-    # Determine start Player by random
-    a = Player.query.filter_by(name=random.choice(data['players'])).first()
-    a.active = True
-    # Commit to DB
-    db.session.add(a)
-    db.session.commit()
-
-    scoreboard_x01()
-    game_controller()
-    socketio.emit('redirectIndex', '/game/scoreboardX01')
-    socketio.emit('redirectAdmin', '/game/gameController')
-
-
-@socketio.on('startCricket')
-def on_start_cricket(data):
-    # Flush tables cause for now we handle only one active game
-    clear_db()
-    # Fill tables
-    variant = data['variant']
-    g = Game(gametype='Cricket', variant=variant)
-    for player in data['players']:
-        c = Cricket(c20=0, c19=0, c18=0, c17=0, c16=0, c15=0, c25=0)
-        s = Score(score=0, parkScore=0, initialScore=0)
-        p = Player.query.filter_by(name=player).first()
-        p.out = False
-        g.players.append(p)
-        p.crickets.append(c)
-        p.scores.append(s)
-        db.session.add(g)
-        db.session.add(p)
-        db.session.add(c)
-        db.session.add(s)
-        db.session.commit()
-    # Determine start Player by random
-    a = Player.query.filter_by(name=random.choice(data['players'])).first()
-    a.active = True
-    # CricketControl
-    cc = CricketControl(c20="", c19="", c18="", c17="", c16="", c15="", c25="")
-    # Commit to DB
-    db.session.add(a)
-    db.session.add(cc)
-    db.session.commit()
-
-    socketio.emit('redirectIndex', '/game/scoreboardCricket')
-    socketio.emit('redirectAdmin', '/game/gameController')
-    scoreboard_cricket()
-
-
 @socketio.on('startATC')
 def on_start_atc(data):
     # Flush tables
@@ -752,6 +787,130 @@ def on_start_atc(data):
     socketio.emit('redirectAdmin', '/game/gameController')
 
 
-@socketio.on('redrawCricket')
-def redraw_cricket(message):
-    scoreboard_cricket(message)
+# Split-Score routes
+@mod_game.route("/scoreboardSplit")
+def scoreboard_split(message=None, soundeffect=None):
+    # Var for returning options
+    if not message:
+        message = "-"
+    else:
+        message = message
+
+    if not soundeffect:
+        audiofile = None
+    else:
+        audiofile = soundeffect
+
+    if message == gettext("Split Score! Remove Darts!"):
+        audiofile = sounddict["bust"]
+    elif message == gettext("Game Over!"):
+        socketio.emit('rematchButton')
+
+    # Check if sound is enabled [config.py]
+    sound = SOUND
+    # Get general data to draw scoreboard
+    playing_players = get_playing_players_objects()
+    playing_players_id = get_playing_players_id()
+    active_player = get_active_player()
+    # ActivePlayerThrowcount
+    try:
+        throwcount = get_throws_count(active_player.id)
+    except AttributeError:
+        throwcount = "0"
+
+    game = Game.query.first()
+    try:
+        rnd = len(Round.query.filter_by(player_id=active_player.id).all())
+    except:
+        rnd = 1
+
+    # Get last throws to show in scoreboard beneath Message Container
+    last_throws = []
+    for player in playing_players:
+        last_throws.append(get_last_throws(player.id))
+
+    player_numbers = []
+    for player in playing_players:
+        if game.variant == "steeldart":
+            if len(Round.query.filter_by(player_id=player.id).all()) < 1:
+                player_numbers.append(gettext(u"Throw for starting score"))
+            else:
+                player_numbers.append(Split.query.filter_by(player_id=player.id).first())
+        else:
+            player_numbers.append(Split.query.filter_by(player_id=player.id).first())
+
+    player_scores = []
+    for player in playing_players:
+        player_scores.append(get_score(player.id))
+
+    player_number_list = [{'Player': str(name), 'PlayerID': str(playerid), 'Score': str(score), 'NextHit': str(nexthit)}
+                          for name, playerid, score, nexthit
+                          in zip(playing_players, playing_players_id, player_scores, player_numbers)]
+
+    # Get last throws to show in scoreboard beneath Message Container
+    last_throws = []
+    for player in playing_players:
+        last_throws.append(get_last_throws(player.id))
+
+    # Variant rewording
+    if game.variant == "edart":
+        variant = "E-Dart"
+    elif game.variant == "steeldart":
+        variant = "Steel Dart"
+    else:
+        variant = "Error"
+
+    socketio.emit('drawScoreboardSplit', (player_number_list, last_throws))
+    socketio.emit('highlightSplit', (active_player.name, rnd, throwcount, message))
+
+    if sound:
+        socketio.emit('playSound', audiofile)
+
+    return render_template(
+        '/game/scoreboardSplit.html',
+        playerlist=player_number_list,
+        message=message,
+        player=active_player.name,
+        rndcount=rnd,
+        throwcount=throwcount,
+        lastthrows=last_throws,
+        gametype="Split-Score",
+        variant=variant
+    )
+
+
+@socketio.on("startSplit")
+def on_start_split(data):
+    # Flush tables
+    clear_db()
+    # Fill tables
+    variant = data['variant']
+    g = Game(gametype='Split', variant=variant)
+    for player in data['players']:
+        if variant == "edart":
+            score = Score(score=40, parkScore=0, initialScore=40)
+        elif variant == "steeldart":
+            score = Score(score=0, parkScore=0, initialScore=0)
+        p = Player.query.filter_by(name=player).first()
+        p.out = False
+        split = Split(next_hit="15", has_been_hit=False, player_id=p.id)
+        g.players.append(p)
+        p.nexthits.append(split)
+        p.scores.append(score)
+        db.session.add(g)
+        db.session.add(p)
+        db.session.add(score)
+        db.session.add(split)
+        db.session.commit()
+
+    # Determine start Player by random
+    a = Player.query.filter_by(name=random.choice(data['players'])).first()
+    a.active = True
+    # Commit to DB
+    db.session.add(a)
+    db.session.commit()
+
+    scoreboard_split()
+    game_controller()
+    socketio.emit('redirectIndex', '/game/scoreboardSplit')
+    socketio.emit('redirectAdmin', '/game/gameController')

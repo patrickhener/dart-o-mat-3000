@@ -16,6 +16,7 @@ function submitGame() {
     var exit = document.getElementById('exitOut').value;
     var cut = document.getElementById('variant').value;
     var atcvariant = document.getElementById('atc-variant').value;
+    var splitvariant = document.getElementById('split-variant').value;
 
     if (gametype === 'x01') {
         createX01(playerlist, variant, start, exit);
@@ -23,6 +24,8 @@ function submitGame() {
         createCricket(playerlist, cut);
     } else if (gametype === 'aroundtheclock') {
         createATW(playerlist, atcvariant);
+    } else if (gametype === 'splitscore') {
+        createSplit(playerlist, splitvariant);
     } else {
         alert("Something went wrong");
     }
@@ -43,6 +46,11 @@ function createATW(playerlist, atcvariant) {
     socket.emit('startATC', {players: playerlist, variant: atcvariant});
 }
 
+function createSplit(playerlist, splitvariant) {
+    console.log('Creating Split Score game...');
+    socket.emit('startSplit', {players: playerlist, variant: splitvariant});
+}
+
 function hideshow() {
     var s1 = document.getElementById('gametype');
     var s2 = document.getElementById('div-x01variant');
@@ -53,6 +61,8 @@ function hideshow() {
     var s7 = document.getElementById('x01-rules');
     var s8 = document.getElementById('cricket-rules');
     var s9 = document.getElementById('atc-rules');
+    var s10 = document.getElementById('div-splitscore-variant');
+    var s11 = document.getElementById('split-rules');
 
     if (s1.options[s1.selectedIndex].text == "X01") {
         s2.style.display = 'block';
@@ -63,6 +73,8 @@ function hideshow() {
         s7.style.display = 'block';
         s8.style.display = 'none';
         s9.style.display = 'none';
+        s10.style.display = 'none';
+        s11.style.display = 'none';
     }
 
     if (s1.options[s1.selectedIndex].text == "Cricket") {
@@ -74,6 +86,8 @@ function hideshow() {
         s7.style.display = 'none';
         s8.style.display = 'block';
         s9.style.display = 'none';
+        s10.style.display = 'none';
+        s11.style.display = 'none';
     }
 
     if (s1.options[s1.selectedIndex].text == "Around the Clock") {
@@ -85,6 +99,21 @@ function hideshow() {
         s7.style.display = 'none';
         s8.style.display = 'none';
         s9.style.display = 'block';
+        s10.style.display = 'none';
+        s11.style.display = 'none';
+    }
+
+    if (s1.options[s1.selectedIndex].text == "Split-Score") {
+        s2.style.display = 'none';
+        s3.style.display = 'none';
+        s4.style.display = 'none';
+        s5.style.display = 'none';
+        s6.style.display = 'none';
+        s7.style.display = 'none';
+        s8.style.display = 'none';
+        s9.style.display = 'none';
+        s10.style.display = 'block';
+        s11.style.display = 'block';
     }
 }
 
@@ -98,6 +127,9 @@ function hide() {
     var s7 = document.getElementById('x01-rules');
     var s8 = document.getElementById('cricket-rules');
     var s9 = document.getElementById('atc-rules');
+    var s10 = document.getElementById('div-splitscore-variant');
+    var s11 = document.getElementById('split-rules');
+
     s1.style.display = 'block';
     s2.style.display = 'block';
     s3.style.display = 'block';
@@ -107,4 +139,6 @@ function hide() {
     s7.style.display = 'block';
     s8.style.display = 'none';
     s9.style.display = 'none';
+    s10.style.display = 'none';
+    s11.style.display = 'none';
 }

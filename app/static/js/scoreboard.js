@@ -1,3 +1,4 @@
+// Socket IO Settings and events
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 
 socket.on('connect', function() {
@@ -10,6 +11,10 @@ socket.on('refresh', function() {
 
 socket.on('playSound', function(soundfile) {
     playSound(soundfile);
+});
+
+socket.on('drawScoreboardSplit', function(playerlist, lastthrows) {
+    drawScoreboardSplit(playerlist, lastthrows);
 });
 
 socket.on('drawScoreboardATC', function(playerlist) {
@@ -36,6 +41,10 @@ socket.on('highlightATC', function(activePlayer, rnd, throwcount, message) {
     highlightATC(activePlayer, rnd, throwcount, message);
 });
 
+socket.on('highlightSplit', function(activePlayer, rnd, throwcount, message) {
+    highlightSplit(activePlayer, rnd, throwcount, message);
+});
+
 socket.on('redirectX01', function(url) {
     window.location.href = url;
 });
@@ -45,6 +54,10 @@ socket.on('redirectCricket', function(url) {
 });
 
 socket.on('redirectATC', function(url) {
+    window.location.href = url;
+});
+
+socket.on('redirectSplit', function(url) {
     window.location.href = url;
 });
 
@@ -58,6 +71,10 @@ socket.on('drawPodiumCricket', function(podium, word) {
 
 socket.on('drawPodiumATC', function(podium, word) {
     drawPodiumATC(podium, word);
+});
+
+socket.on('drawPodiumSplit', function(podium, word) {
+    drawPodiumSplit(podium, word);
 });
 
 // Functions
@@ -141,7 +158,7 @@ function highlightActivePlayer(activePlayer, playerID, playerRound, message, ave
     divThrowcount.innerHTML = throwcount;
     var messageDiv = document.getElementsByName("Message-" + activePlayer);
     messageDiv[0].innerHTML = "<h1>" + message + "</h1>";
-};
+}
 
 function playSound(soundfile) {
     if (soundfile != null) {
@@ -381,6 +398,74 @@ function highlightATC(activePlayer, playerRound, throwcount, message) {
     messageDiv[0].innerHTML = "<h1>" + message + "</h1>";
 }
 
+function drawScoreboardSplit(list, lastthrows) {
+    var div = document.getElementById("score");
+    while (div.firstChild) {
+        div.removeChild(div.firstChild);
+    }
+    for (var item in list) {
+        var borderDiv = document.createElement("div");
+        borderDiv.setAttribute("class", "col");
+        borderDiv.setAttribute("id", "Border-" + list[item].Player);
+        var nameDiv = document.createElement("div");
+        nameDiv.setAttribute("name", "Player-" + list[item].Player);
+        nameDiv.setAttribute("id", "playerName");
+        nameDiv.innerHTML = "<h1 id='playerName'>" + list[item].Player + "</h1>";
+        borderDiv.appendChild(nameDiv);
+        var scoreDiv = document.createElement("div");
+        scoreDiv.setAttribute("name", "Score-" + list[item].Player);
+        scoreDiv.setAttribute("id", "playerScore");
+        scoreDiv.innerHTML = "<h1 id='playerScore'>" + list[item].Score + "</h1>";
+        borderDiv.appendChild(scoreDiv);
+        var messageDiv = document.createElement("div");
+        messageDiv.setAttribute("name", "Message-" + list[item].Player);
+        messageDiv.setAttribute("id", "playerMessage");
+        messageDiv.innerHTML = "";
+        borderDiv.appendChild(messageDiv);
+        var throwDiv = document.createElement("div");
+        throwDiv.setAttribute("id", "Throws-" + list[item].PlayerID);
+        borderDiv.appendChild(throwDiv);
+        var sumDiv = document.createElement("div");
+        sumDiv.setAttribute("id", "Sum-" + list[item].PlayerID);
+        sumDiv.innerHTML="<h2 id='playerSum'>" + list[item].NextHit + "</h2>";
+        borderDiv.appendChild(sumDiv);
+        div.appendChild(borderDiv);
+    }
+
+    for (var item in lastthrows) {
+        for (var item2 in lastthrows[item]) {
+            var array = lastthrows[item][item2].split(",");
+            throwDiv = document.getElementById("Throws-" + array[0]);
+            var throww = document.createElement("div");
+            throww.setAttribute("id", "throw");
+            var output = "";
+            if (array[3] == "2") {
+                output += "D";
+            }
+            else if (array[3] == "3") {
+                output += "T";
+            }
+            output += array[2];
+            throww.innerHTML = "<h2 id='playerThrow'>" + output + "</h2>";
+            throwDiv.appendChild(throww);
+        }
+    }
+}
+
+function highlightSplit(activePlayer, playerRound, throwcount, message) {
+    var borderDiv = document.getElementById("Border-" + activePlayer);
+    borderDiv.style.border='5px solid white';
+    borderDiv.style.boxShadow='10px 10px 15px black';
+    var divActivePlayer = document.getElementById("header-activePlayer");
+    divActivePlayer.innerHTML = activePlayer;
+    var divRndcount = document.getElementById("header-rndcount");
+    divRndcount.innerHTML = playerRound;
+    var divThrowcount = document.getElementById("header-throwcount");
+    divThrowcount.innerHTML = throwcount;
+    var messageDiv = document.getElementsByName("Message-" + activePlayer);
+    messageDiv[0].innerHTML = "<h1>" + message + "</h1>";
+}
+
 function isOdd(num) {
     return num % 2;
 }
@@ -418,5 +503,15 @@ function drawPodiumATC(podium, word) {
             var messageDiv = document.getElementsByName("Message-" + array[0]);
             messageDiv[0].innerHTML = "<h1>" + word + " " + array[1] + "</h1>";
         }
+    }
+}
+
+function drawPodiumSplit(podium, word) {
+    for (var item in podium) {
+        // array[0] = Name
+        // array[1] = Podium Place
+        var array = podium[item].split(",");
+        var scoreDiv = document.getElementsByName("Score-" + array[0]);
+        scoreDiv[0].innerHTML = "<h1 id='playerScore'>" + word + " " + array[1] + "</h1>";
     }
 }

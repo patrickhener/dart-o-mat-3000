@@ -8,7 +8,7 @@ from itertools import cycle, islice
 from flask_babel import gettext
 
 # Import module models
-from .models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium
+from .models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium, Split
 
 
 # Method definitions
@@ -22,6 +22,7 @@ def clear_db():
     db.session.query(PointsGained).delete()
     db.session.query(ATC).delete()
     db.session.query(Podium).delete()
+    db.session.query(Split).delete()
 
     playing_players_object = Player.query.filter_by(game_id=1).all()
     for player in playing_players_object:
