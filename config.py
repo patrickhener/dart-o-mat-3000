@@ -10,8 +10,8 @@ BABEL_DEFAULT_LOCALE = "de"
 BABEL_DEFAULT_TIMEZONE = "UTC"
 
 # Statement for enabling the development environment
-DEBUG = False
-TESTING = False
+DEBUG = True
+TESTING = True
 
 # Define the application directory
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))

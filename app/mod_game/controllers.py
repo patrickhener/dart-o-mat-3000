@@ -1,22 +1,33 @@
 # General imports
 import random
 
-# Import flask dependencies
-from flask import Blueprint, request, render_template
-
 # Import the database and socketio object from the main app module
 from app import db, socketio, IPADDR, PORT, RECOGNITION, SOUND
 
-# Import module models
-from app.mod_game.models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium
-
-# Import helper functions
-from app.mod_game.helper import clear_db, score_x01, switch_next_player, get_playing_players_objects, \
-    get_playing_players_id, get_score, get_active_player, get_average, get_throws_count, get_last_throws, \
-    update_throw_table, get_cricket, score_cricket, get_closed, get_checkout, score_atc, check_other_players
+# Import flask dependencies
+from flask import Blueprint, request, render_template
 
 # Import Babel Stuff
 from flask_babel import gettext
+
+# Import module models
+from .models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium
+
+# Import helper functions
+from .helper import clear_db, switch_next_player, get_playing_players_objects, get_playing_players_id, get_score, \
+    get_active_player, get_average, get_throws_count, get_last_throws
+
+# Import ATC functions
+from .atc import score_atc
+from .atc import update_throw_table as atc_update_throw_table
+
+# Import Cricket functions
+from .cricket import get_cricket, score_cricket, get_closed
+from .cricket import update_throw_table as cricket_update_throw_table
+
+# Import X01 functions
+from .x01 import get_checkout, score_x01
+from .x01 import update_throw_table as x01_update_throw_table
 
 # Define the blueprint: 'game', set its url prefix: app.url/game
 mod_game = Blueprint('game', __name__, url_prefix='/game')
@@ -536,12 +547,14 @@ def throw(hit, mod):
 @mod_game.route("/throw/update/<throw_id>/<new_hit>/<new_mod>")
 def update_throw(throw_id, new_hit, new_mod):
     game = Game.query.first()
-    update_throw_table(throw_id, new_hit, new_mod)
     if game.gametype == "Cricket":
+        cricket_update_throw_table(throw_id, new_hit, new_mod)
         scoreboard_cricket(gettext(u"Throw updated"))
     elif "01" in game.gametype:
+        x01_update_throw_table(throw_id, new_hit, new_mod)
         scoreboard_x01(gettext(u"Throw updated"))
     elif game.gametype == "ATC":
+        atc_update_throw_table(throw_id, new_hit, new_mod)
         scoreboard_atc(gettext(u"Throw updated"))
 
     game_controller()
