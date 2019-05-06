@@ -8,14 +8,11 @@ Features
 ========
 
 * Different Sounds to choose from
-* Different Sound when meaningful number hit at cricket
 
 Bugs
 ====
 
 * Find out which font to install to properly display crossed circle in cricket. Otherwise this will be a square
-* Refresh in Rematch Game: Split-Score
-* Bulls as number for Split-Score
 
 New Games
 =========

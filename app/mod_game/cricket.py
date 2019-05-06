@@ -189,6 +189,7 @@ def check_won_cricket():
 def score_cricket(hit, mod):
     # Empty result for now
     result = ""
+    audiofile = ""
     # Check if game is ongoing
     if check_if_ongoing_game():
         # set active player
@@ -210,7 +211,9 @@ def score_cricket(hit, mod):
         # Check if relevant hit
         if hit in range(0, 15):
             result = "-"
+            audiofile = "beep"
         else:
+            audiofile = "hit"
             # Cricket and score
             # 1. Check if hit is closed already
             if not check_close(hit) == "closed":
@@ -226,19 +229,23 @@ def score_cricket(hit, mod):
                     # check opened
                     if cricket_dict[str(hit)] == 3:
                         result += gettext(u" Opened!")
+                        audiofile = "open"
                 # 3. Now check if it was not closed, then check scoring options
                 if not check_close(hit):
                     if cricket_dict[str(hit)] > 3:
                         if check_to_score(hit, mod, hit_before_increase, active_player.id):
                             result += gettext(u" Scored!")
+                            audiofile = "score"
                 else:
                     result += gettext(u" Closed!")
+                    audiofile = "close"
             else:
                 # This happens when already closed
                 cricket_dict = get_cricket_dict(active_player.id)
                 cricket_dict[str(hit)] += mod
                 set_cricket_dict(active_player.id, cricket_dict)
                 result = "-"
+                audiofile = "beep"
 
         # Finally Check if Player is out
         if check_won_cricket():
@@ -270,7 +277,7 @@ def score_cricket(hit, mod):
         db.session.add(throw)
         db.session.commit()
 
-        return result
+        return result, audiofile
 
     else:
         return gettext(u"There is no active game running")

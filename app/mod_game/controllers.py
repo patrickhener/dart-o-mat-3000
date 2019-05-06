@@ -216,20 +216,26 @@ def throw(hit, mod):
         if "01" in game.gametype:
             do_it = score_x01(hit, mod)
             if do_it == gettext("Winner!"):
-                audiofile = "winner"
+                audiofile = sounddict["winner"]
             if do_it == gettext("Bust! Remove Darts!"):
-                audiofile = "bust"
+                audiofile = sounddict["bust"]
             if do_it == gettext("No Out possible! Remove Darts!"):
-                audiofile = "bust"
+                audiofile = sounddict["bust"]
             scoreboard_x01(do_it, audiofile)
             game_controller()
             return do_it
         elif str(game.gametype) == "Cricket":
-            do_it = score_cricket(hit, mod)
-            if gettext(" Opened!") in do_it:
-                audiofile = "open"
-            if gettext(" Closed!") in do_it:
-                audiofile = "close"
+            do_it, audio = score_cricket(hit, mod)
+            if audio == "open":
+                audiofile = sounddict["open"]
+            elif audio == "close":
+                audiofile = sounddict["close"]
+            elif audio == "beep":
+                audiofile = sounddict["0"]
+            elif audio == "hit":
+                audiofile = sounddict["25"]
+            elif audio == "score":
+                audiofile = sounddict["score"]
             scoreboard_cricket(do_it, audiofile)
             game_controller()
             return do_it
@@ -344,7 +350,7 @@ def rematch():
         cc = CricketControl(c20="", c19="", c18="", c17="", c16="", c15="", c25="")
         db.session.add(cc)
         db.session.commit()
-        scoreboard_cricket(gettext(u"Rematch"), "startgame")
+        scoreboard_cricket(gettext(u"Rematch"), sounddict["start"])
         game_controller()
     elif game.gametype == "ATC":
         for player in players:
@@ -365,6 +371,8 @@ def rematch():
         for split in splits:
             split.next_hit="15"
             db.session.commit()
+        scoreboard_split(gettext(u"Rematch"), sounddict["start"])
+        game_controller()
     else:
         for player in players:
             p = Player.query.filter_by(id=player.id).first()
@@ -392,8 +400,6 @@ def scoreboard_cricket(message=None, soundeffect=None):
     elif gettext(" Game Over!") in message:
         audiofile = sounddict["winner"]
         socketio.emit('rematchButton')
-    elif gettext(" Scored!") in message:
-        audiofile = sounddict["score"]
     else:
         message = message
     # Check if sound is enabled [config.py]
@@ -805,6 +811,9 @@ def scoreboard_split(message=None, soundeffect=None):
         audiofile = sounddict["bust"]
     elif message == gettext("Game Over!"):
         socketio.emit('rematchButton')
+        audiofile = sounddict["winner"]
+    elif message == gettext("Scored"):
+        audiofile = sounddict["25"]
 
     # Check if sound is enabled [config.py]
     sound = SOUND
@@ -888,7 +897,7 @@ def on_start_split(data):
     g = Game(gametype='Split', variant=variant)
     for player in data['players']:
         if variant == "edart":
-            score = Score(score=40, parkScore=0, initialScore=40)
+            score = Score(score=40, parkScore=40, initialScore=40)
         elif variant == "steeldart":
             score = Score(score=0, parkScore=0, initialScore=0)
         p = Player.query.filter_by(name=player).first()
