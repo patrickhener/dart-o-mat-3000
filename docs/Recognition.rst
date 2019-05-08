@@ -25,3 +25,5 @@ You can use any other recoginition as well, as long as it is propagating it's th
   * Example: Double 18 will be /game/throw/18/2
 
 2. URL to switch to next player /game/nextPlayer
+
+For a full overview of possible API calls refer to :ref:`API <API>`

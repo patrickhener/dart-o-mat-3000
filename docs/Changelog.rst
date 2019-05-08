@@ -3,6 +3,7 @@ Changelog
 =========
 
 2019-05-XX - v???: First Release?
+=================================
 Working condition: TODO
 
 Features added:
@@ -20,7 +21,7 @@ Documentation:
 * Pages and API are now documented
 
 2019-04-29 - v0.9.9.1: Pre-release Version
-========================================
+==========================================
 Working condition: Pre-Release state. There should not be bugs (although there will be for sure). This is still a pre-release.
 
 Features added:
