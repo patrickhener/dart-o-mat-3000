@@ -241,3 +241,28 @@ def set_last_podium():
     db.session.commit()
 
     return "Done"
+
+
+def update_throw_and_score(throw, hit, mod, add):
+    # get Throw and score
+    score = Score.query.filter_by(player_id=throw.player_id).first()
+    # Calculate old points resulting of old throw
+    oldpoints = throw.hit * throw.mod
+    # Calculate new points resulting of altered throw
+    newpoints = int(hit) * int(mod)
+    # Calculate difference
+    alter_score = newpoints - oldpoints
+    # Calculate new score
+    if add:
+        new_score = score.score + alter_score
+    else:
+        new_score = score.score - alter_score
+    # Set Throw to new values
+    throw.hit = int(hit)
+    throw.mod = int(mod)
+    # Set Score and Park Score to new Score
+    score.score = new_score
+    # Commit to db
+    db.session.commit()
+
+    return "Done"

@@ -4,7 +4,8 @@
 from app import db
 from flask_babel import gettext
 from .models import Score, Game, Round, Throw, Split, Player, PointsGained
-from .helper import check_if_ongoing_game, get_active_player, check_if_ongoing_round, get_playing_players_id
+from .helper import check_if_ongoing_game, get_active_player, check_if_ongoing_round, get_playing_players_id, \
+    update_throw_and_score
 
 
 def score_split(hit, mod):
@@ -48,10 +49,11 @@ def score_split(hit, mod):
                     result = "-"
                 else:
                     result, split, scored = check_to_score(split_object.next_hit, hit, mod,
-                                                   points, active_player.id, throwcount)
+                                                           points, active_player.id, throwcount)
 
             else:
-                result, split, scored = check_to_score(split_object.next_hit, hit, mod, points, active_player.id, throwcount)
+                result, split, scored = check_to_score(split_object.next_hit, hit, mod, points, active_player.id,
+                                                       throwcount)
 
             # Increase throwcount and so on
             throwcount += 1
@@ -226,27 +228,56 @@ def build_podium():
     return player_podium
 
 
+def format_to_split(hit, mod, next_hit):
+    if hit == 25:
+        output = "Bulls"
+    elif next_hit == "double":
+        if str(mod) == "2":
+            output = "double"
+        else:
+            output = str(hit)
+    elif next_hit == "triple":
+        if str(mod) == "3":
+            output = "triple"
+        else:
+            output = str(hit)
+    else:
+        output = str(hit)
+
+    return output
+
+
 def update_throw_table(throwid, hit, mod):
-    # Different cases can happen
-    # Case 1: Hit which gets corrected will erase points gained
-    # Case 2: Hit which gets corrected will spawn new points to be gained
-    # Case 3: Hit which gets corrected will need to result in split score
-    # Case 4: Hit which gets corrected will double up already split score
-    # Case 5: Hit which gets corrected will split score
-    #
     # Get the throw to change
     throw = Throw.query.filter_by(id=throwid).first()
-    print("Throw id is {}".format(throw.id))
     # Get nextHit of this throw
     split = Split.query.filter_by(player_id=throw.player_id).first()
-    print("Split id is {}".format(split))
     # Get player Round
     rnd = Round.query.filter_by(player_id=throw.player_id).order_by(Round.id.desc()).first()
-    print("Round id is {} with throwcount {}".format(rnd.id, rnd.throwcount))
     # Get player score
     score = Score.query.filter_by(player_id=throw.player_id).first()
-    print("Score is {} and parkScore is {}".format(score.score, score.parkScore))
+    # Get game for game variant
+    game = Game.query.first()
+    # Get player rounds
+    rnds = Round.query.filter_by(player_id=throw.player_id).all()
 
+    # Now handle steel dart variant first round throw change
+    if game.variant == "steeldart":
+        # Check if there is only one round associated with the player
+        if len(rnds) == 1:
+            # Just edit score
+            update_throw_and_score(throw, hit, mod, True)
+
+        else:
+            # It is a mid game throw update, so do throw update routine
+            update_throw_routine(rnd, split, throw, hit, mod, score)
+
+    else:
+        # E-Dart Variant - Do throw update routine
+        update_throw_routine(rnd, split, throw, hit, mod, score)
+
+
+def update_throw_routine(rnd, split, throw, hit, mod, score):
     # Now lets determine which was the number which should have been hit depending on throwcount
     if rnd.throwcount == 3:
         if split.next_hit == "double":
@@ -262,65 +293,62 @@ def update_throw_table(throwid, hit, mod):
         elif split.next_hit == "-":
             next_hit = "Bulls"
         else:
-            next_hit = int(split.next_hit) - 1
-        # Next up determine if the score was split
+            next_hit = str(int(split.next_hit) - 1)
     else:
-        next_hit = split.next_hit
+        next_hit = str(split.next_hit)
 
-    if score.score < score.parkScore:
-        splitted = True
-    else:
-        splitted = False
-
-    print("The modified throw should have hit {}".format(next_hit))
-    print("Splitted is {}".format(splitted))
-
-    # Instanciate old and new hit
-    oldhit = 0
-    newhit = 0
     # Next up format old hit to split language
-    if throw.hit == 25:
-        oldhit = "Bulls"
-    elif next_hit == "double":
-        if throw.mod == 2:
-            oldhit = "double"
-    elif next_hit == "triple":
-        if throw.mod == 3:
-            oldhit = "triple"
-    else:
-        oldhit = str(throw.hit)
+    oldhit = format_to_split(throw.hit, throw.mod, next_hit)
 
     # Format new hit
-    if hit == 25:
-        newhit = "Bulls"
-    elif next_hit == "double":
-        if mod == 2:
-            newhit = "double"
-    elif next_hit == "triple":
-        if mod == 3:
-            newhit = "triple"
-    else:
-        newhit = str(hit)
-    print("OldHit is {}\nNewHit is {}".format(oldhit, newhit))
+    newhit = format_to_split(hit, mod, next_hit)
 
-    # First check if the change is even relevant
-    # It is if you change to a number which is the nexthit or you change from a nexthit number to one which isn't
-    print("oldhit == next_hit is {}".format(oldhit == next_hit))
-    print("newhit == next_hit is {}".format(newhit == next_hit))
     # Undo any gained points first
     points_gained = PointsGained.query.filter_by(throw_id=throw.id).first()
     if points_gained:
-        print("points_gained is {}".format(points_gained))
         score.score -= points_gained.points
         db.session.query(PointsGained).filter(PointsGained.id == points_gained.id).delete()
         db.session.commit()
-        print("Points were removed")
 
-    if not (oldhit == next_hit) and not (newhit == next_hit):
-        # Do nothing, skip to throw change
-        print("Change irrelevant")
-    else:
-        print("Change is relevant")
+    # Then change the throw in database
+    throw.hit = int(hit)
+    throw.mod = int(mod)
+    db.session.commit()
+
+    # Next up check if the change is relevant
+    if (oldhit == next_hit) or (newhit == next_hit):
+        # Determine if the score has to be split or doubled up again
+        # get all throws associated to round
+        throws = Throw.query.filter_by(round_id=rnd.id).all()
+        if len(throws) == 3:
+            # First check if score was splitted
+            if score.score > score.parkScore:
+                splitted = False
+            elif score.score == score.parkScore:
+                splitted = False
+            else:
+                splitted = True
+
+            # Now if score was splitted before check if it needs to be unsplitted now
+            if splitted:
+                unsplit = False
+                for tr in throws:
+                    check_hit = format_to_split(tr.hit, tr.mod, next_hit)
+                    if check_hit == next_hit:
+                        unsplit = True
+                if unsplit:
+                    unsplit_score(throw.player_id)
+
+            # Now check if it needs to be splitted otherwise
+            if not splitted:
+                to_split = True
+                for tr in throws:
+                    check_hit = format_to_split(tr.hit, tr.mod, next_hit)
+                    if check_hit == next_hit:
+                        to_split = False
+                if to_split:
+                    split_score(throw.player_id)
+
         # now we need to determine if the change might gain new points
         if newhit == next_hit:
             # New Points are gained
@@ -328,13 +356,3 @@ def update_throw_table(throwid, hit, mod):
             add_score(player_id=throw.player_id, points=points)
             set_has_been_hit(throw.player_id, True)
             add_points_gained(points, throw.id, throw.player_id)
-            print("Points were gained")
-            # now if throwcount of round is 3 and it has been split unsplit the score
-            if rnd.throwcount == 3 and splitted:
-                unsplit_score(throw.player_id)
-                print("Score was doubled up again")
-
-    # Finally change throw in table
-    throw.hit = int(hit)
-    throw.mod = int(mod)
-    db.session.commit()

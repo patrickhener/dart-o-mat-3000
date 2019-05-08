@@ -4,7 +4,8 @@
 from app import db
 from flask_babel import gettext
 from .models import Score, Game, Player, Round, Podium, Throw
-from .helper import check_if_ongoing_game, check_if_ongoing_round, check_other_players, set_podium, set_last_podium
+from .helper import check_if_ongoing_game, check_if_ongoing_round, check_other_players, set_podium, set_last_podium, \
+    update_throw_and_score
 
 # Dictionaries
 checkout_dict = {
@@ -312,20 +313,4 @@ def score_x01(hit, mod):
 def update_throw_table(throw_id, hit, mod):
     # get Throw and score
     throw = Throw.query.filter_by(id=throw_id).first()
-    score = Score.query.filter_by(player_id=throw.player_id).first()
-    # Calculate old points resulting of old throw
-    oldpoints = throw.hit * throw.mod
-    # Calculate new points resulting of altered throw
-    newpoints = int(hit) * int(mod)
-    # Calculate difference
-    alter_score = newpoints - oldpoints
-    # Calculate new score
-    new_score = score.score - alter_score
-    # Set Throw to new values
-    throw.hit = int(hit)
-    throw.mod = int(mod)
-    # Set Score and Park Score to new Score
-    score.score = new_score
-    score.parkScore = new_score
-    # Commit to db
-    db.session.commit()
+    update_throw_and_score(throw, hit, mod, False)

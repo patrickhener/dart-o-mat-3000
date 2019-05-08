@@ -369,7 +369,8 @@ def rematch():
     elif game.gametype == "Split":
         splits = Split.query.all()
         for split in splits:
-            split.next_hit="15"
+            split.next_hit = "15"
+            split.has_been_hit = False
             db.session.commit()
         scoreboard_split(gettext(u"Rematch"), sounddict["start"])
         game_controller()
