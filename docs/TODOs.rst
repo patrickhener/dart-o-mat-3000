@@ -17,6 +17,4 @@ Bugs
 New Games
 =========
 
-* Split-Score: Update_throw_table
-
 Currently there are no new Games to be developed.

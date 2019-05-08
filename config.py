@@ -6,7 +6,7 @@ PORT = 5000
 RECOGNITION = False  # Use Recognition or not. If not you will have buttons to insert Score in gameController
 SOUND = True  # Sound output if you want
 # Babel default settings
-BABEL_DEFAULT_LOCALE = "de"
+BABEL_DEFAULT_LOCALE = "en"
 BABEL_DEFAULT_TIMEZONE = "UTC"
 
 # Statement for enabling the development environment

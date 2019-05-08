@@ -2,6 +2,23 @@
 Changelog
 =========
 
+2019-05-XX - v???: First Release?
+Working condition: TODO
+
+Features added:
+
+* Tweaked the sound a little bit
+
+Game added:
+
+* Split-Score
+* Variants: E-Dart, Steeldart
+
+Documentation:
+
+* Documented the new game as well
+* Pages and API are now documented
+
 2019-04-29 - v0.9.9.1: Pre-release Version
 ========================================
 Working condition: Pre-Release state. There should not be bugs (although there will be for sure). This is still a pre-release.

@@ -1,3 +1,5 @@
+.. _Games:
+
 =====
 Games
 =====
@@ -60,3 +62,30 @@ Fast
 ----
 
 Single will count +1, double will count +2 and triple will even count +3 on the number which has to be hit next.
+
+Split-Score
+===========
+
+The goal of this game is to hit predefined numbers / target areas. Three darts are thrown on each number or target area. The hits are added to the score. If you do not hit the target with a dart, your score will be devided into half. The starting points are defined by the games variant.
+
+Hitting order:
+
+* 15
+* 16
+* Any Double
+* 17
+* 18
+* Any Triple
+* 19
+* 20
+* Bulls-Eye
+
+E-Dart
+------
+
+Each player will start with 40 points.
+
+Steeldart
+---------
+
+Each player gets to throw 3 darts first. The sum of the darts will be their starting points
