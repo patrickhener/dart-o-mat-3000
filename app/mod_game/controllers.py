@@ -2,7 +2,7 @@
 import random
 
 # Import the database and socketio object from the main app module
-from app import db, socketio, IPADDR, PORT, RECOGNITION, SOUND
+from app import db, socketio, IPADDR, PORT, RECOGNITION, SOUND, SSL
 
 # Import flask dependencies
 from flask import Blueprint, request, render_template
@@ -72,7 +72,14 @@ sounddict = {
 # General routes
 @mod_game.route("/")
 def index():
-    return render_template('/game/index.html', ipaddr=IPADDR, port=PORT)
+    if PORT == 80:
+        url = "http://{}/game/admin".format(IPADDR)
+    elif PORT != 80 and SSL:
+        url = "https://{}/game/admin".format(IPADDR)
+    else:
+        url = "http://{}:{}".format(IPADDR,PORT)
+
+    return render_template('/game/index.html', url=url)
 
 
 @mod_game.route("/admin/")

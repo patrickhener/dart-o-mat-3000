@@ -2,9 +2,9 @@
 Changelog
 =========
 
-2019-05-XX - v???: First Release?
-=================================
-Working condition: TODO
+2019-05-15 - v0.9.9.2: Pre-release Version
+==========================================
+Working condition: Works great so far. Still no testing with a real recognition software though.
 
 Features added:
 
@@ -19,6 +19,14 @@ Documentation:
 
 * Documented the new game as well
 * Pages and API are now documented
+
+Issues fixed:
+
+* Issue |#1| fixed
+
+.. |#1| raw:: html
+
+    <a href="https://github.com/patrickhener/dart-o-mat-3000/issues/1" target="_blank">#1</a>
 
 2019-04-29 - v0.9.9.1: Pre-release Version
 ==========================================

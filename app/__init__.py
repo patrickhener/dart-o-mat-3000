@@ -19,6 +19,7 @@ IFACE = app.config["IFACE"]
 PORT = app.config["PORT"]
 RECOGNITION = app.config["RECOGNITION"]
 SOUND = app.config["SOUND"]
+SSL = app.config["SSL"]
 
 # Define SocketIO
 socketio = SocketIO(app)

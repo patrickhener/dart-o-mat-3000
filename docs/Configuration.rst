@@ -22,6 +22,8 @@ The table gives an overview for what they are used:
 +------------------------+----------------------------------------------+
 | PORT                   | Server Interface Port for the webserver      |
 +------------------------+----------------------------------------------+
+| SSL                    | Server Interface is https (SSL) or plain     |
++------------------------+----------------------------------------------+
 | RECOGNITION            | Use recognition software or not.             |
 |                        | GameController will look different depending |
 |                        | on this flag                                 |
