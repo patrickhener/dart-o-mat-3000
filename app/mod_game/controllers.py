@@ -77,7 +77,7 @@ def index():
     elif PORT != 80 and SSL:
         url = "https://{}/game/admin".format(IPADDR)
     else:
-        url = "http://{}:{}".format(IPADDR,PORT)
+        url = "http://{}:{}/game/admin".format(IPADDR,PORT)
 
     return render_template('/game/index.html', url=url)
 
