@@ -15,7 +15,7 @@ from .models import Game, Player, Score, Cricket, Round, Throw, CricketControl, 
 
 # Import helper functions
 from .helper import clear_db, switch_next_player, get_playing_players_objects, get_playing_players_id, get_score, \
-    get_active_player, get_average, get_throws_count, get_last_throws
+    get_active_player, get_average, get_throws_count, get_last_throws, get_last_throws_count
 
 # Import ATC functions
 from .atc import score_atc
@@ -389,6 +389,11 @@ def rematch():
         scoreboard_x01(gettext(u"Rematch"), sounddict["start"])
         game_controller()
     return "-"
+
+
+@mod_game.route("/getThrowcount")
+def get_throwcount():
+    return str(get_last_throws_count())
 
 
 # Cricket routes

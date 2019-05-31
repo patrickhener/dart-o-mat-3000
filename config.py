@@ -1,7 +1,7 @@
 import os
 # Custom IP and Port Config, needed for example in QR Code generation
-IPADDR = '10.201.1.143'  # QRCode IP
-IFACE = '10.201.1.143'  # Server Interface IP
+IPADDR = '192.168.1.171'  # QRCode IP
+IFACE = '192.168.1.171'  # Server Interface IP
 PORT = 5000
 SSL = False # https or not. You need to match the settings of your webserver
 RECOGNITION = False  # Use Recognition or not. If not you will have buttons to insert Score in gameController
