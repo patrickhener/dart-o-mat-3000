@@ -158,3 +158,22 @@ Example
 
         curl -X GET 'http://localhost:5000/game/rematch'
         -
+
+getThrowcount
+=============
+
+You can read out the current throwcount of the active player with a GET request.
+The url will look like `http://localhost:5000/game/getThrowcount`
+This was implemented to play together with another project of mine which you may find |dARTs|.
+
+.. |dARTS| raw:: html
+
+    <a href="https://github.com/patrickhener/dARts" target="_blank">here</a>
+
+Example
+-------
+
+.. code-block:: bash
+
+    curl -X GET 'http://localhost:5000/game/getThrowcount'
+    2
