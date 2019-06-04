@@ -17,6 +17,9 @@
 
 <!-- Body param -->
 {% block bodyparam %}
+
+{% if not recognition %}
+
 {% if gametype == "Cricket" %}
 onload="drawCricketController(), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightCricket('{{ activePlayer }}')"
 
@@ -27,6 +30,22 @@ onload="drawATC({{ number }},'{{ single }}','{{ miss }}'), drawThrows({{ playing
 onload="drawX01Controller(), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ activePlayer }}',{{ scorelist }})"
 
 {% endif %}
+
+{% else %}
+
+{% if gametype == "Cricket" %}
+onload="drawThrows({{ playingPlayers }},{{ throwlist }}), highlightCricket('{{ activePlayer }}')"
+
+{% elif gametype == "ATC" %}
+onload="drawThrows({{ playingPlayers }},{{ throwlist }}), highlightATC({{ player_number_list }}, '{{ activePlayer }}')"
+
+{% else %}
+onload="drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ activePlayer }}',{{ scorelist }})"
+
+{% endif %}
+
+{% endif %}
+
 {% endblock %}}
 
 <!-- Content -->
@@ -49,6 +68,7 @@ onload="drawX01Controller(), drawThrows({{ playingPlayers }},{{ throwlist }}), h
     <br>
     <hr>
 
+    {% if not recognition %}
     <div id="controlsframe" class="row">
         <div><h3>{% trans %}Insert Throws{% endtrans %}</h3></div>
         <div id="controls" class="col">
@@ -57,6 +77,7 @@ onload="drawX01Controller(), drawThrows({{ playingPlayers }},{{ throwlist }}), h
 
     <br>
     <hr>
+    {% endif %}
 
     <div id="throws" class="row">
         <div><h3>{% trans %}Change Throws{% endtrans %}</h3></div>
