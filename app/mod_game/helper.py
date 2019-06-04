@@ -204,23 +204,27 @@ def get_last_throws(player_id):
 
 
 def get_last_throws_count():
-    player = get_active_player()
-    last_round = Round.query.order_by(Round.id.desc()).first()
-    throwcount = 0
-    # if last_round == None:
-    if not last_round:
-        return throwcount
+    game = Game.query.first()
+    if not game:
+        return "No Game is running."
     else:
-        last_throws = Throw.query.filter_by(round_id=last_round.id).all()
-        if not last_throws == []:
-            if player.id == last_round.player_id:
-                throwcount = len(last_throws)
+        player = get_active_player()
+        last_round = Round.query.order_by(Round.id.desc()).first()
+        throwcount = 0
+        # if last_round == None:
+        if not last_round:
+            return throwcount
+        else:
+            last_throws = Throw.query.filter_by(round_id=last_round.id).all()
+            if not last_throws == []:
+                if player.id == last_round.player_id:
+                    throwcount = len(last_throws)
+                else:
+                    throwcount = 0
             else:
                 throwcount = 0
-        else:
-            throwcount = 0
 
-        return throwcount
+            return throwcount
 
 
 def get_all_throws(player_id):

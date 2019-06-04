@@ -213,12 +213,17 @@ def throw(hit, mod):
             audiofile = sounddict[str(hit)]
 
     # Lookup if next player has to be switched
-    if game.nextPlayerNeeded:
-        scoreboard_x01(gettext(u"Remove Darts"))
-        scoreboard_cricket(gettext(u"Remove Darts"))
-        scoreboard_atc(gettext(u"Remove Darts"))
-        scoreboard_split(gettext(u"Remove Darts"))
-        return gettext(u"Switch to next player first")
+    try:
+        if game.nextPlayerNeeded:
+            scoreboard_x01(gettext(u"Remove Darts"))
+            scoreboard_cricket(gettext(u"Remove Darts"))
+            scoreboard_atc(gettext(u"Remove Darts"))
+            scoreboard_split(gettext(u"Remove Darts"))
+            return gettext(u"Switch to next player first")
+
+    except AttributeError:
+        return "There might be no active game."
+
     else:
         if "01" in game.gametype:
             do_it = score_x01(hit, mod)
