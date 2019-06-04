@@ -5,7 +5,7 @@ Configuration
 =============
 
 I decided to use a central config file on all the configurations a user is supposed to do.
-The file is called *config.py* and can be found in the root directory of the project.
+The file is called *config.py*. You can find a sample file in the root directory of the project which you can just copy to *config.py* to work.
 
 Configuration Parameters
 ========================
