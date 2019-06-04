@@ -13,6 +13,15 @@ As this project is developed depending on the |recognition_software| of Niels LÃ
 
     <a href="https://github.com/nluede/cvdarts" target="_blank">recognition software</a>
 
+dARts Project
+=============
+
+Also there is my other project called *|dARts|*. It is a hardware build of a classic Softdart Machine using *LÃ¶wen Darts* components and an arduino. This will also work with Dart-O-Mat 3000. Be sure to check it out, too,
+
+.. |dARts| raw:: html
+
+    <a href="https://github.com/patrickhener/dARts" target="_blank">dARts</a>
+
 RESTful API Requests
 ====================
 
