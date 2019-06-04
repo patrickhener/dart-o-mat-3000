@@ -16,7 +16,7 @@ As this project is developed depending on the |recognition_software| of Niels L�
 dARts Project
 =============
 
-Also there is my other project called *|dARts|*. It is a hardware build of a classic Softdart Machine using *Löwen Darts* components and an arduino. This will also work with Dart-O-Mat 3000. Be sure to check it out, too,
+Also there is my other project called |dARts|. It is a hardware build of a classic Softdart Machine using *Löwen Darts* components and an arduino. This will also work with Dart-O-Mat 3000. Be sure to check it out, too,
 
 .. |dARts| raw:: html
 
