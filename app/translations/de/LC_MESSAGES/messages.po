@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  0.9\n"
 "Report-Msgid-Bugs-To: patrickhener@gmx.de\n"
-"POT-Creation-Date: 2019-04-30 16:00+0200\n"
+"POT-Creation-Date: 2019-06-05 13:43+0200\n"
 "PO-Revision-Date: 2019-04-10 19:56+0200\n"
 "Last-Translator: Patrick Hener <patrickhener@gmx.de>\n"
 "Language: de\n"
@@ -16,132 +16,139 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.6.0\n"
+"Generated-By: Babel 2.7.0\n"
 
-#: mod_game/atc.py:50 mod_game/controllers.py:548 mod_game/controllers.py:688
-#: mod_game/x01.py:249
+#: mod_game/atc.py:50 mod_game/controllers.py:602 mod_game/controllers.py:742
+#: mod_game/x01.py:250
 msgid "Next Winner"
 msgstr "Nächster Gewinner"
 
-#: mod_game/atc.py:52 mod_game/controllers.py:218 mod_game/controllers.py:388
-#: mod_game/controllers.py:539 mod_game/controllers.py:546
-#: mod_game/controllers.py:686 mod_game/cricket.py:251 mod_game/x01.py:251
-#: mod_game/x01.py:270
+#: mod_game/atc.py:52 mod_game/controllers.py:230 mod_game/controllers.py:444
+#: mod_game/controllers.py:593 mod_game/controllers.py:600
+#: mod_game/controllers.py:740 mod_game/cricket.py:258 mod_game/x01.py:252
+#: mod_game/x01.py:271
 msgid "Winner!"
 msgstr "Sieger!"
 
-#: mod_game/atc.py:61 mod_game/controllers.py:245 mod_game/controllers.py:542
-#: mod_game/controllers.py:692 mod_game/controllers.py:806
-#: mod_game/splitscore.py:80 mod_game/x01.py:272
+#: mod_game/atc.py:61 mod_game/controllers.py:263 mod_game/controllers.py:596
+#: mod_game/controllers.py:746 mod_game/controllers.py:860
+#: mod_game/splitscore.py:91 mod_game/x01.py:273
 msgid "Game Over!"
 msgstr "Spiel vorbei!"
 
-#: mod_game/atc.py:63 mod_game/controllers.py:690
+#: mod_game/atc.py:63 mod_game/controllers.py:744
 msgid "Hit"
 msgstr "Getroffen"
 
-#: mod_game/atc.py:70 mod_game/atc.py:81 mod_game/splitscore.py:72
-#: mod_game/x01.py:302
+#: mod_game/atc.py:70 mod_game/atc.py:81 mod_game/splitscore.py:78
+#: mod_game/x01.py:303
 msgid "Remove Darts!"
 msgstr "Darts entfernen"
 
-#: mod_game/atc.py:87 mod_game/cricket.py:276 mod_game/helper.py:119
-#: mod_game/x01.py:309
+#: mod_game/atc.py:87 mod_game/cricket.py:283 mod_game/helper.py:119
+#: mod_game/x01.py:310
 msgid "There is no active game running"
 msgstr "Aktuell ist kein Spiel gestartet"
 
-#: mod_game/controllers.py:121
+#: mod_game/controllers.py:128
 msgid "Really end game?"
 msgstr "Spiel wirklich beenden?"
 
-#: mod_game/controllers.py:161
+#: mod_game/controllers.py:168
 msgid "Single"
 msgstr "Einfach"
 
-#: mod_game/controllers.py:162
+#: mod_game/controllers.py:169
 msgid "Miss"
 msgstr "Daneben"
 
-#: mod_game/controllers.py:210 mod_game/controllers.py:211
-#: mod_game/controllers.py:212 mod_game/controllers.py:213
+#: mod_game/controllers.py:218 mod_game/controllers.py:219
+#: mod_game/controllers.py:220 mod_game/controllers.py:221
 msgid "Remove Darts"
 msgstr "Darts entfernen"
 
-#: mod_game/controllers.py:214
+#: mod_game/controllers.py:222
 msgid "Switch to next player first"
 msgstr "Wechsle zuerst zum nächsten Spieler"
 
-#: mod_game/controllers.py:220 mod_game/x01.py:236
+#: mod_game/controllers.py:232 mod_game/x01.py:237
 msgid "Bust! Remove Darts!"
 msgstr "Überworfen! Darts entfernen!"
 
-#: mod_game/controllers.py:222 mod_game/x01.py:290
+#: mod_game/controllers.py:234 mod_game/x01.py:291
 msgid "No Out possible! Remove Darts!"
 msgstr "Sieg nicht mehr möglich! Darts entfernen!"
 
-#: mod_game/controllers.py:229 mod_game/cricket.py:228
-msgid " Opened!"
-msgstr " Geöffnet!"
-
-#: mod_game/controllers.py:231 mod_game/cricket.py:235
-msgid " Closed!"
-msgstr " Geschlossen!"
-
-#: mod_game/controllers.py:246 mod_game/controllers.py:460
-#: mod_game/controllers.py:617 mod_game/controllers.py:736
+#: mod_game/controllers.py:264 mod_game/controllers.py:514
+#: mod_game/controllers.py:671 mod_game/controllers.py:790
 msgid "Place"
 msgstr "Platz"
 
-#: mod_game/controllers.py:259 mod_game/controllers.py:262
-#: mod_game/controllers.py:265 mod_game/controllers.py:268
-#: mod_game/cricket.py:361
+#: mod_game/controllers.py:277 mod_game/controllers.py:280
+#: mod_game/controllers.py:283 mod_game/controllers.py:286
+#: mod_game/cricket.py:368
 msgid "Throw updated"
 msgstr "Wurf geändert"
 
-#: mod_game/controllers.py:315
+#: mod_game/controllers.py:333
 msgid "Done"
 msgstr "Erledigt"
 
-#: mod_game/controllers.py:347 mod_game/controllers.py:361
-#: mod_game/controllers.py:373 templates/game/gameController.html:39
+#: mod_game/controllers.py:365 mod_game/controllers.py:379
+#: mod_game/controllers.py:387 mod_game/controllers.py:394
+#: templates/game/gameController.html:58
 msgid "Rematch"
 msgstr "Erneut spielen"
 
-#: mod_game/controllers.py:390 mod_game/cricket.py:249
+#: mod_game/controllers.py:412 mod_game/controllers.py:417
+#: mod_game/controllers.py:422 mod_game/controllers.py:427
+msgid "Stuck Dart"
+msgstr "Dart steckt fest"
+
+#: mod_game/controllers.py:446 mod_game/cricket.py:256
 msgid " Next Winner"
 msgstr " Nächster Gewinner"
 
-#: mod_game/controllers.py:392 mod_game/cricket.py:261
+#: mod_game/controllers.py:448 mod_game/cricket.py:268
 msgid " Game Over!"
 msgstr " Spiel vorbei!"
 
-#: mod_game/controllers.py:395 mod_game/cricket.py:233
-msgid " Scored!"
-msgstr " Gepunktet!"
-
-#: mod_game/controllers.py:804 mod_game/splitscore.py:70
+#: mod_game/controllers.py:858 mod_game/splitscore.py:76
 msgid "Split Score! Remove Darts!"
 msgstr "Punkte halbiert! Darts entfernen!"
 
-#: mod_game/controllers.py:836
-msgid "Throw for starting score"
-msgstr "Werfen für Startpunktzahl"
-
-#: mod_game/cricket.py:269
-msgid " Remove Darts!"
-msgstr " Darts entfernen!"
-
-#: mod_game/splitscore.py:109 mod_game/splitscore.py:119
-#: mod_game/splitscore.py:129
+#: mod_game/controllers.py:863 mod_game/splitscore.py:135
+#: mod_game/splitscore.py:146 mod_game/splitscore.py:157
+#: mod_game/splitscore.py:168
 msgid "Scored"
 msgstr "Gepunktet"
 
-#: mod_game/x01.py:195 templates/game/admin.html:44
+#: mod_game/controllers.py:893
+msgid "Throw for starting score"
+msgstr "Werfen für Startpunktzahl"
+
+#: mod_game/cricket.py:231
+msgid " Opened!"
+msgstr " Geöffnet!"
+
+#: mod_game/cricket.py:237
+msgid " Scored!"
+msgstr " Gepunktet!"
+
+#: mod_game/cricket.py:240
+msgid " Closed!"
+msgstr " Geschlossen!"
+
+#: mod_game/cricket.py:276
+msgid " Remove Darts!"
+msgstr " Darts entfernen!"
+
+#: mod_game/x01.py:196 templates/game/admin.html:44
 #: templates/game/admin.html:52 templates/game/admin.html:97
 msgid "Straight"
 msgstr "Direkt"
 
-#: mod_game/x01.py:279
+#: mod_game/x01.py:280
 #, python-format
 msgid "Bust! %(mode)s out!"
 msgstr "Überworfen! %(mode)s aus!"
@@ -418,27 +425,27 @@ msgstr ""
 "Jeder Spieler darf zuerst 3 Darts werfen. Die Summe der Würfe bildet die "
 "Startpunktzahl."
 
-#: templates/game/gameController.html:36
+#: templates/game/gameController.html:55
 msgid "Game Controls"
 msgstr "Spielsteuerung"
 
-#: templates/game/gameController.html:42
+#: templates/game/gameController.html:61
 msgid "Next Player"
 msgstr "Nächster Spieler"
 
-#: templates/game/gameController.html:44
+#: templates/game/gameController.html:63
 msgid "End Game"
 msgstr "Spiel beenden"
 
-#: templates/game/gameController.html:53
+#: templates/game/gameController.html:73
 msgid "Insert Throws"
 msgstr "Würfe einfügen"
 
-#: templates/game/gameController.html:62
+#: templates/game/gameController.html:83
 msgid "Change Throws"
 msgstr "Würfe bearbeiten"
 
-#: templates/game/gameController.html:70
+#: templates/game/gameController.html:91
 msgid "Update Throw"
 msgstr "Wurf bearbeiten"
 

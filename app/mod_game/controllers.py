@@ -401,6 +401,36 @@ def get_throwcount():
     return str(get_last_throws_count())
 
 
+@mod_game.route("/stuck")
+def stuck():
+    # Get game object
+    game = Game.query.first()
+    # Get Sound
+    sound = SOUND
+    # Switch over what to do
+    if game.gametype == "Cricket":
+        scoreboard_cricket(gettext(u"Stuck Dart"))
+        if sound:
+            socketio.emit("playSound", sounddict["score"])
+
+    elif game.gametype == "ATC":
+        scoreboard_atc(gettext(u"Stuck Dart"))
+        if sound:
+            socketio.emit("playSound", sounddict["score"])
+
+    elif game.gametype == "Split":
+        scoreboard_split(gettext(u"Stuck Dart"))
+        if sound:
+            socketio.emit("playSound", sounddict["score"])
+
+    else:
+        scoreboard_x01(gettext(u"Stuck Dart"))
+        if sound:
+            socketio.emit("playSound", sounddict["score"])
+
+    return "Stuck function done"
+
+
 # Cricket routes
 @mod_game.route("/scoreboardCricket")
 def scoreboard_cricket(message=None, soundeffect=None):
