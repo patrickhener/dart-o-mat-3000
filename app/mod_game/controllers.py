@@ -61,6 +61,10 @@ sounddict = {
     "20": "beep",
     "25": "bull",
     "50": "doublebull",
+    "T17": "T17",
+    "T18": "T18",
+    "T19": "T19",
+    "T20": "T20",
     "winner": "winner",
     "score": "score",
     "bust": "bust",
@@ -208,6 +212,18 @@ def throw(hit, mod):
             audiofile = sounddict["50"]
         else:
             audiofile = sounddict[str(hit)]
+    elif mod == 3:
+        if hit == 17:
+            audiofile = sounddict["T17"]
+        if hit == 18:
+            audiofile = sounddict["T18"]
+        elif hit == 19:
+            audiofile = sounddict["T19"]
+        elif hit == 20:
+            audiofile = sounddict["T20"]
+        else:
+            audiofile = sounddict[str(hit)]
+
     else:
         if hit in range(0, 26):
             audiofile = sounddict[str(hit)]
