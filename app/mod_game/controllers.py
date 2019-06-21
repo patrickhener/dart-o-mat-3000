@@ -215,7 +215,7 @@ def throw(hit, mod):
     elif mod == 3:
         if hit == 17:
             audiofile = sounddict["T17"]
-        if hit == 18:
+        elif hit == 18:
             audiofile = sounddict["T18"]
         elif hit == 19:
             audiofile = sounddict["T19"]
