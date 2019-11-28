@@ -7,11 +7,11 @@ Recognition
 Recommendation on recognition software
 ======================================
 
-As this project is developed depending on the |recognition_software| of Niels Lüdemann it is recommended to use it.
+As this project is developed depending on my |recognition_software| **puffyCV** it is recommended to use it. It is still WIP, though.
 
 .. |recognition_software| raw:: html
 
-    <a href="https://github.com/nluede/cvdarts" target="_blank">recognition software</a>
+    <a href="https://github.com/patrickhener/puffyCV" target="_blank">recognition software</a>
 
 dARts Project
 =============
