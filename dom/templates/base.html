@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
     <!-- Title -->
     <title>Dart-O-Mat 3000</title>
@@ -11,33 +12,34 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
     <!-- scripts -->
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-	    <script type="text/javascript" src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/common/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/common/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/common/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/common/socket.io.min.js') }}"></script>
     {% block head %}
     {% endblock %}
 </head>
 
 <body {% block bodyparam %}{% endblock %}>
-<div class="jumbotron header">
-    {% block banner %}{% endblock %}
-</div>
-{% block content %}
-{% endblock %}
+    <div class="jumbotron header">
+        {% block banner %}{% endblock %}
+    </div>
+    {% block content %}
+    {% endblock %}
 
-<div class="jumbotron footer" style="margin-bottom:0">
-    <table class="table footer">
-        <tr>
-            <td align="left">{% trans %}Author{% endtrans %}: Patrick Hener</td>
-            <td align="left">Dart-O-Mat 3000</td>
-            <td align="right"><a href="https://github.com/patrickhener/dart-o-mat-3000" target="_blank"><img
-											src="{{ url_for('static', filename='img/GitHub-Mark-32px.png') }}"/></a></td>
-        </tr>
-    </table>
-</div>
+    <div class="jumbotron footer" style="margin-bottom:0">
+        <table class="table footer">
+            <tr>
+                <td align="left">{% trans %}Author{% endtrans %}: Patrick Hener</td>
+                <td align="left">Dart-O-Mat 3000</td>
+                <td align="right"><a href="https://github.com/patrickhener/dart-o-mat-3000" target="_blank"><img
+                            src="{{ url_for('static', filename='img/GitHub-Mark-32px.png') }}" /></a></td>
+            </tr>
+        </table>
+    </div>
 
-{% block script %}
-{% endblock %}
+    {% block script %}
+    {% endblock %}
 </body>
+
 </html>

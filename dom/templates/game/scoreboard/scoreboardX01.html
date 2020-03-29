@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block head %}
-<script src="{{ url_for('static', filename='js/scoreboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/scoreboard/scoreboardX01.js') }}" type="module"></script>
 {% endblock %}
-{% block bodyparam %}style="overflow: hidden;" onload="drawScoreboardX01({{ playerlist }}, {{ lastthrows }}, {{ throwsum }}), highlightActivePlayer('{{ player }}', '{{ player_id }}', '{{ rndcount }}', '{{ message }}', '{{ average }}', '{{ throwcount }}')"{% endblock %}
+{% block bodyparam %}style="overflow: hidden;" onload="drawScoreboardX01({{ playerlist }}, {{ lastthrows }},
+{{ throwsum }}), highlightActivePlayer('{{ player }}', '{{ player_id }}', '{{ rndcount }}', '{{ message }}',
+'{{ average }}', '{{ throwcount }}')"{% endblock %}
 {% block content %}
 <div class="container-fluid" id="content">
 	<div class="row border-bottom border-top rounded" id="scoreheader">
@@ -11,13 +13,16 @@
 				<tr>
 					<td>{% trans %}Active Player{% endtrans %}:</td>
 					<td id="header-activePlayer">{{ player }}</td>
-				</tr><tr>
+				</tr>
+				<tr>
 					<td>{% trans %}Player round{% endtrans %}:</td>
 					<td id="header-rndcount">{{ rndcount }}</td>
-				</tr><tr>
+				</tr>
+				<tr>
 					<td>{% trans %}Player Average{% endtrans %}:</td>
 					<td id="header-average">{{ average }}</td>
-				</tr><tr>
+				</tr>
+				<tr>
 					<td>{% trans %}Player Throws{% endtrans %}:</td>
 					<td id="header-throwcount">{{ throwcount }}</td>
 				</tr>
@@ -28,10 +33,12 @@
 				<tr>
 					<td>{% trans %}Game{% endtrans %}:</td>
 					<td>{{ gametype }}</td>
-				</tr><tr>
+				</tr>
+				<tr>
 					<td>{% trans %}In{% endtrans %}:</td>
 					<td>{{ startIn }}</td>
-				</tr><tr>
+				</tr>
+				<tr>
 					<td>{% trans %}Out{% endtrans %}:</td>
 					<td>{{ exitOut }}</td>
 				</tr>

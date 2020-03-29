@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block head %}
-<script src="{{ url_for('static', filename='js/gameController.js') }}"></script>
+<script src="{{ url_for('static', filename='js/controller/gameController.js') }}"></script>
 {% block script %}
 <script>
     function endGame() {
@@ -21,13 +21,16 @@
 {% if not recognition %}
 
 {% if gametype == "Cricket" %}
-onload="drawCricketController(), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightCricket('{{ activePlayer }}')"
+onload="drawCricketController(), drawThrows({{ playingPlayers }},{{ throwlist }}),
+highlightCricket('{{ activePlayer }}')"
 
 {% elif gametype == "ATC" %}
-onload="drawATC({{ number }},'{{ single }}','{{ miss }}'), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightATC({{ player_number_list }}, '{{ activePlayer }}')"
+onload="drawATC({{ number }},'{{ single }}','{{ miss }}'), drawThrows({{ playingPlayers }},{{ throwlist }}),
+highlightATC({{ player_number_list }}, '{{ activePlayer }}')"
 
 {% else %}
-onload="drawX01Controller(), drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ activePlayer }}',{{ scorelist }})"
+onload="drawX01Controller(), drawThrows({{ playingPlayers }},{{ throwlist }}),
+highlightAndScore('{{ activePlayer }}',{{ scorelist }})"
 
 {% endif %}
 
@@ -52,7 +55,9 @@ onload="drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ 
 {% block content %}
 <div class="container">
     <div id="gameControls" class="row">
-        <div><h3>{% trans %}Game Controls{% endtrans %}</h3></div>
+        <div>
+            <h3>{% trans %}Game Controls{% endtrans %}</h3>
+        </div>
         <div id="buttons" class="col">
             <button onclick="rematch()" style="display: none;" id="rematch" class="btn btn-outline-primary btn-lg">{%
                 trans %}Rematch{% endtrans %}
@@ -70,7 +75,9 @@ onload="drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ 
 
     {% if not recognition %}
     <div id="controlsframe" class="row">
-        <div><h3>{% trans %}Insert Throws{% endtrans %}</h3></div>
+        <div>
+            <h3>{% trans %}Insert Throws{% endtrans %}</h3>
+        </div>
         <div id="controls" class="col">
         </div>
     </div>
@@ -80,7 +87,9 @@ onload="drawThrows({{ playingPlayers }},{{ throwlist }}), highlightAndScore('{{ 
     {% endif %}
 
     <div id="throws" class="row">
-        <div><h3>{% trans %}Change Throws{% endtrans %}</h3></div>
+        <div>
+            <h3>{% trans %}Change Throws{% endtrans %}</h3>
+        </div>
         <div id="frame" class="col"></div>
     </div>
 

@@ -16,6 +16,7 @@ from dom.game.database.models import Game, Player, Score, Cricket, Round, Throw,
 # Import helper functions
 from dom.game.common.helper import clear_db, switch_next_player, get_playing_players_objects, get_playing_players_id, get_score, \
     get_active_player, get_average, get_throws_count, get_last_throws, get_last_throws_count
+from dom.game.common.dictionaries import sounddict
 
 # Import ATC functions
 from dom.game.modes.atc import score_atc
@@ -36,52 +37,16 @@ from dom.game.modes.splitscore import update_throw_table as split_update_throw_t
 # Define the blueprint: 'game', set its url prefix: app.url/game
 game = Blueprint('game', __name__, url_prefix='/game')
 
-# Dict for soundfiles
-sounddict = {
-    "0": "beep",
-    "1": "beep",
-    "2": "beep",
-    "3": "beep",
-    "4": "beep",
-    "5": "beep",
-    "6": "beep",
-    "7": "beep",
-    "8": "beep",
-    "9": "beep",
-    "10": "beep",
-    "11": "beep",
-    "12": "beep",
-    "13": "beep",
-    "14": "beep",
-    "15": "beep",
-    "16": "beep",
-    "17": "beep",
-    "18": "beep",
-    "19": "beep",
-    "20": "beep",
-    "25": "bull",
-    "50": "doublebull",
-    "T17": "T17",
-    "T18": "T18",
-    "T19": "T19",
-    "T20": "T20",
-    "winner": "winner",
-    "score": "score",
-    "bust": "bust",
-    "open": "open",
-    "close": "close",
-    "start": "startgame",
-}
 
 # General routes
 @game.route("/")
 def index():
     if PORT == 80:
-        url = "http://{}/game/admin".format(IPADDR)
+        url = f"http://{IPADDR}/game/admin"
     elif PORT != 80 and SSL:
-        url = "https://{}/game/admin".format(IPADDR)
+        url = f"https://{IPADDR}/game/admin"
     else:
-        url = "http://{}:{}/game/admin".format(IPADDR, PORT)
+        url = f"http://{IPADDR}:{PORT}/game/admin"
 
     return render_template('/game/index.html', url=url)
 
@@ -189,7 +154,7 @@ def game_controller():
 
     # Render Template
     return render_template(
-        '/game/gameController.html',
+        '/game/controller/gameController.html',
         recognition=recognition,
         gametype=game.gametype,
         variant=game.variant,
@@ -543,7 +508,7 @@ def scoreboard_cricket(message=None, soundeffect=None):
         socketio.emit('playSound', audiofile)
 
     return render_template(
-        '/game/scoreboardCricket.html',
+        '/game/scoreboard/scoreboardCricket.html',
         playerlist=player_scores_list,
         throwcount=throwcount,
         lastthrows=last_throws,
@@ -701,7 +666,7 @@ def scoreboard_x01(message=None, soundeffect=None):
         socketio.emit('playSound', audiofile)
 
     return render_template(
-        '/game/scoreboardX01.html',
+        '/game/scoreboard/scoreboardX01.html',
         playerlist=player_scores_list,
         throwcount=throwcount,
         lastthrows=last_throws,
@@ -824,7 +789,7 @@ def scoreboard_atc(message=None, soundeffect=None):
         socketio.emit('playSound', audiofile)
 
     return render_template(
-        '/game/scoreboardATC.html',
+        '/game/scoreboard/scoreboardATC.html',
         playerlist=player_number_list,
         message=message,
         player=active_player.name,
@@ -954,7 +919,7 @@ def scoreboard_split(message=None, soundeffect=None):
         socketio.emit('playSound', audiofile)
 
     return render_template(
-        '/game/scoreboardSplit.html',
+        '/game/scoreboard/scoreboardSplit.html',
         playerlist=player_number_list,
         message=message,
         player=active_player.name,
