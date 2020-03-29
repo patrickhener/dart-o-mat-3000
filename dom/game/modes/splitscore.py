@@ -1,10 +1,10 @@
 # Helper file for Split-Score
 
 # Imports
-from app import db
+from dom import db
 from flask_babel import gettext
-from .models import Score, Game, Round, Throw, Split, Player, PointsGained
-from .helper import check_if_ongoing_game, get_active_player, check_if_ongoing_round, get_playing_players_id, \
+from dom.game.database.models import Score, Game, Round, Throw, Split, Player, PointsGained
+from dom.game.common.helper import check_if_ongoing_game, get_active_player, check_if_ongoing_round, get_playing_players_id, \
     update_throw_and_score
 
 
@@ -17,7 +17,8 @@ def score_split(hit, mod):
         # Get active player
         active_player = get_active_player()
         # Get players number to hit
-        split_object = Split.query.filter_by(player_id=active_player.id).first()
+        split_object = Split.query.filter_by(
+            player_id=active_player.id).first()
         # Get game variant
         game = Game.query.first()
         # Calculate point which might be gained
@@ -31,7 +32,8 @@ def score_split(hit, mod):
             db.session.commit()
         else:
             # Set round object
-            rnd = Round.query.filter_by(player_id=active_player.id, ongoing=1).first()
+            rnd = Round.query.filter_by(
+                player_id=active_player.id, ongoing=1).first()
         # Check if ongoing round is over
         if rnd.throwcount == 3:
             game.nextPlayerNeeded = True
@@ -58,7 +60,8 @@ def score_split(hit, mod):
             # Increase throwcount and so on
             throwcount += 1
             rnd.throwcount = throwcount
-            throw = Throw(hit=hit, mod=mod, round_id=rnd.id, player_id=active_player.id)
+            throw = Throw(hit=hit, mod=mod, round_id=rnd.id,
+                          player_id=active_player.id)
             if throwcount == 3:
                 game.nextPlayerNeeded = True
                 split_object.has_been_hit = False
@@ -102,7 +105,8 @@ def add_score(player_id, points):
 
 def add_points_gained(points, throwid, playerid):
     # Setup gained Points for updateThrow
-    gained_points = PointsGained(points=points, throw_id=throwid, player_id=playerid)
+    gained_points = PointsGained(
+        points=points, throw_id=throwid, player_id=playerid)
     db.session.add(gained_points)
     db.session.commit()
 
@@ -222,7 +226,8 @@ def build_podium():
     player_podium = []
     place = 1
     for score in scores:
-        player_podium.append(str(Player.query.filter_by(id=score.player_id).first().name) + "," + str(place))
+        player_podium.append(str(Player.query.filter_by(
+            id=score.player_id).first().name) + "," + str(place))
         place += 1
 
     return player_podium
@@ -253,7 +258,8 @@ def update_throw_table(throwid, hit, mod):
     # Get nextHit of this throw
     split = Split.query.filter_by(player_id=throw.player_id).first()
     # Get player Round
-    rnd = Round.query.filter_by(player_id=throw.player_id).order_by(Round.id.desc()).first()
+    rnd = Round.query.filter_by(
+        player_id=throw.player_id).order_by(Round.id.desc()).first()
     # Get player score
     score = Score.query.filter_by(player_id=throw.player_id).first()
     # Get game for game variant
@@ -307,7 +313,8 @@ def update_throw_routine(rnd, split, throw, hit, mod, score):
     points_gained = PointsGained.query.filter_by(throw_id=throw.id).first()
     if points_gained:
         score.score -= points_gained.points
-        db.session.query(PointsGained).filter(PointsGained.id == points_gained.id).delete()
+        db.session.query(PointsGained).filter(
+            PointsGained.id == points_gained.id).delete()
         db.session.commit()
 
     # Then change the throw in database

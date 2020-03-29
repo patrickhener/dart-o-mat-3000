@@ -2,7 +2,7 @@
 import random
 
 # Import the database and socketio object from the main app module
-from app import db, socketio, IPADDR, PORT, RECOGNITION, SOUND, SSL
+from dom import db, socketio, IPADDR, PORT, RECOGNITION, SOUND, SSL
 
 # Import flask dependencies
 from flask import Blueprint, request, render_template
@@ -11,30 +11,30 @@ from flask import Blueprint, request, render_template
 from flask_babel import gettext
 
 # Import module models
-from .models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium, Split
+from dom.game.database.models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium, Split
 
 # Import helper functions
-from .helper import clear_db, switch_next_player, get_playing_players_objects, get_playing_players_id, get_score, \
+from dom.game.common.helper import clear_db, switch_next_player, get_playing_players_objects, get_playing_players_id, get_score, \
     get_active_player, get_average, get_throws_count, get_last_throws, get_last_throws_count
 
 # Import ATC functions
-from .atc import score_atc
-from .atc import update_throw_table as atc_update_throw_table
+from dom.game.modes.atc import score_atc
+from dom.game.modes.atc import update_throw_table as atc_update_throw_table
 
 # Import Cricket functions
-from .cricket import get_cricket, score_cricket, get_closed
-from .cricket import update_throw_table as cricket_update_throw_table
+from dom.game.modes.cricket import get_cricket, score_cricket, get_closed
+from dom.game.modes.cricket import update_throw_table as cricket_update_throw_table
 
 # Import X01 functions
-from .x01 import get_checkout, score_x01
-from .x01 import update_throw_table as x01_update_throw_table
+from dom.game.modes.x01 import get_checkout, score_x01
+from dom.game.modes.x01 import update_throw_table as x01_update_throw_table
 
 # Import Split-Score functions
-from .splitscore import score_split, build_podium
-from .splitscore import update_throw_table as split_update_throw_table
+from dom.game.modes.splitscore import score_split, build_podium
+from dom.game.modes.splitscore import update_throw_table as split_update_throw_table
 
 # Define the blueprint: 'game', set its url prefix: app.url/game
-mod_game = Blueprint('game', __name__, url_prefix='/game')
+game = Blueprint('game', __name__, url_prefix='/game')
 
 # Dict for soundfiles
 sounddict = {
@@ -74,25 +74,25 @@ sounddict = {
 }
 
 # General routes
-@mod_game.route("/")
+@game.route("/")
 def index():
     if PORT == 80:
         url = "http://{}/game/admin".format(IPADDR)
     elif PORT != 80 and SSL:
         url = "https://{}/game/admin".format(IPADDR)
     else:
-        url = "http://{}:{}/game/admin".format(IPADDR,PORT)
+        url = "http://{}:{}/game/admin".format(IPADDR, PORT)
 
     return render_template('/game/index.html', url=url)
 
 
-@mod_game.route("/admin/")
+@game.route("/admin/")
 def admin():
     players = Player.query.all()
     return render_template('/game/admin.html', players=players)
 
 
-@mod_game.route("/manageuser", methods=['GET', 'POST'])
+@game.route("/manageuser", methods=['GET', 'POST'])
 def manageuser():
     # set Things
     created = False
@@ -127,7 +127,7 @@ def manageuser():
         return render_template('/game/manageuser.html', created=created, deleted=deleted, players=players)
 
 
-@mod_game.route("/gameController")
+@game.route("/gameController")
 def game_controller():
     end_message = gettext(u"Really end game?")
     # Recognition [config.py]
@@ -158,10 +158,13 @@ def game_controller():
     active_player_number_to_hit = 0
     player_number_list = []
     if game.gametype == "ATC":
-        active_player_number_to_hit = ATC.query.filter_by(player_id=active_player.id).first().number
+        active_player_number_to_hit = ATC.query.filter_by(
+            player_id=active_player.id).first().number
         for player in playing_players:
-            player_number_to_hit = ATC.query.filter_by(player_id=player.id).first().number
-            player_number_list.append(str(player.name) + "," + str(player_number_to_hit))
+            player_number_to_hit = ATC.query.filter_by(
+                player_id=player.id).first().number
+            player_number_list.append(
+                str(player.name) + "," + str(player_number_to_hit))
 
         print("player_number_list is {}".format(player_number_list))
 
@@ -202,7 +205,7 @@ def game_controller():
     )
 
 
-@mod_game.route("/throw/<int:hit>/<int:mod>")
+@game.route("/throw/<int:hit>/<int:mod>")
 def throw(hit, mod):
     game = Game.query.first()
     # Determine which sound to play
@@ -285,7 +288,7 @@ def throw(hit, mod):
             return "Other Game Type"
 
 
-@mod_game.route("/throw/update/<throw_id>/<new_hit>/<new_mod>")
+@game.route("/throw/update/<throw_id>/<new_hit>/<new_mod>")
 def update_throw(throw_id, new_hit, new_mod):
     game = Game.query.first()
     if game.gametype == "Cricket":
@@ -305,7 +308,7 @@ def update_throw(throw_id, new_hit, new_mod):
     return "-"
 
 
-@mod_game.route("/nextPlayer")
+@game.route("/nextPlayer")
 def next_player():
     # Do the switch
     do_it = switch_next_player()
@@ -338,7 +341,7 @@ def next_player():
     return do_it
 
 
-@mod_game.route("/endGame")
+@game.route("/endGame")
 def end_game():
     clear_db()
     socketio.emit('redirectX01', "/game/")
@@ -349,7 +352,7 @@ def end_game():
     return gettext(u"Done")
 
 
-@mod_game.route("/rematch")
+@game.route("/rematch")
 def rematch():
     game = Game.query.first()
     players = get_playing_players_objects()
@@ -375,7 +378,8 @@ def rematch():
             db.session.add(p)
             db.session.add(c)
             db.session.commit()
-        cc = CricketControl(c20="", c19="", c18="", c17="", c16="", c15="", c25="")
+        cc = CricketControl(c20="", c19="", c18="",
+                            c17="", c16="", c15="", c25="")
         db.session.add(cc)
         db.session.commit()
         scoreboard_cricket(gettext(u"Rematch"), sounddict["start"])
@@ -412,12 +416,12 @@ def rematch():
     return "-"
 
 
-@mod_game.route("/getThrowcount")
+@game.route("/getThrowcount")
 def get_throwcount():
     return str(get_last_throws_count())
 
 
-@mod_game.route("/stuck")
+@game.route("/stuck")
 def stuck():
     # Get game object
     game = Game.query.first()
@@ -448,7 +452,7 @@ def stuck():
 
 
 # Cricket routes
-@mod_game.route("/scoreboardCricket")
+@game.route("/scoreboardCricket")
 def scoreboard_cricket(message=None, soundeffect=None):
     # Var for returning options
     if not soundeffect:
@@ -529,8 +533,10 @@ def scoreboard_cricket(message=None, soundeffect=None):
 
     word = gettext(u"Place")
 
-    socketio.emit('drawScoreboardCricket', (player_scores_list, str(last_throws), closed_list))
-    socketio.emit('highlightActiveCricket', (active_player.name, active_player.id, rnd, message, throwcount))
+    socketio.emit('drawScoreboardCricket',
+                  (player_scores_list, str(last_throws), closed_list))
+    socketio.emit('highlightActiveCricket', (active_player.name,
+                                             active_player.id, rnd, message, throwcount))
     socketio.emit('drawPodiumCricket', (podium_list, word))
 
     if sound:
@@ -592,7 +598,7 @@ def redraw_cricket(message):
 
 
 # X01 routes
-@mod_game.route("/scoreboardX01")
+@game.route("/scoreboardX01")
 def scoreboard_x01(message=None, soundeffect=None):
     # Var for returning options
     if not message:
@@ -686,8 +692,10 @@ def scoreboard_x01(message=None, soundeffect=None):
 
     word = gettext(u"Place")
 
-    socketio.emit('drawScoreboardX01', (player_scores_list, last_throws, sum_throws))
-    socketio.emit('highlightActive', (active_player.name, active_player.id, rnd, message, average, throwcount))
+    socketio.emit('drawScoreboardX01',
+                  (player_scores_list, last_throws, sum_throws))
+    socketio.emit('highlightActive', (active_player.name,
+                                      active_player.id, rnd, message, average, throwcount))
     socketio.emit('drawPodiumX01', (podium_list, word))
     if sound:
         socketio.emit('playSound', audiofile)
@@ -715,9 +723,11 @@ def on_start_x01(data):
     clear_db()
     # Fill tables
     scorecount = int(data['x01variant'])
-    g = Game(gametype=data['x01variant'], inGame=data['startIn'], outGame=data['exitOut'])
+    g = Game(gametype=data['x01variant'],
+             inGame=data['startIn'], outGame=data['exitOut'])
     for player in data['players']:
-        s = Score(score=scorecount, parkScore=scorecount, initialScore=scorecount)
+        s = Score(score=scorecount, parkScore=scorecount,
+                  initialScore=scorecount)
         p = Player.query.filter_by(name=player).first()
         p.out = False
         g.players.append(p)
@@ -740,7 +750,7 @@ def on_start_x01(data):
 
 
 # ATC routes
-@mod_game.route("/scoreboardATC")
+@game.route("/scoreboardATC")
 def scoreboard_atc(message=None, soundeffect=None):
     # Var for returning options
     if not message:
@@ -806,7 +816,8 @@ def scoreboard_atc(message=None, soundeffect=None):
     word = gettext(u"Place")
 
     socketio.emit('drawScoreboardATC', player_number_list)
-    socketio.emit('highlightATC', (active_player.name, rnd, throwcount, message))
+    socketio.emit('highlightATC', (active_player.name,
+                                   rnd, throwcount, message))
     socketio.emit('drawPodiumATC', (podium_list, word))
 
     if sound:
@@ -858,7 +869,7 @@ def on_start_atc(data):
 
 
 # Split-Score routes
-@mod_game.route("/scoreboardSplit")
+@game.route("/scoreboardSplit")
 def scoreboard_split(message=None, soundeffect=None):
     # Var for returning options
     if not message:
@@ -908,9 +919,11 @@ def scoreboard_split(message=None, soundeffect=None):
             if len(Round.query.filter_by(player_id=player.id).all()) < 1:
                 player_numbers.append(gettext(u"Throw for starting score"))
             else:
-                player_numbers.append(Split.query.filter_by(player_id=player.id).first())
+                player_numbers.append(Split.query.filter_by(
+                    player_id=player.id).first())
         else:
-            player_numbers.append(Split.query.filter_by(player_id=player.id).first())
+            player_numbers.append(Split.query.filter_by(
+                player_id=player.id).first())
 
     player_scores = []
     for player in playing_players:
@@ -934,7 +947,8 @@ def scoreboard_split(message=None, soundeffect=None):
         variant = "Error"
 
     socketio.emit('drawScoreboardSplit', (player_number_list, last_throws))
-    socketio.emit('highlightSplit', (active_player.name, rnd, throwcount, message))
+    socketio.emit('highlightSplit',
+                  (active_player.name, rnd, throwcount, message))
 
     if sound:
         socketio.emit('playSound', audiofile)

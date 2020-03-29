@@ -38,7 +38,7 @@ def not_found():
 
 
 # Import a module / component using its blueprint handler variable (mod_game)
-from app.mod_game.controllers import mod_game as game_module
+from dom.game.controller import game as game_module
 
 # Register blueprint(s)
 app.register_blueprint(game_module)

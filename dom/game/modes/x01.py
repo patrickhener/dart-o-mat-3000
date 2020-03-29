@@ -1,10 +1,10 @@
 # helper file for X01
 
 # imports
-from app import db
+from dom import db
 from flask_babel import gettext
-from .models import Score, Game, Player, Round, Podium, Throw
-from .helper import check_if_ongoing_game, check_if_ongoing_round, check_other_players, set_podium, set_last_podium, \
+from dom.game.database.models import Score, Game, Player, Round, Podium, Throw
+from dom.game.common.helper import check_if_ongoing_game, check_if_ongoing_round, check_other_players, set_podium, set_last_podium, \
     update_throw_and_score
 
 # Dictionaries
@@ -218,7 +218,8 @@ def score_x01(hit, mod):
             db.session.commit()
         else:
             # Set round object
-            rnd = Round.query.filter_by(player_id=active_player.id, ongoing=1).first()
+            rnd = Round.query.filter_by(
+                player_id=active_player.id, ongoing=1).first()
 
         # Check if ongoing round is over
         if rnd.throwcount == 3:
@@ -226,7 +227,8 @@ def score_x01(hit, mod):
         else:
             # set throwcount and old score
             throwcount = rnd.throwcount
-            player_score = Score.query.filter_by(player_id=active_player.id).first()
+            player_score = Score.query.filter_by(
+                player_id=active_player.id).first()
             # check if bust
             if player_score.score - points < 0:
                 game.nextPlayerNeeded = True
@@ -296,7 +298,8 @@ def score_x01(hit, mod):
                     else:
                         result = str(game.inGame) + " in!"
                     rnd.throwcount = throwcount
-                    throw = Throw(hit=hit, mod=mod, round_id=rnd.id, player_id=active_player.id)
+                    throw = Throw(hit=hit, mod=mod, round_id=rnd.id,
+                                  player_id=active_player.id)
                     if throwcount == 3:
                         player_score.parkScore = new_score
                         game.nextPlayerNeeded = True

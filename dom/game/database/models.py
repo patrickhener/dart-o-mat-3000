@@ -1,5 +1,5 @@
 # Import the database object (db) from the main application module
-from app import db
+from dom import db
 
 
 # Define a base model for other database tables to inherit
@@ -37,7 +37,8 @@ class Player(Base):
     nexthits = db.relationship('Split', backref='nexthits', lazy=True)
     podiums = db.relationship('Podium', backref='podiums', lazy=True)
 
-    game_id = db.Column(db.Integer, db.ForeignKey('game.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=True)
+    game_id = db.Column(db.Integer, db.ForeignKey(
+        'game.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=True)
 
     def __repr__(self):
         return self.name
@@ -87,8 +88,10 @@ class CricketControl(Base):
 class PointsGained(Base):
     points = db.Column(db.Integer, nullable=False)
 
-    throw_id = db.Column(db.Integer, db.ForeignKey('throw.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
-    player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+    throw_id = db.Column(db.Integer, db.ForeignKey(
+        'throw.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+    player_id = db.Column(db.Integer, db.ForeignKey(
+        'player.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
 
     def __repr__(self):
         return str(self.id)
@@ -110,7 +113,8 @@ class Throw(Base):
 
     gained = db.relationship('PointsGained', backref='throwgaines', lazy=True)
 
-    round_id = db.Column(db.Integer, db.ForeignKey('round.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+    round_id = db.Column(db.Integer, db.ForeignKey(
+        'round.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
     player_id = db.Column(db.Integer, db.ForeignKey('player.id', onupdate="CASCADE", ondelete="CASCADE"),
                           nullable=False)
 

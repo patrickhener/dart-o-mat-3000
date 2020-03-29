@@ -1,10 +1,10 @@
 # Helper file for Around the clock
 
 # Imports
-from app import db
+from dom import db
 from flask_babel import gettext
-from .models import ATC, Game, Round, Podium, Throw
-from .helper import check_if_ongoing_game, get_active_player, check_if_ongoing_round, check_other_players, set_podium, \
+from dom.game.database.models import ATC, Game, Round, Podium, Throw
+from dom.game.common.helper import check_if_ongoing_game, get_active_player, check_if_ongoing_round, check_other_players, set_podium, \
     set_last_podium
 
 
@@ -24,7 +24,8 @@ def score_atc(hit, mod):
             db.session.commit()
         else:
             # Set round object
-            rnd = Round.query.filter_by(player_id=active_player.id, ongoing=1).first()
+            rnd = Round.query.filter_by(
+                player_id=active_player.id, ongoing=1).first()
 
         # Check if ongoing round is over
         if rnd.throwcount == 3:
@@ -64,7 +65,8 @@ def score_atc(hit, mod):
 
                 throwcount += 1
                 rnd.throwcount = throwcount
-                throw = Throw(hit=hit, mod=mod, round_id=rnd.id, player_id=active_player.id)
+                throw = Throw(hit=hit, mod=mod, round_id=rnd.id,
+                              player_id=active_player.id)
                 if throwcount == 3:
                     game.nextPlayerNeeded = True
                     result = gettext(u"Remove Darts!")
@@ -75,7 +77,8 @@ def score_atc(hit, mod):
                 result = "-"
                 throwcount += 1
                 rnd.throwcount = throwcount
-                throw = Throw(hit=hit, mod=mod, round_id=rnd.id, player_id=active_player.id)
+                throw = Throw(hit=hit, mod=mod, round_id=rnd.id,
+                              player_id=active_player.id)
                 if throwcount == 3:
                     game.nextPlayerNeeded = True
                     result = gettext(u"Remove Darts!")

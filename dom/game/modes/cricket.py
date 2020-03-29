@@ -1,10 +1,10 @@
 # Helper file for cricket
 
 # Imports
-from app import db, socketio
+from dom import db, socketio
 from flask_babel import gettext
-from .models import Cricket, Player, Round, Game, Podium, Throw, CricketControl, Score, PointsGained
-from .helper import check_if_ongoing_game, check_if_ongoing_round, check_other_players, set_podium, set_last_podium, \
+from dom.game.database.models import Cricket, Player, Round, Game, Podium, Throw, CricketControl, Score, PointsGained
+from dom.game.common.helper import check_if_ongoing_game, check_if_ongoing_round, check_other_players, set_podium, set_last_podium, \
     get_playing_players_objects, get_active_player, get_playing_players_not_out_objects
 
 
@@ -125,7 +125,8 @@ def check_to_score(hit, mod, hit_before, player_id):
                 score.score += points
                 # Setup gained Points for updateThrow
                 throw_id = Throw.query.order_by(Throw.id.desc()).first()
-                gained_points = PointsGained(points=points, throw_id=throw_id.id+1, player_id=player_id)
+                gained_points = PointsGained(
+                    points=points, throw_id=throw_id.id + 1, player_id=player_id)
                 db.session.add(gained_points)
                 db.session.commit()
                 return scored
@@ -137,12 +138,15 @@ def check_to_score(hit, mod, hit_before, player_id):
                     if cricket_dict[str(hit)] < 3:
                         # Scoring
                         scored = True
-                        score = Score.query.filter_by(player_id=player.id).first()
+                        score = Score.query.filter_by(
+                            player_id=player.id).first()
                         points = hit * relevant_mod
                         score.score += points
                         # Setup gained Points for updateThrow
-                        throw_id = Throw.query.order_by(Throw.id.desc()).first()
-                        gained_points = PointsGained(points=points, throw_id=throw_id.id+1, player_id=player.id)
+                        throw_id = Throw.query.order_by(
+                            Throw.id.desc()).first()
+                        gained_points = PointsGained(
+                            points=points, throw_id=throw_id.id + 1, player_id=player.id)
                         db.session.add(gained_points)
                         db.session.commit()
 
@@ -166,15 +170,19 @@ def check_won_cricket():
     if all_closed:
         if game.variant == "Normal":
             for player in players_not_out:
-                active_score = Score.query.filter_by(player_id=active_player.id).first()
-                player_score = Score.query.filter_by(player_id=player.id).first()
+                active_score = Score.query.filter_by(
+                    player_id=active_player.id).first()
+                player_score = Score.query.filter_by(
+                    player_id=player.id).first()
                 if not active_player.id == player.id:
                     if active_score.score < player_score.score:
                         won = False
         elif game.variant == "Cut Throat":
             for player in players_not_out:
-                active_score = Score.query.filter_by(player_id=active_player.id).first()
-                player_score = Score.query.filter_by(player_id=player.id).first()
+                active_score = Score.query.filter_by(
+                    player_id=active_player.id).first()
+                player_score = Score.query.filter_by(
+                    player_id=player.id).first()
                 if not active_player.id == player.id:
                     if active_score.score > player_score.score:
                         won = False
@@ -203,7 +211,8 @@ def score_cricket(hit, mod):
             db.session.commit()
         else:
             # Set round object
-            rnd = Round.query.filter_by(player_id=active_player.id, ongoing=1).first()
+            rnd = Round.query.filter_by(
+                player_id=active_player.id, ongoing=1).first()
 
         # set throwcount
         throwcount = rnd.throwcount
@@ -270,7 +279,8 @@ def score_cricket(hit, mod):
         # Do final round handling
         throwcount += 1
         rnd.throwcount = throwcount
-        throw = Throw(hit=hit, mod=mod, round_id=rnd.id, player_id=active_player.id)
+        throw = Throw(hit=hit, mod=mod, round_id=rnd.id,
+                      player_id=active_player.id)
         if throwcount == 3:
             game.nextPlayerNeeded = True
             result += gettext(u" Remove Darts!")
@@ -312,7 +322,8 @@ def update_throw_table(throw_id, hit, mod):
             # reduce score again
             score.score -= gp.points
             # remove points gained entry
-            db.session.query(PointsGained).filter(PointsGained.id == gp.id).delete()
+            db.session.query(PointsGained).filter(
+                PointsGained.id == gp.id).delete()
             db.session.commit()
 
         # CASE 1-3: Correct Throw count
@@ -349,7 +360,8 @@ def update_throw_table(throw_id, hit, mod):
             cricket_dict[str(hit)] += int(mod)
             set_cricket_dict(throw.player_id, cricket_dict)
             # 3. look if there are new points
-            check_to_score(int(hit), int(mod), hit_before_increase, throw.player_id)
+            check_to_score(int(hit), int(
+                mod), hit_before_increase, throw.player_id)
 
             # now check if the corrected throw might close something
             cricket_control_dict = get_cricket_control()

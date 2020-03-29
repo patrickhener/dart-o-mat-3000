@@ -1,14 +1,14 @@
 # General helper file
 
 # Import db from app
-from app import db
+from dom import db
 # cycle and islice for nextPlayer
 from itertools import cycle, islice
 # Babel Translation
 from flask_babel import gettext
 
 # Import module models
-from .models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium, Split
+from dom.game.database.models import Game, Player, Score, Cricket, Round, Throw, CricketControl, PointsGained, ATC, Podium, Split
 
 
 # Method definitions
@@ -121,7 +121,8 @@ def switch_next_player():
         # Then set active Player round ongoing to 0 and nextPlayerNeeded in Game to 0
         active_player_object = Player.query.filter_by(active=True).first()
         # else just switch player as always
-        active_player_round = Round.query.filter_by(player_id=active_player_object.id, ongoing=1).first()
+        active_player_round = Round.query.filter_by(
+            player_id=active_player_object.id, ongoing=1).first()
         try:
             active_player_round.ongoing = False
         except AttributeError:
@@ -140,10 +141,12 @@ def switch_next_player():
         # define cycle over key list
         cycle_player_key_in_list = cycle(key)
         # start at position of active player in the keyList
-        position_key_after_active = islice(cycle_player_key_in_list, position_list_active_player+1, None)
+        position_key_after_active = islice(
+            cycle_player_key_in_list, position_list_active_player + 1, None)
         # Take one step in list and define next player with the resulting key
         next_player_key = next(position_key_after_active)
-        next_active_player_object = Player.query.filter_by(name=list_of_playing_players[next_player_key]).first()
+        next_active_player_object = Player.query.filter_by(
+            name=list_of_playing_players[next_player_key]).first()
         # Commit current active player false and next active player true to database
         active_player_object.active = False
         next_active_player_object.active = True
@@ -180,7 +183,8 @@ def get_throws_count(player_id):
 
 def get_last_throws(player_id):
     throwlist = []
-    last_round = Round.query.filter_by(player_id=player_id).order_by(Round.id.desc()).first()
+    last_round = Round.query.filter_by(
+        player_id=player_id).order_by(Round.id.desc()).first()
     # if last_round == None:
     if not last_round:
         throwlist.append(str(player_id) + ",0,0")
@@ -239,7 +243,8 @@ def set_podium(player_id):
     player = Player.query.filter_by(id=player_id).first()
     # If there are any Objects
     if podium:
-        p = Podium(place=len(podium)+1, name=player.name, player_id=player_id)
+        p = Podium(place=len(podium) + 1,
+                   name=player.name, player_id=player_id)
     # No Objects yet, so 1st Place
     else:
         p = Podium(place=1, name=player.name, player_id=player_id)
@@ -259,7 +264,7 @@ def set_last_podium():
     podium = Podium.query.all()
     # Get looser player
     looser = Player.query.filter_by(game_id=1, out=0).first()
-    p = Podium(place=len(podium)+1, name=looser.name, player_id=looser.id)
+    p = Podium(place=len(podium) + 1, name=looser.name, player_id=looser.id)
     looser.out = True
     db.session.add(p)
     db.session.commit()
