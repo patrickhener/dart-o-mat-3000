@@ -1,3 +1,6 @@
+# DISCLAIMER
+This project is not actively developed anymore because there will be a complete rewrite. To further support the project [dARts](http://github.com/patrickhener/dARts) this branch is the last working copy.
+
 # Introduction
 This project is a scoreboard for a darts game which will run on an automated steel darts machine. It's purpose is to track the score of the game.
 
