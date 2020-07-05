@@ -1,3 +1,8 @@
+# DISCLAIMER
+This project will not be developed any further, because I am doing a complete rewrite using othe API stuff and ReactJS as frontend.
+
+If you are looking for a Version working with [dARts](https://github.com/patrickhener/dARts) then you should go for the branch "dARts". This will be frozen to work with dARts until the new scoreboard is available. Then dARts will be updated as well.
+
 # Introduction
 This project is a scoreboard for a darts game which will run on an automated steel darts machine. It's purpose is to track the score of the game.
 
