@@ -1,5 +1,9 @@
+# DEPRECATED
+This project is now abandoned in favor of [dascr-board](https://github.com/dascr/dascr-board) 
+
+
 # DISCLAIMER
-This project will not be developed any further, because I am doing a complete rewrite using othe API stuff and ReactJS as frontend.
+This project will not be developed any further, because I am doing a complete rewrite using othe API stuff and Svelte as frontend.
 
 If you are looking for a Version working with [dARts](https://github.com/patrickhener/dARts) then you should go for the branch "dARts". This will be frozen to work with dARts until the new scoreboard is available. Then dARts will be updated as well.
 
