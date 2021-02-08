@@ -1,5 +1,5 @@
 # DEPRECATED
-This project is now abandoned in favor of [dascr-board](https://github.com/dascr/dascr-board) 
+This project is now abandoned in favor of [DaSCR-Board](https://github.com/dascr/dascr-board), [dascr.org](https://dascr.org)
 
 
 # DISCLAIMER
