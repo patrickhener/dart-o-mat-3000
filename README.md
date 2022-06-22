@@ -12,4 +12,4 @@ For documentation refer to:
 # Donate
 If you like this project and want to leave me a cup of coffee or an icecold German beer:
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=W2KPLBLTVYK3A&source=url)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate/?hosted_button_id=W2KPLBLTVYK3A)
